@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TranscilMobileApp</string>
+    <string name="app_tagline">Transcil</string>
+    <string name="onboarding1_title">Smart EV Mobility</string>
+    <string name="onboarding1_desc">Rent electric vehicles, swap batteries, or earn as a delivery rider</string>
+    <string name="onboarding2_title">Wide Network</string>
+    <string name="onboarding2_desc">Find nearby hubs and swap stations across the city with real-time availability</string>
+    <string name="skip">Skip</string>
+    <string name="next">NEXT</string>
+    <string name="onboarding3_title">Quick Battery Swaps</string>
+    <string name="onboarding3_desc">Swap your battery in under 2 minutes at our automated swap stations</string>
+    <string name="onboarding4_title">Flexible Payments</string>
+    <string name="onboarding4_desc">Pay-as-you-go or choose from flexible rental plans that suit your needs</string>
+    <string name="get_started">GET START</string>
+</resources>
