@@ -25,4 +25,37 @@
     <string name="resend_otp">Resend OTP</string>
     <string name="otp_terms">By entering the OTP, you agree to the terms and conditions.</string>
     <string name="verify_otp_button">Verify OTP</string>
+
+    <string name="continue_button">Continue</string>
+    <string name="choose_journey_title">Choose Your Journey</string>
+    <string name="choose_journey_subtitle">Select how you\'d like to use TransCIL</string>
+    <string name="journey_rent_ev_title">Rent an EV</string>
+    <string name="journey_rent_ev_subtitle">Rent an EV for personal use</string>
+    <string name="journey_rent_ev_bullet_1">Flexible rental plans</string>
+    <string name="journey_rent_ev_bullet_2">Daily, weekly, monthly options</string>
+    <string name="journey_rent_ev_bullet_3">Easy battery swaps</string>
+    <string name="journey_rent_ev_bullet_4">No ownership hassles</string>
+    <string name="journey_3pl_title">3PL</string>
+    <string name="journey_3pl_subtitle">Join our delivery partner network</string>
+    <string name="journey_3pl_bullet_1">Earn with deliveries</string>
+    <string name="journey_3pl_bullet_2">Own or rent vehicle</string>
+    <string name="journey_3pl_bullet_3">Flexible working hours</string>
+    <string name="journey_3pl_bullet_4">Weekly payouts</string>
+    <string name="coming_soon_3pl">3PL onboarding coming soon</string>
+
+    <string name="personal_details_toolbar">Personal Details</string>
+    <string name="create_personal_account_title">Create Personal Account</string>
+    <string name="full_name_label">Full Name</string>
+    <string name="full_name_hint">Enter your full name</string>
+    <string name="email_label">Email Address</string>
+    <string name="email_hint">your.email@example.com</string>
+    <string name="dob_label">Date of Birth</string>
+    <string name="dob_hint">DD - MM - YYYY</string>
+    <string name="gender_label">Gender</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_other">Other</string>
+    <string name="error_required_fields">Please fill in all fields</string>
+    <string name="error_invalid_email">Please enter a valid email address</string>
+    <string name="personal_account_saved_stub">Personal details saved</string>
 </resources>

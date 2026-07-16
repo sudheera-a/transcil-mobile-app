@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/screen_background">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollContent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            android:paddingHorizontal="@dimen/screen_padding"
+            android:clipToPadding="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btnContinue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/spacing_xl"
+                android:paddingBottom="@dimen/spacing_lg">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/choose_journey_title"
+                    android:textColor="@color/text_primary"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:gravity="center"
+                    android:text="@string/choose_journey_subtitle"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+
+                <!-- Rent EV card -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cardRentEv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xl"
+                    android:background="@drawable/bg_card_default"
+                    android:padding="@dimen/spacing_lg"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <FrameLayout
+                        android:id="@+id/tileRentEv"
+                        android:layout_width="@dimen/icon_tile_size"
+                        android:layout_height="@dimen/icon_tile_size"
+                        android:background="@drawable/bg_icon_tile"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <ImageView
+                            android:layout_width="@dimen/icon_size"
+                            android:layout_height="@dimen/icon_size"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_scooter"
+                            android:contentDescription="@null" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tvRentEvTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_md"
+                        android:text="@string/journey_rent_ev_title"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="@id/tileRentEv"
+                        app:layout_constraintStart_toEndOf="@id/tileRentEv"
+                        app:layout_constraintEnd_toStartOf="@id/ivRentEvCheck" />
+
+                    <TextView
+                        android:id="@+id/tvRentEvSubtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_md"
+                        android:text="@string/journey_rent_ev_subtitle"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp"
+                        app:layout_constraintTop_toBottomOf="@id/tvRentEvTitle"
+                        app:layout_constraintStart_toEndOf="@id/tileRentEv"
+                        app:layout_constraintEnd_toStartOf="@id/ivRentEvCheck" />
+
+                    <ImageView
+                        android:id="@+id/ivRentEvCheck"
+                        android:layout_width="@dimen/check_size"
+                        android:layout_height="@dimen/check_size"
+                        android:src="@drawable/ic_check_circle"
+                        android:visibility="gone"
+                        android:contentDescription="@null"
+                        app:layout_constraintTop_toTopOf="@id/tileRentEv"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/rentEvBullets"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_md"
+                        android:orientation="vertical"
+                        app:layout_constraintTop_toBottomOf="@id/tileRentEv"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="@dimen/spacing_sm"
+                            android:drawableStart="@drawable/ic_bullet"
+                            android:text="@string/journey_rent_ev_bullet_1"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:drawablePadding="@dimen/spacing_sm"
+                            android:drawableStart="@drawable/ic_bullet"
+                            android:text="@string/journey_rent_ev_bullet_2"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:drawablePadding="@dimen/spacing_sm"
+                            android:drawableStart="@drawable/ic_bullet"
+                            android:text="@string/journey_rent_ev_bullet_3"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:drawablePadding="@dimen/spacing_sm"
+                            android:drawableStart="@drawable/ic_bullet"
+                            android:text="@string/journey_rent_ev_bullet_4"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- 3PL card -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cardThreePl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:background="@drawable/bg_card_default"
+                    android:padding="@dimen/spacing_lg"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <FrameLayout
+                        android:id="@+id/tileThreePl"
+                        android:layout_width="@dimen/icon_tile_size"
+                        android:layout_height="@dimen/icon_tile_size"
+                        android:background="@drawable/bg_icon_tile"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <ImageView
+                            android:layout_width="@dimen/icon_size"
+                            android:layout_height="@dimen/icon_size"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_package"
+                            android:contentDescription="@null" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tvThreePlTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_md"
+                        android:text="@string/journey_3pl_title"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="@id/tileThreePl"
+                        app:layout_constraintStart_toEndOf="@id/tileThreePl"
+                        app:layout_constraintEnd_toStartOf="@id/ivThreePlCheck" />
+
+                    <TextView
+                        android:id="@+id/tvThreePlSubtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_md"
+                        android:text="@string/journey_3pl_subtitle"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp"
+                        app:layout_constraintTop_toBottomOf="@id/tvThreePlTitle"
+                        app:layout_constraintStart_toEndOf="@id/tileThreePl"
+                        app:layout_constraintEnd_toStartOf="@id/ivThreePlCheck" />
+
+                    <ImageView
+                        android:id="@+id/ivThreePlCheck"
+                        android:layout_width="@dimen/check_size"
+                        android:layout_height="@dimen/check_size"
+                        android:src="@drawable/ic_check_circle"
+                        android:visibility="gone"
+                        android:contentDescription="@null"
+                        app:layout_constraintTop_toTopOf="@id/tileThreePl"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_md"
+                        android:orientation="vertical"
+                        app:layout_constraintTop_toBottomOf="@id/tileThreePl"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="@dimen/spacing_sm"
+                            android:drawableStart="@drawable/ic_bullet"
+                            android:text="@string/journey_3pl_bullet_1"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:drawablePadding="@dimen/spacing_sm"
+                            android:drawableStart="@drawable/ic_bullet"
+                            android:text="@string/journey_3pl_bullet_2"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:drawablePadding="@dimen/spacing_sm"
+                            android:drawableStart="@drawable/ic_bullet"
+                            android:text="@string/journey_3pl_bullet_3"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:drawablePadding="@dimen/spacing_sm"
+                            android:drawableStart="@drawable/ic_bullet"
+                            android:text="@string/journey_3pl_bullet_4"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginBottom="@dimen/spacing_xl"
+            android:background="@drawable/bg_button_primary"
+            android:enabled="false"
+            android:alpha="0.5"
+            android:text="@string/continue_button"
+            android:textAllCaps="false"
+            android:textColor="@color/text_on_brand"
+            android:textStyle="bold"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

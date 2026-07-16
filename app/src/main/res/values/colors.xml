@@ -4,5 +4,10 @@
     <color name="text_secondary">#666666</color>
     <color name="text_muted">#999999</color>
     <color name="brand_primary">#8BC34A</color>
+    <color name="brand_primary_soft">#EAF6D8</color>
     <color name="text_on_brand">#FFFFFF</color>
+    <color name="stroke_default">#E0E0E0</color>
+    <color name="stroke_selected">#8BC34A</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="icon_on_brand">#FFFFFF</color>
 </resources>

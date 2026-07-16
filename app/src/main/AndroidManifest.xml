@@ -35,6 +35,13 @@
         <activity
                 android:name=".VerifyOtpActivity"
                 android:exported="false" />
+        <activity
+                android:name=".ChooseJourneyActivity"
+                android:exported="false" />
+        <activity
+                android:name=".CreatePersonalAccountActivity"
+                android:exported="false"
+                android:windowSoftInputMode="adjustResize" />
 
 
 

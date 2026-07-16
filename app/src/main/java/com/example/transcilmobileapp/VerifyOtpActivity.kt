@@ -1,5 +1,6 @@
 package com.example.transcilmobileapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -36,8 +37,8 @@ class VerifyOtpActivity : BaseActivity<ActivityVerifyOtpBinding>(ActivityVerifyO
 
         viewModel.navigateToHome.observe(this) { shouldNavigate ->
             if (shouldNavigate) {
-                Toast.makeText(this, "OTP Verified!", Toast.LENGTH_SHORT).show()
-                // Later: startActivity(Intent(this, HomeActivity::class.java))
+                startActivity(Intent(this, ChooseJourneyActivity::class.java))
+                finish()
             }
         }
 
