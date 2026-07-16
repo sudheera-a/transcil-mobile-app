@@ -54,6 +54,14 @@
                 android:name=".AadhaarOtpActivity"
                 android:exported="false"
                 android:windowSoftInputMode="adjustResize" />
+        <activity
+                android:name=".PanVerificationActivity"
+                android:exported="false"
+                android:windowSoftInputMode="adjustResize" />
+        <activity
+                android:name=".BankDetailsActivity"
+                android:exported="false"
+                android:windowSoftInputMode="adjustResize" />
 
     </application>
 

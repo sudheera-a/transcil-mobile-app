@@ -33,7 +33,7 @@ class AadhaarVerificationActivity :
         }
         viewModel.skipFlow.observe(this) { skip ->
             if (skip == true) {
-                Toast.makeText(this, R.string.aadhaar_skipped_stub, Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, PanVerificationActivity::class.java))
             }
         }
         viewModel.errorMessage.observe(this) { message ->

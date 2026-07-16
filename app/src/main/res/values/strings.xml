@@ -92,4 +92,30 @@
     <string name="aadhaar_otp_sent_to">We\'ve sent a 6-digit code to +91 0000000000</string>
     <string name="resend_otp_in">Resend OTP in %1$ds</string>
     <string name="error_incomplete_otp">Please enter the complete 6-digit OTP</string>
+
+    <string name="pan_verification_title">PAN Verification</string>
+    <string name="pan_optional_info">Optional Verification. PAN verification is optional but recommended for faster payment processing and tax compliance.</string>
+    <string name="pan_number_label">PAN Number</string>
+    <string name="pan_number_hint">ABCDE1234F</string>
+    <string name="pan_number_helper">Enter your 10-character PAN number</string>
+    <string name="pan_verify_notice">Your PAN details will be verified with Income Tax Department records.</string>
+    <string name="verify_pan">Verify PAN</string>
+    <string name="skip_for_now">Skip for Now</string>
+    <string name="pan_add_later">You can add PAN details later from your profile</string>
+    <string name="error_invalid_pan">Please enter a valid 10-character PAN number</string>
+
+    <string name="bank_details_title">Bank Details</string>
+    <string name="bank_secure_info">Secure Payment Setup. Add your bank details to receive payments and refunds securely.</string>
+    <string name="account_holder_label">Account Holder Name</string>
+    <string name="account_holder_hint">Enter name as per bank records</string>
+    <string name="account_number_label">Account Number</string>
+    <string name="account_number_hint">Enter account number</string>
+    <string name="confirm_account_number_label">Confirm Account Number</string>
+    <string name="confirm_account_number_hint">Re-enter account number</string>
+    <string name="ifsc_label">IFSC Code</string>
+    <string name="ifsc_hint">e.g., SBIN0001234</string>
+    <string name="verify_bank_details">Verify Bank Details</string>
+    <string name="error_account_mismatch">Account numbers do not match</string>
+    <string name="error_invalid_ifsc">Please enter a valid IFSC code</string>
+    <string name="onboarding_complete_stub">Onboarding complete</string>
 </resources>

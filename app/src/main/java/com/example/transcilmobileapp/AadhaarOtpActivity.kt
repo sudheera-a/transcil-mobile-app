@@ -1,5 +1,6 @@
 package com.example.transcilmobileapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -39,7 +40,7 @@ class AadhaarOtpActivity :
         }
         viewModel.navigateNext.observe(this) { go ->
             if (go == true) {
-                Toast.makeText(this, R.string.step_four_coming_soon, Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, PanVerificationActivity::class.java))
             }
         }
         viewModel.errorMessage.observe(this) { message ->

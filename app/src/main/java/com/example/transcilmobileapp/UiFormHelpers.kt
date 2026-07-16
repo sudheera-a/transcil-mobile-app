@@ -24,7 +24,7 @@ object UiFormHelpers {
         )
         segments.forEachIndexed { index, view ->
             view.setBackgroundResource(
-                if (index + 1 == activeStep) R.drawable.bg_step_active else R.drawable.bg_step_inactive
+                if (index < activeStep) R.drawable.bg_step_active else R.drawable.bg_step_inactive
             )
         }
         root.findViewById<TextView>(R.id.tvStepLabel).text =
