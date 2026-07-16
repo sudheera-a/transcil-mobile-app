@@ -5,17 +5,18 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/splash_background">
+        android:background="@drawable/screen_background">
 
         <TextView
             android:id="@+id/tvSplashLogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_tagline"
-            android:textSize="36sp"
+            android:textSize="27sp"
+            android:lineSpacingExtra="5sp"
             android:textStyle="bold"
-            android:fontFamily="sans-serif-condensed"
-            android:textColor="@color/brand_dark"
+            android:gravity="center"
+            android:textColor="@color/text_primary"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
