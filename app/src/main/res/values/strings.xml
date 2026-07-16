@@ -57,7 +57,6 @@
     <string name="gender_other">Other</string>
     <string name="error_required_fields">Please fill in all fields</string>
     <string name="error_invalid_email">Please enter a valid email address</string>
-    <string name="personal_account_saved_stub">Personal details saved</string>
     <string name="step_of_four">Step %1$d of 4</string>
 
     <string name="address_details_toolbar">Address Details</string>
@@ -83,8 +82,6 @@
     <string name="verify_aadhaar">Verify Aadhaar</string>
     <string name="error_invalid_aadhaar">Please enter a valid 12-digit Aadhaar number</string>
     <string name="error_aadhaar_consent">Please accept the Aadhaar consent to continue</string>
-    <string name="aadhaar_skipped_stub">Aadhaar verification skipped</string>
-    <string name="step_four_coming_soon">Step 4 coming soon</string>
 
     <string name="verify_aadhaar_otp_toolbar">Verify Aadhaar OTP</string>
     <string name="aadhaar_otp_sent">OTP Sent: We\'ve sent a 6-digit OTP to your Aadhaar-registered mobile number ending with XXXX.</string>
@@ -117,5 +114,22 @@
     <string name="verify_bank_details">Verify Bank Details</string>
     <string name="error_account_mismatch">Account numbers do not match</string>
     <string name="error_invalid_ifsc">Please enter a valid IFSC code</string>
-    <string name="onboarding_complete_stub">Onboarding complete</string>
+
+    <string name="kyc_pending_title">Verification Pending</string>
+    <string name="kyc_pending_subtitle">Your KYC documents are under review. This usually takes 24-48 hours.</string>
+    <string name="kyc_pending_bullet_1">We\'re verifying your submitted documents</string>
+    <string name="kyc_pending_bullet_2">You\'ll receive a notification once approved</string>
+    <string name="kyc_pending_bullet_3">Meanwhile, you can explore the app</string>
+    <string name="kyc_review_in_progress">Review in Progress</string>
+    <string name="kyc_contact_support">Contact Support</string>
+    <string name="kyc_pending_footer">Verification typically takes 24-48 hours. You\'ll receive an email and notification once complete.</string>
+    <string name="kyc_support_stub">Support will be available soon</string>
+
+    <string name="kyc_approved_title">KYC Approved!</string>
+    <string name="kyc_approved_subtitle">Congratulations! Your account has been verified successfully.</string>
+    <string name="kyc_approved_bullet_1">Full access to all features</string>
+    <string name="kyc_approved_bullet_2">Book vehicles instantly</string>
+    <string name="kyc_approved_bullet_3">Start earning with deliveries</string>
+    <string name="kyc_continue_dashboard">Continue to Dashboard</string>
+    <string name="dashboard_coming_soon">Dashboard coming soon</string>
 </resources>

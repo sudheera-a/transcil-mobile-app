@@ -12,8 +12,10 @@ description: >-
 ## Stack (do not invent another)
 
 - Native Android: **Kotlin + XML Views + ViewBinding/DataBinding**
-- Package today: `com.example.transcilmobileapp`
-- MVVM: `BaseActivity` + `BaseViewModel` (LiveData); Activities observe and navigate via `Intent`
+- Package today: `com.example.transcilmobileapp` with feature packages:
+  `core`, `splash`, `onboarding`, `auth`, `journey`, `kyc`
+- MVVM: `core.BaseActivity` + `core.BaseViewModel` (LiveData); Activities observe and navigate via `Intent`
+- KYC status: `core.KycNavigator` + `KycStatus` (PENDING/APPROVED stubs until API)
 - Theme: Material3 DayNight, **Manrope**, `@drawable/screen_background` (mesh)
 - **Not** Jetpack Compose unless the user explicitly migrates the project
 

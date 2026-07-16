@@ -11,57 +11,53 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TranscilMobileApp">
+
         <activity
-            android:name=".MainActivity"
+            android:name=".splash.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Onboarding1Activity"
-                  android:exported="false" />
-        <activity android:name=".Onboarding2Activity"
-                  android:exported="false"/>
-        <activity android:name=".Onboarding3Activity"
-                  android:exported="false"/>
-        <activity android:name=".Onboarding4Activity"
-                  android:exported="false" />
+
+        <activity android:name=".onboarding.Onboarding1Activity" android:exported="false" />
+        <activity android:name=".onboarding.Onboarding2Activity" android:exported="false" />
+        <activity android:name=".onboarding.Onboarding3Activity" android:exported="false" />
+        <activity android:name=".onboarding.Onboarding4Activity" android:exported="false" />
+
+        <activity android:name=".auth.WelcomeActivity" android:exported="false" />
+        <activity android:name=".auth.VerifyOtpActivity" android:exported="false" />
+
+        <activity android:name=".journey.ChooseJourneyActivity" android:exported="false" />
+
         <activity
-                android:name=".WelcomeActivity"
-                android:exported="false" />
+            android:name=".kyc.CreatePersonalAccountActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
-                android:name=".VerifyOtpActivity"
-                android:exported="false" />
+            android:name=".kyc.AddressDetailsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
-                android:name=".ChooseJourneyActivity"
-                android:exported="false" />
+            android:name=".kyc.AadhaarVerificationActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
-                android:name=".CreatePersonalAccountActivity"
-                android:exported="false"
-                android:windowSoftInputMode="adjustResize" />
+            android:name=".kyc.AadhaarOtpActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
-                android:name=".AddressDetailsActivity"
-                android:exported="false"
-                android:windowSoftInputMode="adjustResize" />
+            android:name=".kyc.PanVerificationActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
-                android:name=".AadhaarVerificationActivity"
-                android:exported="false"
-                android:windowSoftInputMode="adjustResize" />
-        <activity
-                android:name=".AadhaarOtpActivity"
-                android:exported="false"
-                android:windowSoftInputMode="adjustResize" />
-        <activity
-                android:name=".PanVerificationActivity"
-                android:exported="false"
-                android:windowSoftInputMode="adjustResize" />
-        <activity
-                android:name=".BankDetailsActivity"
-                android:exported="false"
-                android:windowSoftInputMode="adjustResize" />
+            android:name=".kyc.BankDetailsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".kyc.KycPendingActivity" android:exported="false" />
+        <activity android:name=".kyc.KycApprovedActivity" android:exported="false" />
 
     </application>
 
