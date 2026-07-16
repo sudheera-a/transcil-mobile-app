@@ -10,4 +10,6 @@
     <color name="stroke_selected">#8BC34A</color>
     <color name="surface_card">#1E1E1E</color>
     <color name="icon_on_brand">#FFFFFF</color>
+    <color name="step_track_inactive">#444444</color>
+    <color name="info_banner_bg">#2A3D1F</color>
 </resources>

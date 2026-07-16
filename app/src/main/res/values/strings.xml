@@ -58,4 +58,38 @@
     <string name="error_required_fields">Please fill in all fields</string>
     <string name="error_invalid_email">Please enter a valid email address</string>
     <string name="personal_account_saved_stub">Personal details saved</string>
+    <string name="step_of_four">Step %1$d of 4</string>
+
+    <string name="address_details_toolbar">Address Details</string>
+    <string name="address_line1_label">Address Line 1</string>
+    <string name="address_line1_hint">House/Flat No, Building Name</string>
+    <string name="address_line2_label">Address Line 2</string>
+    <string name="address_line2_hint">Street, Area, Locality</string>
+    <string name="city_label">City</string>
+    <string name="city_hint">City</string>
+    <string name="state_label">State</string>
+    <string name="state_hint">State</string>
+    <string name="pincode_label">Pincode</string>
+    <string name="pincode_hint">6 - Digit pincode</string>
+    <string name="error_invalid_pincode">Please enter a valid 6-digit pincode</string>
+
+    <string name="aadhaar_verification_title">Aadhaar Verification</string>
+    <string name="aadhaar_secure_verification">Secure Verification: Your Aadhaar details are encrypted and used only for identity verification as per UIDAI guidelines.</string>
+    <string name="aadhaar_number_label">Aadhaar Number</string>
+    <string name="aadhaar_number_hint">XXXX XXXX XXXX</string>
+    <string name="aadhaar_number_helper">Enter your 12-digit Aadhaar number</string>
+    <string name="aadhaar_consent">I hereby consent to use my Aadhaar for KYC verification and authorize Transcil to obtain my details from UIDAI.</string>
+    <string name="aadhaar_otp_info">You will receive an OTP on your Aadhaar-registered mobile number for verification.</string>
+    <string name="verify_aadhaar">Verify Aadhaar</string>
+    <string name="error_invalid_aadhaar">Please enter a valid 12-digit Aadhaar number</string>
+    <string name="error_aadhaar_consent">Please accept the Aadhaar consent to continue</string>
+    <string name="aadhaar_skipped_stub">Aadhaar verification skipped</string>
+    <string name="step_four_coming_soon">Step 4 coming soon</string>
+
+    <string name="verify_aadhaar_otp_toolbar">Verify Aadhaar OTP</string>
+    <string name="aadhaar_otp_sent">OTP Sent: We\'ve sent a 6-digit OTP to your Aadhaar-registered mobile number ending with XXXX.</string>
+    <string name="enter_otp_heading">Enter OTP</string>
+    <string name="aadhaar_otp_sent_to">We\'ve sent a 6-digit code to +91 0000000000</string>
+    <string name="resend_otp_in">Resend OTP in %1$ds</string>
+    <string name="error_incomplete_otp">Please enter the complete 6-digit OTP</string>
 </resources>

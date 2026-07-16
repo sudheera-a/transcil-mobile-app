@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/screen_background"
+        android:paddingHorizontal="@dimen/screen_padding">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="@dimen/spacing_lg"
+            android:contentDescription="@string/verify_aadhaar_otp_toolbar"
+            android:src="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvToolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_md"
+            android:text="@string/verify_aadhaar_otp_toolbar"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/ivBack"
+            app:layout_constraintStart_toEndOf="@id/ivBack"
+            app:layout_constraintTop_toTopOf="@id/ivBack" />
+
+        <include
+            android:id="@+id/stepProgress"
+            layout="@layout/layout_step_progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_lg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivBack" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/spacing_lg"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toTopOf="@id/btnVerify"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stepProgress">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/spacing_lg">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/aadhaar_verification_title"
+                    android:textColor="@color/text_primary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xl"
+                    android:background="@drawable/bg_info_outline"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_lg">
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_check_circle" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_md"
+                        android:layout_weight="1"
+                        android:text="@string/aadhaar_otp_sent"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xl"
+                    android:text="@string/enter_otp_heading"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:gravity="center"
+                    android:text="@string/aadhaar_otp_sent_to"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <LinearLayout
+                    android:id="@+id/otpContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xl"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/etOtp1"
+                        android:layout_width="@dimen/otp_box_size"
+                        android:layout_height="@dimen/otp_box_size"
+                        android:layout_marginEnd="@dimen/spacing_sm"
+                        android:background="@drawable/bg_otp_box"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/etOtp2"
+                        android:layout_width="@dimen/otp_box_size"
+                        android:layout_height="@dimen/otp_box_size"
+                        android:layout_marginEnd="@dimen/spacing_sm"
+                        android:background="@drawable/bg_otp_box"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/etOtp3"
+                        android:layout_width="@dimen/otp_box_size"
+                        android:layout_height="@dimen/otp_box_size"
+                        android:layout_marginEnd="@dimen/spacing_sm"
+                        android:background="@drawable/bg_otp_box"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/etOtp4"
+                        android:layout_width="@dimen/otp_box_size"
+                        android:layout_height="@dimen/otp_box_size"
+                        android:layout_marginEnd="@dimen/spacing_sm"
+                        android:background="@drawable/bg_otp_box"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/etOtp5"
+                        android:layout_width="@dimen/otp_box_size"
+                        android:layout_height="@dimen/otp_box_size"
+                        android:layout_marginEnd="@dimen/spacing_sm"
+                        android:background="@drawable/bg_otp_box"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/etOtp6"
+                        android:layout_width="@dimen/otp_box_size"
+                        android:layout_height="@dimen/otp_box_size"
+                        android:background="@drawable/bg_otp_box"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:maxLength="1"
+                        android:textColor="@color/text_primary"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvResend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_lg"
+                    android:textColor="@color/brand_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <Button
+            android:id="@+id/btnVerify"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginBottom="@dimen/spacing_xl"
+            android:background="@drawable/bg_button_primary"
+            android:text="@string/verify_otp_button"
+            android:textAllCaps="false"
+            android:textColor="@color/text_on_brand"
+            android:textStyle="bold"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

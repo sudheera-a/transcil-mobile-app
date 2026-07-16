@@ -1,5 +1,6 @@
 package com.example.transcilmobileapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -34,8 +35,8 @@ class CreatePersonalAccountActivity :
             )
         }
 
-        bindFocusHighlight(binding.etFullName)
-        bindFocusHighlight(binding.etEmail)
+        UiFormHelpers.bindFocusHighlight(binding.etFullName)
+        UiFormHelpers.bindFocusHighlight(binding.etEmail)
 
         viewModel.selectedGender.observe(this, ::renderGender)
         viewModel.dateOfBirth.observe(this) { value ->
@@ -47,22 +48,13 @@ class CreatePersonalAccountActivity :
         }
         viewModel.navigateNext.observe(this) { go ->
             if (go == true) {
-                Toast.makeText(this, R.string.personal_account_saved_stub, Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, AddressDetailsActivity::class.java))
             }
         }
         viewModel.errorMessage.observe(this) { message ->
             if (!message.isNullOrBlank()) {
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
-        }
-    }
-
-    private fun bindFocusHighlight(editText: android.widget.EditText) {
-        val container = editText.parent as android.view.View
-        editText.setOnFocusChangeListener { _, hasFocus ->
-            container.setBackgroundResource(
-                if (hasFocus) R.drawable.bg_input_focused else R.drawable.bg_input_default
-            )
         }
     }
 

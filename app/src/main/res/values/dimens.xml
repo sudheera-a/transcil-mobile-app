@@ -17,4 +17,7 @@
     <dimen name="button_height">52dp</dimen>
     <dimen name="stroke_width">1.5dp</dimen>
     <dimen name="check_size">22dp</dimen>
+    <dimen name="step_segment_height">4dp</dimen>
+    <dimen name="otp_box_size">48dp</dimen>
+    <dimen name="info_icon_size">18dp</dimen>
 </resources>
