@@ -13,4 +13,16 @@
     <string name="onboarding4_title">Flexible Payments</string>
     <string name="onboarding4_desc">Pay-as-you-go or choose from flexible rental plans that suit your needs</string>
     <string name="get_started">GET START</string>
+    <string name="welcome_title">WELCOME</string>
+    <string name="welcome_subtitle">Enter your mobile number to continue</string>
+    <string name="mobile_number_label">Mobile Number</string>
+    <string name="mobile_number_hint">Enter 10 digit mobile number</string>
+    <string name="send_otp">Send OTP</string>
+
+    <string name="verify_otp_title">Verify OTP</string>
+    <string name="enter_otp_title">Enter OTP</string>
+    <string name="otp_sent_prefix">We\'ve sent a 6-digit code to</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="otp_terms">By entering the OTP, you agree to the terms and conditions.</string>
+    <string name="verify_otp_button">Verify OTP</string>
 </resources>
