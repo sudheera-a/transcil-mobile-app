@@ -36,7 +36,8 @@ class AadhaarVerificationActivity :
         }
         viewModel.skipFlow.observe(this) { skip ->
             if (skip == true) {
-                startActivity(Intent(this, PanVerificationActivity::class.java))
+                KycProgressRepository.markCompleted(KycStep.AADHAAR)
+                KycFlowNavigator.openProgress(this)
             }
         }
         viewModel.errorMessage.observe(this) { message ->

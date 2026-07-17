@@ -31,6 +31,18 @@ class CreatePersonalAccountViewModel(application: Application) : AndroidViewMode
         _dateOfBirth.value = formatted
     }
 
+    fun hydrateFromDraft() {
+        val draft = KycProgressRepository.personalDraft()
+        if (draft.fullName.isNotBlank() || draft.email.isNotBlank() || draft.dateOfBirth.isNotBlank()) {
+            if (draft.dateOfBirth.isNotBlank()) {
+                _dateOfBirth.value = draft.dateOfBirth
+            }
+            if (draft.gender != null) {
+                _selectedGender.value = draft.gender
+            }
+        }
+    }
+
     fun onContinueClicked(fullName: String, email: String) {
         val dob = _dateOfBirth.value.orEmpty()
         if (fullName.isBlank() || email.isBlank() || dob.isBlank()) {
@@ -41,6 +53,14 @@ class CreatePersonalAccountViewModel(application: Application) : AndroidViewMode
             _errorMessage.value = getApplication<Application>().getString(R.string.error_invalid_email)
             return
         }
+        KycProgressRepository.savePersonal(
+            PersonalDraft(
+                fullName = fullName.trim(),
+                email = email.trim(),
+                dateOfBirth = dob,
+                gender = _selectedGender.value
+            )
+        )
         _navigateNext.value = true
     }
 }

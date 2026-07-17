@@ -56,6 +56,8 @@
             android:name=".kyc.BankDetailsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".kyc.KycProgressActivity" android:exported="false" />
+        <activity android:name=".kyc.SelfieVerificationActivity" android:exported="false" />
         <activity android:name=".kyc.KycPendingActivity" android:exported="false" />
         <activity android:name=".kyc.KycApprovedActivity" android:exported="false" />
 

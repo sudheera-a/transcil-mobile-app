@@ -17,9 +17,6 @@ class ChooseJourneyViewModel : BaseViewModel() {
     private val _navigateToPersonalAccount = MutableLiveData<Boolean>()
     val navigateToPersonalAccount: LiveData<Boolean> = _navigateToPersonalAccount
 
-    private val _showComingSoon = MutableLiveData<Boolean>()
-    val showComingSoon: LiveData<Boolean> = _showComingSoon
-
     fun onJourneySelected(type: JourneyType) {
         _selectedJourney.value = type
         _continueEnabled.value = true
@@ -27,8 +24,8 @@ class ChooseJourneyViewModel : BaseViewModel() {
 
     fun onContinueClicked() {
         when (_selectedJourney.value) {
-            JourneyType.RENT_EV -> _navigateToPersonalAccount.value = true
-            JourneyType.THREE_PL -> _showComingSoon.value = true
+            JourneyType.RENT_EV, JourneyType.THREE_PL ->
+                _navigateToPersonalAccount.value = true
             null -> Unit
         }
     }

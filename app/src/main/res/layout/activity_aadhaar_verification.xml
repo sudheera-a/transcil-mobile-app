@@ -161,7 +161,12 @@
                         android:id="@+id/cbConsent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/brand_primary" />
+                        android:background="@android:color/transparent"
+                        android:button="@drawable/selector_checkbox_tick"
+                        android:minWidth="@dimen/check_size"
+                        android:minHeight="@dimen/check_size"
+                        android:paddingEnd="@dimen/spacing_sm"
+                        app:buttonTint="@null" />
 
                     <TextView
                         android:layout_width="0dp"

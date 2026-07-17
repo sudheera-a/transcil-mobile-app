@@ -1,6 +1,5 @@
 package com.example.transcilmobileapp.kyc
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -34,7 +33,8 @@ class AddressDetailsActivity :
 
         viewModel.navigateNext.observe(this) { go ->
             if (go == true) {
-                startActivity(Intent(this, AadhaarVerificationActivity::class.java))
+                KycProgressRepository.markCompleted(KycStep.ADDRESS)
+                KycFlowNavigator.openProgress(this)
             }
         }
         viewModel.errorMessage.observe(this) { message ->

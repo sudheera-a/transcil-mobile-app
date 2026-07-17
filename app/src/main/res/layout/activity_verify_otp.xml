@@ -13,7 +13,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="16dp"
-            android:src="@android:drawable/ic_menu_revert"
+            android:contentDescription="@string/cd_back"
+            android:src="@drawable/ic_back"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -172,8 +173,8 @@
         <Button
             android:id="@+id/btnVerify"
             android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_marginBottom="24dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginBottom="@dimen/cta_bottom_margin"
             android:backgroundTint="@color/brand_primary"
             android:text="@string/verify_otp_button"
             android:textColor="@color/text_on_brand"
