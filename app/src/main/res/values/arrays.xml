@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="kyc_relation_options">
+        <item>Mother</item>
+        <item>Father</item>
+        <item>Brother</item>
+        <item>Sister</item>
+        <item>Wife</item>
+        <item>Husband</item>
+    </string-array>
+
+    <string-array name="kyc_other_doc_options">
+        <item>Voter ID Card</item>
+        <item>Driving License</item>
+        <item>PAN Card</item>
+    </string-array>
+</resources>

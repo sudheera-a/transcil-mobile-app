@@ -3,14 +3,15 @@ package com.example.transcilmobileapp.journey
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.transcilmobileapp.databinding.ActivityChooseJourneyBinding
 
 import com.example.transcilmobileapp.R
 import com.example.transcilmobileapp.core.BaseActivity
 import com.example.transcilmobileapp.core.JourneyType
+import com.example.transcilmobileapp.core.NavExtras
 import com.example.transcilmobileapp.kyc.CreatePersonalAccountActivity
+import com.example.transcilmobileapp.kyc.KycProgressRepository
 
 class ChooseJourneyActivity :
     BaseActivity<ActivityChooseJourneyBinding>(ActivityChooseJourneyBinding::inflate) {
@@ -37,12 +38,12 @@ class ChooseJourneyActivity :
         }
         viewModel.navigateToPersonalAccount.observe(this) { go ->
             if (go == true) {
-                startActivity(Intent(this, CreatePersonalAccountActivity::class.java))
-            }
-        }
-        viewModel.showComingSoon.observe(this) { show ->
-            if (show == true) {
-                Toast.makeText(this, R.string.coming_soon_3pl, Toast.LENGTH_SHORT).show()
+                val type = viewModel.selectedJourney.value ?: return@observe
+                KycProgressRepository.startJourney(type)
+                startActivity(
+                    Intent(this, CreatePersonalAccountActivity::class.java)
+                        .putExtra(NavExtras.JOURNEY_TYPE, type.name)
+                )
             }
         }
     }

@@ -1,12 +1,12 @@
 package com.example.transcilmobileapp.kyc
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.transcilmobileapp.databinding.ActivityPanVerificationBinding
 
 import com.example.transcilmobileapp.core.BaseActivity
+import com.example.transcilmobileapp.core.JourneyType
 import com.example.transcilmobileapp.core.UiFormHelpers
 
 class PanVerificationActivity :
@@ -29,7 +29,12 @@ class PanVerificationActivity :
 
         viewModel.navigateNext.observe(this) { go ->
             if (go == true) {
-                startActivity(Intent(this, BankDetailsActivity::class.java))
+                val step = when (KycProgressRepository.currentJourney()) {
+                    JourneyType.RENT_EV -> KycStep.OTHER_DOCS
+                    else -> KycStep.PAN
+                }
+                KycProgressRepository.markCompleted(step)
+                KycFlowNavigator.openProgress(this)
             }
         }
         viewModel.errorMessage.observe(this) { message ->

@@ -12,4 +12,9 @@
     <color name="icon_on_brand">#FFFFFF</color>
     <color name="step_track_inactive">#D0D0D0</color>
     <color name="info_banner_bg">#EAF6D8</color>
+    <color name="progress_badge_stroke">#FFB300</color>
+    <color name="progress_badge_text">#FFB300</color>
+    <color name="progress_gradient_start">#00BCD4</color>
+    <color name="progress_gradient_end">#8BC34A</color>
+    <color name="kyc_connector_line">#4A90E2</color>
 </resources>

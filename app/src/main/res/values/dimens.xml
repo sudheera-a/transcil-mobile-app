@@ -13,11 +13,22 @@
     <dimen name="radius_icon_tile">12dp</dimen>
     <dimen name="icon_tile_size">40dp</dimen>
     <dimen name="icon_size">20dp</dimen>
+    <dimen name="back_icon_size">24dp</dimen>
     <dimen name="input_height">52dp</dimen>
     <dimen name="button_height">52dp</dimen>
+    <!-- Shared distance from screen bottom (above system insets) for primary CTAs -->
+    <dimen name="cta_bottom_margin">24dp</dimen>
+    <dimen name="cta_skip_gap">12dp</dimen>
     <dimen name="stroke_width">1.5dp</dimen>
     <dimen name="check_size">22dp</dimen>
     <dimen name="step_segment_height">4dp</dimen>
     <dimen name="otp_box_size">48dp</dimen>
     <dimen name="info_icon_size">18dp</dimen>
+    <dimen name="kyc_step_icon_size">28dp</dimen>
+    <dimen name="kyc_progress_bar_height">8dp</dimen>
+    <dimen name="kyc_connector_width">2dp</dimen>
+    <dimen name="selfie_frame_height">280dp</dimen>
+    <dimen name="radius_selfie_frame">24dp</dimen>
+    <dimen name="selfie_placeholder_size">96dp</dimen>
+    <dimen name="selfie_captured_icon_size">48dp</dimen>
 </resources>

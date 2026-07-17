@@ -6,7 +6,6 @@ import androidx.activity.viewModels
 import com.example.transcilmobileapp.databinding.ActivityBankDetailsBinding
 
 import com.example.transcilmobileapp.core.BaseActivity
-import com.example.transcilmobileapp.core.KycNavigator
 import com.example.transcilmobileapp.core.UiFormHelpers
 
 class BankDetailsActivity :
@@ -36,7 +35,8 @@ class BankDetailsActivity :
 
         viewModel.navigateNext.observe(this) { go ->
             if (go == true) {
-                KycNavigator.openAfterSubmission(this)
+                KycProgressRepository.markCompleted(KycStep.BANK)
+                KycFlowNavigator.openProgress(this)
             }
         }
         viewModel.errorMessage.observe(this) { message ->

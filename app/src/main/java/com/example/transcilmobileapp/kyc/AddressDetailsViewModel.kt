@@ -26,10 +26,20 @@ class AddressDetailsViewModel(application: Application) : AndroidViewModel(appli
             _errorMessage.value = getApplication<Application>().getString(R.string.error_required_fields)
             return
         }
-        if (pincode.filter { it.isDigit() }.length != 6) {
+        val digits = pincode.filter { it.isDigit() }
+        if (digits.length != 6) {
             _errorMessage.value = getApplication<Application>().getString(R.string.error_invalid_pincode)
             return
         }
+        KycProgressRepository.saveAddress(
+            AddressDraft(
+                line1 = line1.trim(),
+                line2 = line2.trim(),
+                city = city.trim(),
+                state = state.trim(),
+                pincode = digits
+            )
+        )
         _navigateNext.value = true
     }
 }

@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/screen_background"
-        android:padding="24dp">
+        android:padding="@dimen/screen_padding">
 
         <ImageView
             android:id="@+id/ivOnboarding"
@@ -81,25 +81,25 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnNext"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="@color/brand_primary"
-            android:text="@string/next"
-            android:textColor="@color/text_on_brand"
-            app:layout_constraintBottom_toTopOf="@id/tvSkip"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
         <TextView
             android:id="@+id/tvSkip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/cta_skip_gap"
             android:text="@string/skip"
             android:textColor="@color/text_muted"
+            app:layout_constraintBottom_toTopOf="@id/btnNext"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginBottom="@dimen/cta_bottom_margin"
+            android:backgroundTint="@color/brand_primary"
+            android:text="@string/next"
+            android:textColor="@color/text_on_brand"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

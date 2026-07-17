@@ -280,7 +280,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/button_height"
             android:layout_marginHorizontal="@dimen/screen_padding"
-            android:layout_marginBottom="@dimen/spacing_xl"
+            android:layout_marginBottom="@dimen/cta_bottom_margin"
             android:background="@drawable/bg_button_primary"
             android:enabled="false"
             android:alpha="0.5"

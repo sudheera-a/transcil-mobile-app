@@ -1,6 +1,5 @@
 package com.example.transcilmobileapp.kyc
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -43,6 +42,11 @@ class CreatePersonalAccountActivity :
         UiFormHelpers.bindFocusHighlight(binding.etFullName)
         UiFormHelpers.bindFocusHighlight(binding.etEmail)
 
+        viewModel.hydrateFromDraft()
+        val draft = KycProgressRepository.personalDraft()
+        if (draft.fullName.isNotBlank()) binding.etFullName.setText(draft.fullName)
+        if (draft.email.isNotBlank()) binding.etEmail.setText(draft.email)
+
         viewModel.selectedGender.observe(this, ::renderGender)
         viewModel.dateOfBirth.observe(this) { value ->
             if (!value.isNullOrBlank()) {
@@ -53,7 +57,8 @@ class CreatePersonalAccountActivity :
         }
         viewModel.navigateNext.observe(this) { go ->
             if (go == true) {
-                startActivity(Intent(this, AddressDetailsActivity::class.java))
+                KycProgressRepository.markCompleted(KycStep.PERSONAL)
+                KycFlowNavigator.openProgress(this)
             }
         }
         viewModel.errorMessage.observe(this) { message ->
