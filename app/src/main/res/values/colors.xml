@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="splash_background">#FFFFFF</color>
-    <color name="brand_dark">#1A1A1A</color>
+    <color name="text_primary">#1A1A1A</color>
+    <color name="text_secondary">#666666</color>
+    <color name="text_muted">#999999</color>
+    <color name="brand_primary">#8BC34A</color>
+    <color name="brand_primary_soft">#EAF6D8</color>
+    <color name="text_on_brand">#FFFFFF</color>
+    <color name="stroke_default">#E0E0E0</color>
+    <color name="stroke_selected">#8BC34A</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="icon_on_brand">#FFFFFF</color>
+    <color name="step_track_inactive">#D0D0D0</color>
+    <color name="info_banner_bg">#EAF6D8</color>
 </resources>

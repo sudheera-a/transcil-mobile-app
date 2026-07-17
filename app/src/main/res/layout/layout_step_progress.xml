@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/stepProgressRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/stepSeg1"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/step_segment_height"
+            android:layout_marginEnd="@dimen/spacing_xs"
+            android:layout_weight="1"
+            android:background="@drawable/bg_step_inactive" />
+
+        <View
+            android:id="@+id/stepSeg2"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/step_segment_height"
+            android:layout_marginEnd="@dimen/spacing_xs"
+            android:layout_weight="1"
+            android:background="@drawable/bg_step_inactive" />
+
+        <View
+            android:id="@+id/stepSeg3"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/step_segment_height"
+            android:layout_marginEnd="@dimen/spacing_xs"
+            android:layout_weight="1"
+            android:background="@drawable/bg_step_inactive" />
+
+        <View
+            android:id="@+id/stepSeg4"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/step_segment_height"
+            android:layout_weight="1"
+            android:background="@drawable/bg_step_inactive" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvStepLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp" />
+</LinearLayout>
