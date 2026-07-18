@@ -36,6 +36,14 @@ data class OtherDocsDraft(
     val documentNumber: String = ""
 )
 
+data class BankDraft(
+    val holderName: String = "",
+    val accountNumber: String = "",
+    val confirmAccountNumber: String = "",
+    val ifsc: String = "",
+    val consent: Boolean = false
+)
+
 /**
  * In-memory KYC progress + form drafts for the current session.
  * Drafts persist across accordion re-renders and Activity back/forth until [startJourney]/[reset].
@@ -49,6 +57,8 @@ object KycProgressRepository {
     private var aadhaarDraft = AadhaarDraft()
     private var referenceDraft = ReferenceDraft()
     private var otherDocsDraft = OtherDocsDraft()
+    private var bankDraft = BankDraft()
+    private var sessionMobile: String = ""
 
     fun reset() {
         journey = null
@@ -58,6 +68,8 @@ object KycProgressRepository {
         aadhaarDraft = AadhaarDraft()
         referenceDraft = ReferenceDraft()
         otherDocsDraft = OtherDocsDraft()
+        bankDraft = BankDraft()
+        // Keep sessionMobile across journey reset — it belongs to auth, not KYC drafts.
     }
 
     fun startJourney(journey: JourneyType) {
@@ -69,6 +81,12 @@ object KycProgressRepository {
     }
 
     fun currentJourney(): JourneyType? = journey
+
+    fun saveSessionMobile(mobile: String) {
+        sessionMobile = mobile.filter { it.isDigit() }.takeLast(10)
+    }
+
+    fun sessionMobile(): String = sessionMobile
 
     fun stepsFor(journey: JourneyType): List<KycStep> = KycStepCatalog.stepsFor(journey)
 
@@ -111,6 +129,12 @@ object KycProgressRepository {
     }
 
     fun otherDocsDraft(): OtherDocsDraft = otherDocsDraft
+
+    fun saveBank(draft: BankDraft) {
+        bankDraft = draft
+    }
+
+    fun bankDraft(): BankDraft = bankDraft
 
     fun uiSteps(): List<KycStepUi> {
         val inProgress = inProgressStep()

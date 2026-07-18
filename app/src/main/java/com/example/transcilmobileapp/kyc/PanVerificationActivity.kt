@@ -7,6 +7,8 @@ import com.example.transcilmobileapp.databinding.ActivityPanVerificationBinding
 
 import com.example.transcilmobileapp.core.BaseActivity
 import com.example.transcilmobileapp.core.JourneyType
+import com.example.transcilmobileapp.core.KycNavigator
+import com.example.transcilmobileapp.core.KycStatus
 import com.example.transcilmobileapp.core.UiFormHelpers
 
 class PanVerificationActivity :
@@ -35,6 +37,12 @@ class PanVerificationActivity :
                 }
                 KycProgressRepository.markCompleted(step)
                 KycFlowNavigator.openProgress(this)
+            }
+        }
+        viewModel.skipToHome.observe(this) { skip ->
+            if (skip == true) {
+                KycNavigator.openHomeDashboard(this, KycStatus.PENDING)
+                finish()
             }
         }
         viewModel.errorMessage.observe(this) { message ->

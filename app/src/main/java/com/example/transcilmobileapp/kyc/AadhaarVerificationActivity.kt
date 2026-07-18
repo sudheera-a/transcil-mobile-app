@@ -7,6 +7,8 @@ import androidx.activity.viewModels
 import com.example.transcilmobileapp.databinding.ActivityAadhaarVerificationBinding
 
 import com.example.transcilmobileapp.core.BaseActivity
+import com.example.transcilmobileapp.core.KycNavigator
+import com.example.transcilmobileapp.core.KycStatus
 import com.example.transcilmobileapp.core.UiFormHelpers
 
 class AadhaarVerificationActivity :
@@ -36,8 +38,8 @@ class AadhaarVerificationActivity :
         }
         viewModel.skipFlow.observe(this) { skip ->
             if (skip == true) {
-                KycProgressRepository.markCompleted(KycStep.AADHAAR)
-                KycFlowNavigator.openProgress(this)
+                KycNavigator.openHomeDashboard(this, KycStatus.PENDING)
+                finish()
             }
         }
         viewModel.errorMessage.observe(this) { message ->

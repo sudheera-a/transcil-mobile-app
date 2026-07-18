@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/home_surface">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/homeNavHost"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toTopOf="@id/bottomNav"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navGraph="@navigation/home_nav_graph" />
+
+        <LinearLayout
+            android:id="@+id/bottomNav"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/home_bottom_nav_height"
+            android:background="@color/home_bottom_nav_bg"
+            android:elevation="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/spacing_sm"
+            android:paddingBottom="@dimen/spacing_sm"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:id="@+id/navHome"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ivNavHome"
+                    android:layout_width="@dimen/home_bottom_nav_icon"
+                    android:layout_height="@dimen/home_bottom_nav_icon"
+                    android:contentDescription="@string/home_nav_home"
+                    android:src="@drawable/ic_nav_home"
+                    app:tint="@color/home_nav_item_tint" />
+
+                <TextView
+                    android:id="@+id/tvNavHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:text="@string/home_nav_home"
+                    android:textColor="@color/home_nav_label_tint"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navMap"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ivNavMap"
+                    android:layout_width="@dimen/home_bottom_nav_icon"
+                    android:layout_height="@dimen/home_bottom_nav_icon"
+                    android:contentDescription="@string/home_nav_map"
+                    android:src="@drawable/ic_nav_map"
+                    app:tint="@color/home_nav_item_tint" />
+
+                <TextView
+                    android:id="@+id/tvNavMap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:text="@string/home_nav_map"
+                    android:textColor="@color/home_nav_label_tint"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navBattery"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ivNavBattery"
+                    android:layout_width="@dimen/home_bottom_nav_icon"
+                    android:layout_height="@dimen/home_bottom_nav_icon"
+                    android:contentDescription="@string/home_nav_battery"
+                    android:src="@drawable/ic_nav_battery"
+                    app:tint="@color/home_nav_item_tint" />
+
+                <TextView
+                    android:id="@+id/tvNavBattery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:text="@string/home_nav_battery"
+                    android:textColor="@color/home_nav_label_tint"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navWallet"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ivNavWallet"
+                    android:layout_width="@dimen/home_bottom_nav_icon"
+                    android:layout_height="@dimen/home_bottom_nav_icon"
+                    android:contentDescription="@string/home_nav_wallet"
+                    android:src="@drawable/ic_nav_wallet"
+                    app:tint="@color/home_nav_item_tint" />
+
+                <TextView
+                    android:id="@+id/tvNavWallet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:text="@string/home_nav_wallet"
+                    android:textColor="@color/home_nav_label_tint"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navProfile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ivNavProfile"
+                    android:layout_width="@dimen/home_bottom_nav_icon"
+                    android:layout_height="@dimen/home_bottom_nav_icon"
+                    android:contentDescription="@string/home_nav_profile"
+                    android:src="@drawable/ic_nav_profile"
+                    app:tint="@color/home_nav_item_tint" />
+
+                <TextView
+                    android:id="@+id/tvNavProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:text="@string/home_nav_profile"
+                    android:textColor="@color/home_nav_label_tint"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

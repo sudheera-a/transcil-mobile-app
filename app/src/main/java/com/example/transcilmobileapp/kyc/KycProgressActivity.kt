@@ -3,6 +3,7 @@ package com.example.transcilmobileapp.kyc
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,10 @@ import com.example.transcilmobileapp.R
 import com.example.transcilmobileapp.core.BaseActivity
 import com.example.transcilmobileapp.core.Gender
 import com.example.transcilmobileapp.core.JourneyType
+import com.example.transcilmobileapp.core.KycNavigator
+import com.example.transcilmobileapp.core.KycStatus
 import com.example.transcilmobileapp.core.NavExtras
+import com.example.transcilmobileapp.core.UiFormHelpers
 
 class KycProgressActivity :
     BaseActivity<ActivityKycProgressBinding>(ActivityKycProgressBinding::inflate) {
@@ -70,6 +74,26 @@ class KycProgressActivity :
                 Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
                 viewModel.clearStubMessage()
             }
+        }
+        viewModel.navigateToHome.observe(this) { go ->
+            if (go == true) {
+                persistAllVisibleDrafts()
+                KycNavigator.openHomeDashboard(this, KycStatus.PENDING)
+                viewModel.clearNavigateToHome()
+                finish()
+            }
+        }
+        viewModel.personalFieldErrors.observe(this) { errors ->
+            boundSteps[KycStep.PERSONAL]?.let { applyPersonalFieldErrors(it, errors) }
+        }
+        viewModel.addressFieldErrors.observe(this) { errors ->
+            boundSteps[KycStep.ADDRESS]?.let { applyAddressFieldErrors(it, errors) }
+        }
+        viewModel.bankFieldErrors.observe(this) { errors ->
+            boundSteps[KycStep.BANK]?.let { applyBankFieldErrors(it, errors) }
+        }
+        viewModel.otherDocsFieldErrors.observe(this) { errors ->
+            boundSteps[KycStep.OTHER_DOCS]?.let { applyOtherDocsFieldErrors(it, errors) }
         }
     }
 
@@ -156,21 +180,16 @@ class KycProgressActivity :
         itemBinding.consentRow.visibility = View.GONE
         itemBinding.personalForm.visibility = View.GONE
         itemBinding.addressForm.visibility = View.GONE
+        itemBinding.bankForm.visibility = View.GONE
         itemBinding.aadhaarForm.visibility = View.GONE
         itemBinding.referenceForm.visibility = View.GONE
         itemBinding.otherDocsForm.visibility = View.GONE
         itemBinding.tvCompletedSummary.visibility = View.GONE
 
-        val showConsent = viewModel.showsConsent(stepUi.step, status)
-        itemBinding.consentRow.visibility = if (showConsent) View.VISIBLE else View.GONE
-        if (showConsent) {
-            itemBinding.tvConsent.setText(viewModel.consentTextRes(stepUi.step))
-            itemBinding.cbStepConsent.isChecked = false
-        }
-
         when (stepUi.step) {
             KycStep.PERSONAL -> bindPersonalSection(itemBinding, status)
             KycStep.ADDRESS -> bindAddressSection(itemBinding, status)
+            KycStep.BANK -> bindBankSection(itemBinding, status)
             KycStep.AADHAAR -> bindAadhaarSection(itemBinding, status)
             KycStep.REFERENCE -> bindReferenceSection(itemBinding, status)
             KycStep.OTHER_DOCS -> bindOtherDocsSection(itemBinding, status)
@@ -207,8 +226,17 @@ class KycProgressActivity :
                     itemBinding.etAddressLine1.text?.toString().orEmpty(),
                     itemBinding.etAddressLine2.text?.toString().orEmpty(),
                     itemBinding.etAddressCity.text?.toString().orEmpty(),
-                    itemBinding.etAddressState.text?.toString().orEmpty(),
+                    selectedAddressState(itemBinding),
                     itemBinding.etAddressPincode.text?.toString().orEmpty()
+                )
+            }
+            stepUi.step == KycStep.BANK && editable -> {
+                viewModel.submitBank(
+                    itemBinding.etBankHolderName.text?.toString().orEmpty(),
+                    itemBinding.etBankAccountNumber.text?.toString().orEmpty(),
+                    itemBinding.etBankConfirmAccount.text?.toString().orEmpty(),
+                    itemBinding.etBankIfsc.text?.toString().orEmpty(),
+                    itemBinding.cbBankConsent.isChecked
                 )
             }
             stepUi.step == KycStep.AADHAAR && editable -> {
@@ -265,27 +293,66 @@ class KycProgressActivity :
         itemBinding.chipPersonalOther.isClickable = editable
 
         if (editable) {
-            watchText(itemBinding.etPersonalName) { persistDraftFrom(itemBinding, KycStep.PERSONAL) }
-            watchText(itemBinding.etPersonalEmail) { persistDraftFrom(itemBinding, KycStep.PERSONAL) }
+            watchText(itemBinding.etPersonalName) {
+                viewModel.clearPersonalFullNameError()
+                persistDraftFrom(itemBinding, KycStep.PERSONAL)
+            }
+            watchText(itemBinding.etPersonalEmail) {
+                viewModel.clearPersonalEmailError()
+                persistDraftFrom(itemBinding, KycStep.PERSONAL)
+            }
             itemBinding.tvPersonalDob.setOnClickListener { showDobPicker(itemBinding) }
             itemBinding.chipPersonalMale.setOnClickListener {
                 itemBinding.personalForm.tag = Gender.MALE
                 renderPersonalGender(itemBinding, Gender.MALE)
+                viewModel.clearPersonalGenderError()
                 persistDraftFrom(itemBinding, KycStep.PERSONAL)
             }
             itemBinding.chipPersonalFemale.setOnClickListener {
                 itemBinding.personalForm.tag = Gender.FEMALE
                 renderPersonalGender(itemBinding, Gender.FEMALE)
+                viewModel.clearPersonalGenderError()
                 persistDraftFrom(itemBinding, KycStep.PERSONAL)
             }
             itemBinding.chipPersonalOther.setOnClickListener {
                 itemBinding.personalForm.tag = Gender.OTHER
                 renderPersonalGender(itemBinding, Gender.OTHER)
+                viewModel.clearPersonalGenderError()
                 persistDraftFrom(itemBinding, KycStep.PERSONAL)
             }
         } else {
             itemBinding.tvPersonalDob.setOnClickListener(null)
         }
+
+        applyPersonalFieldErrors(itemBinding, viewModel.personalFieldErrors.value)
+    }
+
+    private fun applyPersonalFieldErrors(
+        itemBinding: ItemKycStepBinding,
+        errors: PersonalFieldErrors?
+    ) {
+        if (itemBinding.personalForm.visibility != View.VISIBLE) return
+        val value = errors ?: PersonalFieldErrors()
+        UiFormHelpers.setFieldError(
+            itemBinding.tvPersonalNameError,
+            itemBinding.etPersonalName,
+            value.fullName
+        )
+        UiFormHelpers.setFieldError(
+            itemBinding.tvPersonalEmailError,
+            itemBinding.etPersonalEmail,
+            value.email
+        )
+        UiFormHelpers.setFieldError(
+            itemBinding.tvPersonalDobError,
+            itemBinding.tvPersonalDob,
+            value.dateOfBirth
+        )
+        UiFormHelpers.setFieldError(
+            itemBinding.tvPersonalGenderError,
+            null,
+            value.gender
+        )
     }
 
     private fun renderPersonalGender(itemBinding: ItemKycStepBinding, gender: Gender?) {
@@ -309,6 +376,7 @@ class KycProgressActivity :
             val value = dobFormat.format(Date(millis))
             itemBinding.tvPersonalDob.text = value
             itemBinding.tvPersonalDob.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+            viewModel.clearPersonalDobError()
             persistDraftFrom(itemBinding, KycStep.PERSONAL)
         }
         picker.show(supportFragmentManager, "kyc_personal_dob")
@@ -320,31 +388,182 @@ class KycProgressActivity :
         val editable = viewModel.isFormEditable(KycStep.ADDRESS, status)
         val draft = KycProgressRepository.addressDraft()
 
+        itemBinding.spinnerAddressState.adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            IndianStates.ALL_WITH_PLACEHOLDER
+        )
+
         bindingInProgress = true
         itemBinding.etAddressLine1.setText(draft.line1)
         itemBinding.etAddressLine2.setText(draft.line2)
         itemBinding.etAddressCity.setText(draft.city)
-        itemBinding.etAddressState.setText(draft.state)
         itemBinding.etAddressPincode.setText(draft.pincode)
+        itemBinding.spinnerAddressState.setSelection(IndianStates.indexOf(draft.state))
         bindingInProgress = false
 
         setEditable(itemBinding.etAddressLine1, editable)
         setEditable(itemBinding.etAddressLine2, editable)
         setEditable(itemBinding.etAddressCity, editable)
-        setEditable(itemBinding.etAddressState, editable)
         setEditable(itemBinding.etAddressPincode, editable)
+        itemBinding.spinnerAddressState.isEnabled = editable
 
         if (editable) {
-            listOf(
-                itemBinding.etAddressLine1,
-                itemBinding.etAddressLine2,
-                itemBinding.etAddressCity,
-                itemBinding.etAddressState,
-                itemBinding.etAddressPincode
-            ).forEach { field ->
-                watchText(field) { persistDraftFrom(itemBinding, KycStep.ADDRESS) }
+            watchText(itemBinding.etAddressLine1) {
+                viewModel.clearAddressLine1Error()
+                persistDraftFrom(itemBinding, KycStep.ADDRESS)
             }
+            watchText(itemBinding.etAddressLine2) {
+                viewModel.clearAddressLine2Error()
+                persistDraftFrom(itemBinding, KycStep.ADDRESS)
+            }
+            watchText(itemBinding.etAddressCity) {
+                viewModel.clearAddressCityError()
+                persistDraftFrom(itemBinding, KycStep.ADDRESS)
+            }
+            watchText(itemBinding.etAddressPincode) {
+                viewModel.clearAddressPincodeError()
+                persistDraftFrom(itemBinding, KycStep.ADDRESS)
+            }
+            itemBinding.spinnerAddressState.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        if (!bindingInProgress) {
+                            viewModel.clearAddressStateError()
+                            persistDraftFrom(itemBinding, KycStep.ADDRESS)
+                        }
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+                }
+        } else {
+            itemBinding.spinnerAddressState.onItemSelectedListener = null
         }
+
+        applyAddressFieldErrors(itemBinding, viewModel.addressFieldErrors.value)
+    }
+
+    private fun bindBankSection(itemBinding: ItemKycStepBinding, status: KycStepStatus) {
+        if (!viewModel.showStepForm(KycStep.BANK, status)) return
+        itemBinding.bankForm.visibility = View.VISIBLE
+        val editable = viewModel.isFormEditable(KycStep.BANK, status)
+        val draft = KycProgressRepository.bankDraft()
+
+        bindingInProgress = true
+        itemBinding.etBankHolderName.setText(draft.holderName)
+        itemBinding.etBankAccountNumber.setText(draft.accountNumber)
+        itemBinding.etBankConfirmAccount.setText(draft.confirmAccountNumber)
+        itemBinding.etBankIfsc.setText(draft.ifsc)
+        itemBinding.cbBankConsent.isChecked = draft.consent
+        bindingInProgress = false
+
+        setEditable(itemBinding.etBankHolderName, editable)
+        setEditable(itemBinding.etBankAccountNumber, editable)
+        setEditable(itemBinding.etBankConfirmAccount, editable)
+        setEditable(itemBinding.etBankIfsc, editable)
+        itemBinding.cbBankConsent.isEnabled = editable
+
+        if (editable) {
+            watchText(itemBinding.etBankHolderName) {
+                viewModel.clearBankHolderError()
+                persistDraftFrom(itemBinding, KycStep.BANK)
+            }
+            watchText(itemBinding.etBankAccountNumber) {
+                viewModel.clearBankAccountError()
+                persistDraftFrom(itemBinding, KycStep.BANK)
+            }
+            watchText(itemBinding.etBankConfirmAccount) {
+                viewModel.clearBankConfirmError()
+                persistDraftFrom(itemBinding, KycStep.BANK)
+            }
+            watchText(itemBinding.etBankIfsc) {
+                viewModel.clearBankIfscError()
+                persistDraftFrom(itemBinding, KycStep.BANK)
+            }
+            itemBinding.cbBankConsent.setOnCheckedChangeListener { _, _ ->
+                if (!bindingInProgress) {
+                    viewModel.clearBankConsentError()
+                    persistDraftFrom(itemBinding, KycStep.BANK)
+                }
+            }
+        } else {
+            itemBinding.cbBankConsent.setOnCheckedChangeListener(null)
+        }
+
+        applyBankFieldErrors(itemBinding, viewModel.bankFieldErrors.value)
+    }
+
+    private fun applyBankFieldErrors(itemBinding: ItemKycStepBinding, errors: BankFieldErrors?) {
+        if (itemBinding.bankForm.visibility != View.VISIBLE) return
+        val value = errors ?: BankFieldErrors()
+        UiFormHelpers.setFieldError(
+            itemBinding.tvBankHolderError,
+            itemBinding.etBankHolderName,
+            value.holderName
+        )
+        UiFormHelpers.setFieldError(
+            itemBinding.tvBankAccountError,
+            itemBinding.etBankAccountNumber,
+            value.accountNumber
+        )
+        UiFormHelpers.setFieldError(
+            itemBinding.tvBankConfirmError,
+            itemBinding.etBankConfirmAccount,
+            value.confirmAccountNumber
+        )
+        UiFormHelpers.setFieldError(
+            itemBinding.tvBankIfscError,
+            itemBinding.etBankIfsc,
+            value.ifsc
+        )
+        UiFormHelpers.setFieldError(
+            itemBinding.tvBankConsentError,
+            null,
+            value.consent
+        )
+    }
+
+    private fun selectedAddressState(itemBinding: ItemKycStepBinding): String {
+        val selected = itemBinding.spinnerAddressState.selectedItem?.toString().orEmpty()
+        return if (selected == IndianStates.PLACEHOLDER) "" else selected
+    }
+
+    private fun applyAddressFieldErrors(
+        itemBinding: ItemKycStepBinding,
+        errors: AddressFieldErrors?
+    ) {
+        if (itemBinding.addressForm.visibility != View.VISIBLE) return
+        val value = errors ?: AddressFieldErrors()
+        UiFormHelpers.setFieldError(
+            itemBinding.tvAddressLine1Error,
+            itemBinding.etAddressLine1,
+            value.line1
+        )
+        UiFormHelpers.setFieldError(
+            itemBinding.tvAddressLine2Error,
+            itemBinding.etAddressLine2,
+            value.line2
+        )
+        UiFormHelpers.setFieldError(
+            itemBinding.tvAddressCityError,
+            itemBinding.etAddressCity,
+            value.city
+        )
+        UiFormHelpers.setFieldError(
+            itemBinding.tvAddressStateError,
+            itemBinding.spinnerAddressState,
+            value.state
+        )
+        UiFormHelpers.setFieldError(
+            itemBinding.tvAddressPincodeError,
+            itemBinding.etAddressPincode,
+            value.pincode
+        )
     }
 
     private fun bindAadhaarSection(itemBinding: ItemKycStepBinding, status: KycStepStatus) {
@@ -460,11 +679,14 @@ class KycProgressActivity :
         itemBinding.etDocNumber.setText(draft.documentNumber)
         bindingInProgress = false
 
-        itemBinding.tvDocNumberLabel.text = getString(R.string.kyc_other_doc_number_label, docs[docIndex])
+        applyOtherDocTypeUi(itemBinding, docs[docIndex])
         itemBinding.spinnerDocument.isEnabled = editable
         setEditable(itemBinding.etDocNumber, editable)
         if (editable) {
-            watchText(itemBinding.etDocNumber) { persistDraftFrom(itemBinding, KycStep.OTHER_DOCS) }
+            watchText(itemBinding.etDocNumber) {
+                viewModel.clearOtherDocsNumberError()
+                persistDraftFrom(itemBinding, KycStep.OTHER_DOCS)
+            }
             itemBinding.spinnerDocument.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
@@ -473,8 +695,8 @@ class KycProgressActivity :
                         position: Int,
                         id: Long
                     ) {
-                        itemBinding.tvDocNumberLabel.text =
-                            getString(R.string.kyc_other_doc_number_label, docs[position])
+                        applyOtherDocTypeUi(itemBinding, docs[position])
+                        viewModel.clearOtherDocsNumberError()
                         if (!bindingInProgress) {
                             persistDraftFrom(itemBinding, KycStep.OTHER_DOCS)
                         }
@@ -483,6 +705,35 @@ class KycProgressActivity :
                     override fun onNothingSelected(parent: AdapterView<*>?) = Unit
                 }
         }
+
+        applyOtherDocsFieldErrors(itemBinding, viewModel.otherDocsFieldErrors.value)
+    }
+
+    private fun applyOtherDocTypeUi(itemBinding: ItemKycStepBinding, docLabel: String) {
+        itemBinding.tvDocNumberLabel.text = getString(R.string.kyc_other_doc_number_label, docLabel)
+        val type = OtherDocumentType.fromLabel(docLabel) ?: return
+        itemBinding.etDocNumber.hint = getString(OtherDocsValidator.hintRes(type))
+        itemBinding.tvDocNumberHelper.setText(OtherDocsValidator.helperRes(type))
+        itemBinding.etDocNumber.filters =
+            arrayOf(InputFilter.LengthFilter(OtherDocsValidator.maxLength(type)))
+        val current = itemBinding.etDocNumber.text?.toString().orEmpty()
+        val max = OtherDocsValidator.maxLength(type)
+        if (current.length > max) {
+            itemBinding.etDocNumber.setText(current.take(max))
+        }
+    }
+
+    private fun applyOtherDocsFieldErrors(
+        itemBinding: ItemKycStepBinding,
+        errors: OtherDocsFieldErrors?
+    ) {
+        if (itemBinding.otherDocsForm.visibility != View.VISIBLE) return
+        val value = errors ?: OtherDocsFieldErrors()
+        UiFormHelpers.setFieldError(
+            itemBinding.tvDocNumberError,
+            itemBinding.etDocNumber,
+            value.documentNumber ?: value.documentType
+        )
     }
 
     private fun persistAllVisibleDrafts() {
@@ -509,8 +760,18 @@ class KycProgressActivity :
                     itemBinding.etAddressLine1.text?.toString().orEmpty(),
                     itemBinding.etAddressLine2.text?.toString().orEmpty(),
                     itemBinding.etAddressCity.text?.toString().orEmpty(),
-                    itemBinding.etAddressState.text?.toString().orEmpty(),
+                    selectedAddressState(itemBinding),
                     itemBinding.etAddressPincode.text?.toString().orEmpty()
+                )
+            }
+            KycStep.BANK -> {
+                if (itemBinding.bankForm.visibility != View.VISIBLE) return
+                viewModel.saveBankDraft(
+                    itemBinding.etBankHolderName.text?.toString().orEmpty(),
+                    itemBinding.etBankAccountNumber.text?.toString().orEmpty(),
+                    itemBinding.etBankConfirmAccount.text?.toString().orEmpty(),
+                    itemBinding.etBankIfsc.text?.toString().orEmpty(),
+                    itemBinding.cbBankConsent.isChecked
                 )
             }
             KycStep.AADHAAR -> {
@@ -608,8 +869,8 @@ class KycProgressActivity :
         val journey = KycProgressRepository.currentJourney()
         when (step) {
             KycStep.PAN -> startStepActivity(PanVerificationActivity::class.java, journey)
-            KycStep.BANK -> startStepActivity(BankDetailsActivity::class.java, journey)
             KycStep.SELFIE -> startStepActivity(SelfieVerificationActivity::class.java, journey)
+            KycStep.BANK,
             KycStep.AADHAAR,
             KycStep.PERSONAL,
             KycStep.ADDRESS,

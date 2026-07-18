@@ -5,8 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-import com.example.transcilmobileapp.R
-
 class BankDetailsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _navigateNext = MutableLiveData<Boolean>()
@@ -21,27 +19,41 @@ class BankDetailsViewModel(application: Application) : AndroidViewModel(applicat
         confirmAccountNumber: String,
         ifsc: String
     ) {
-        if (holderName.isBlank() || accountNumber.isBlank() || confirmAccountNumber.isBlank() || ifsc.isBlank()) {
-            _errorMessage.value = getApplication<Application>().getString(R.string.error_required_fields)
+        val errors = BankDetailsValidator.validate(
+            holderName = holderName,
+            accountNumber = accountNumber,
+            confirmAccountNumber = confirmAccountNumber,
+            ifsc = ifsc,
+            consent = true
+        )
+        if (errors.hasErrors) {
+            val first = listOfNotNull(
+                errors.holderName,
+                errors.accountNumber,
+                errors.confirmAccountNumber,
+                errors.ifsc
+            ).firstOrNull()
+            if (first != null) {
+                _errorMessage.value = getApplication<Application>().getString(first)
+            }
             return
         }
-        if (accountNumber != confirmAccountNumber) {
-            _errorMessage.value = getApplication<Application>().getString(R.string.error_account_mismatch)
-            return
-        }
-        val normalizedIfsc = ifsc.trim().uppercase()
-        if (!IFSC_REGEX.matches(normalizedIfsc)) {
-            _errorMessage.value = getApplication<Application>().getString(R.string.error_invalid_ifsc)
-            return
-        }
+        KycProgressRepository.saveBank(
+            BankDraft(
+                holderName = holderName.trim(),
+                accountNumber = accountNumber.filter { it.isDigit() }.take(18),
+                confirmAccountNumber = confirmAccountNumber.filter { it.isDigit() }.take(18),
+                ifsc = ifsc.trim().uppercase().take(11),
+                consent = true
+            )
+        )
         _navigateNext.value = true
     }
+
+    private val _skipToHome = MutableLiveData<Boolean>()
+    val skipToHome: LiveData<Boolean> = _skipToHome
 
     fun onSkipClicked() {
-        _navigateNext.value = true
-    }
-
-    companion object {
-        private val IFSC_REGEX = Regex("^[A-Z]{4}0[A-Z0-9]{6}$")
+        _skipToHome.value = true
     }
 }

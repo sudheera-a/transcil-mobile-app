@@ -68,6 +68,7 @@
                     android:textStyle="bold" />
 
                 <LinearLayout
+                    android:id="@+id/fullNameContainer"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/input_height"
                     android:layout_marginTop="@dimen/spacing_sm"
@@ -91,10 +92,20 @@
                         android:background="@null"
                         android:hint="@string/full_name_hint"
                         android:inputType="textPersonName"
+                        android:maxLength="40"
                         android:textColor="@color/text_primary"
                         android:textColorHint="@color/text_muted"
                         android:textSize="14sp" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvFullNameError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -106,6 +117,7 @@
                     android:textStyle="bold" />
 
                 <LinearLayout
+                    android:id="@+id/emailContainer"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/input_height"
                     android:layout_marginTop="@dimen/spacing_sm"
@@ -133,6 +145,15 @@
                         android:textColorHint="@color/text_muted"
                         android:textSize="14sp" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvEmailError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -173,6 +194,15 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tvDobError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_lg"
@@ -193,7 +223,7 @@
                         android:layout_height="44dp"
                         android:layout_marginEnd="@dimen/spacing_sm"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_chip_selected"
+                        android:background="@drawable/bg_chip_default"
                         android:gravity="center"
                         android:text="@string/gender_male"
                         android:textColor="@color/text_primary"
@@ -222,6 +252,15 @@
                         android:textColor="@color/text_primary"
                         android:textSize="14sp" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvGenderError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

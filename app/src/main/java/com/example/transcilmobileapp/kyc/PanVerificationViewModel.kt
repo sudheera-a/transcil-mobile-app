@@ -12,6 +12,9 @@ class PanVerificationViewModel(application: Application) : AndroidViewModel(appl
     private val _navigateNext = MutableLiveData<Boolean>()
     val navigateNext: LiveData<Boolean> = _navigateNext
 
+    private val _skipToHome = MutableLiveData<Boolean>()
+    val skipToHome: LiveData<Boolean> = _skipToHome
+
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
@@ -25,7 +28,7 @@ class PanVerificationViewModel(application: Application) : AndroidViewModel(appl
     }
 
     fun onSkipClicked() {
-        _navigateNext.value = true
+        _skipToHome.value = true
     }
 
     companion object {

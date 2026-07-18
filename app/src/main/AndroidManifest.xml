@@ -60,6 +60,7 @@
         <activity android:name=".kyc.SelfieVerificationActivity" android:exported="false" />
         <activity android:name=".kyc.KycPendingActivity" android:exported="false" />
         <activity android:name=".kyc.KycApprovedActivity" android:exported="false" />
+        <activity android:name=".home.HomeDashboardActivity" android:exported="false" />
 
     </application>
 

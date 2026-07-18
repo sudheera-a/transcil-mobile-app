@@ -109,4 +109,13 @@ class KycProgressRepositoryTest {
         KycProgressRepository.startJourney(JourneyType.THREE_PL)
         assertEquals("", KycProgressRepository.addressDraft().line1)
     }
+
+    @Test
+    fun sessionMobile_savedNormalized_survivesJourneyReset() {
+        KycProgressRepository.saveSessionMobile("+91 98765-43210")
+        assertEquals("9876543210", KycProgressRepository.sessionMobile())
+        KycProgressRepository.startJourney(JourneyType.RENT_EV)
+        KycProgressRepository.startJourney(JourneyType.THREE_PL)
+        assertEquals("9876543210", KycProgressRepository.sessionMobile())
+    }
 }

@@ -42,6 +42,18 @@ object UiFormHelpers {
             })
         }
     }
+
+    fun setFieldError(errorView: TextView, container: View?, messageRes: Int?) {
+        if (messageRes == null) {
+            errorView.visibility = View.GONE
+            errorView.text = ""
+            container?.setBackgroundResource(R.drawable.bg_input_default)
+        } else {
+            errorView.visibility = View.VISIBLE
+            errorView.setText(messageRes)
+            container?.setBackgroundResource(R.drawable.bg_input_error)
+        }
+    }
 }
 
 private class SimpleTextWatcher(

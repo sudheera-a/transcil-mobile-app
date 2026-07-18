@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_nav_graph"
+    app:startDestination="@id/homeDashboardFragment">
+
+    <fragment
+        android:id="@+id/homeDashboardFragment"
+        android:name="com.example.transcilmobileapp.home.HomeDashboardFragment"
+        android:label="@string/home_nav_home"
+        tools:layout="@layout/fragment_home_dashboard" />
+
+    <fragment
+        android:id="@+id/nearbyHubsFragment"
+        android:name="com.example.transcilmobileapp.home.NearbyHubsFragment"
+        android:label="@string/nearby_hubs_title"
+        tools:layout="@layout/fragment_nearby_hubs" />
+
+    <fragment
+        android:id="@+id/batterySwapFragment"
+        android:name="com.example.transcilmobileapp.home.BatterySwapFragment"
+        android:label="@string/battery_swap_title"
+        tools:layout="@layout/fragment_battery_swap" />
+
+    <fragment
+        android:id="@+id/walletFragment"
+        android:name="com.example.transcilmobileapp.home.WalletFragment"
+        android:label="@string/wallet_title"
+        tools:layout="@layout/fragment_wallet" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.transcilmobileapp.home.ProfileFragment"
+        android:label="@string/profile_title"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profile_to_settings"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.transcilmobileapp.home.SettingsFragment"
+        android:label="@string/profile_menu_settings"
+        tools:layout="@layout/fragment_settings" />
+</navigation>
