@@ -1,7 +1,6 @@
 package com.example.transcilmobileapp.kyc
 
 import android.app.Application
-import android.util.Patterns
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -35,6 +34,21 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
 
     private val _showStubMessage = MutableLiveData<Int?>()
     val showStubMessage: LiveData<Int?> = _showStubMessage
+
+    private val _navigateToHome = MutableLiveData<Boolean>()
+    val navigateToHome: LiveData<Boolean> = _navigateToHome
+
+    private val _personalFieldErrors = MutableLiveData(PersonalFieldErrors())
+    val personalFieldErrors: LiveData<PersonalFieldErrors> = _personalFieldErrors
+
+    private val _addressFieldErrors = MutableLiveData(AddressFieldErrors())
+    val addressFieldErrors: LiveData<AddressFieldErrors> = _addressFieldErrors
+
+    private val _bankFieldErrors = MutableLiveData(BankFieldErrors())
+    val bankFieldErrors: LiveData<BankFieldErrors> = _bankFieldErrors
+
+    private val _otherDocsFieldErrors = MutableLiveData(OtherDocsFieldErrors())
+    val otherDocsFieldErrors: LiveData<OtherDocsFieldErrors> = _otherDocsFieldErrors
 
     fun refresh() {
         val journey = KycProgressRepository.currentJourney() ?: return
@@ -84,6 +98,7 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
             when (step) {
                 KycStep.PERSONAL,
                 KycStep.ADDRESS,
+                KycStep.BANK,
                 KycStep.REFERENCE,
                 KycStep.OTHER_DOCS -> {
                     _inlineEditStep.value = step
@@ -112,6 +127,7 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
             KycStep.PERSONAL,
             KycStep.ADDRESS,
             KycStep.AADHAAR,
+            KycStep.BANK,
             KycStep.REFERENCE,
             KycStep.OTHER_DOCS -> Unit
             else -> _navigateToStep.value = step
@@ -177,22 +193,117 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun saveOtherDocsDraft(documentType: String, documentNumber: String) {
-        KycProgressRepository.saveOtherDocs(documentType, documentNumber)
+        val type = OtherDocumentType.fromLabel(documentType)
+        val normalized = if (type != null) {
+            OtherDocsValidator.normalize(type, documentNumber)
+        } else {
+            documentNumber.trim()
+        }
+        KycProgressRepository.saveOtherDocs(documentType, normalized)
+    }
+
+    fun saveBankDraft(
+        holderName: String,
+        accountNumber: String,
+        confirmAccountNumber: String,
+        ifsc: String,
+        consent: Boolean
+    ) {
+        KycProgressRepository.saveBank(
+            BankDraft(
+                holderName = holderName.trim(),
+                accountNumber = accountNumber.filter { it.isDigit() }.take(18),
+                confirmAccountNumber = confirmAccountNumber.filter { it.isDigit() }.take(18),
+                ifsc = ifsc.trim().uppercase().take(11),
+                consent = consent
+            )
+        )
+    }
+
+    fun clearBankHolderError() = clearBank { it.copy(holderName = null) }
+    fun clearBankAccountError() = clearBank { it.copy(accountNumber = null) }
+    fun clearBankConfirmError() = clearBank { it.copy(confirmAccountNumber = null) }
+    fun clearBankIfscError() = clearBank { it.copy(ifsc = null) }
+    fun clearBankConsentError() = clearBank { it.copy(consent = null) }
+
+    private fun clearBank(transform: (BankFieldErrors) -> BankFieldErrors) {
+        val current = _bankFieldErrors.value ?: BankFieldErrors()
+        _bankFieldErrors.value = transform(current)
+    }
+
+    fun submitBank(
+        holderName: String,
+        accountNumber: String,
+        confirmAccountNumber: String,
+        ifsc: String,
+        consent: Boolean
+    ) {
+        val errors = BankDetailsValidator.validate(
+            holderName,
+            accountNumber,
+            confirmAccountNumber,
+            ifsc,
+            consent
+        )
+        _bankFieldErrors.value = errors
+        if (errors.hasErrors) return
+
+        saveBankDraft(holderName, accountNumber, confirmAccountNumber, ifsc, consent)
+        KycProgressRepository.markCompleted(KycStep.BANK)
+        _bankFieldErrors.value = BankFieldErrors()
+        _inlineEditStep.value = null
+        refresh()
+    }
+
+    fun clearPersonalFullNameError() {
+        val current = _personalFieldErrors.value ?: PersonalFieldErrors()
+        if (current.fullName != null) {
+            _personalFieldErrors.value = current.copy(fullName = null)
+        }
+    }
+
+    fun clearPersonalEmailError() {
+        val current = _personalFieldErrors.value ?: PersonalFieldErrors()
+        if (current.email != null) {
+            _personalFieldErrors.value = current.copy(email = null)
+        }
+    }
+
+    fun clearPersonalDobError() {
+        val current = _personalFieldErrors.value ?: PersonalFieldErrors()
+        if (current.dateOfBirth != null) {
+            _personalFieldErrors.value = current.copy(dateOfBirth = null)
+        }
+    }
+
+    fun clearPersonalGenderError() {
+        val current = _personalFieldErrors.value ?: PersonalFieldErrors()
+        if (current.gender != null) {
+            _personalFieldErrors.value = current.copy(gender = null)
+        }
     }
 
     fun submitPersonal(fullName: String, email: String, dob: String, gender: Gender?) {
-        if (fullName.isBlank() || email.isBlank() || dob.isBlank() || gender == null) {
-            _showStubMessage.value = R.string.error_required_fields
-            return
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()) {
-            _showStubMessage.value = R.string.error_invalid_email
-            return
-        }
+        val errors = PersonalDetailsValidator.validate(fullName, email, dob, gender)
+        _personalFieldErrors.value = errors
+        if (errors.hasErrors) return
+
         savePersonalDraft(fullName, email, dob, gender)
         KycProgressRepository.markCompleted(KycStep.PERSONAL)
+        _personalFieldErrors.value = PersonalFieldErrors()
         _inlineEditStep.value = null
         refresh()
+    }
+
+    fun clearAddressLine1Error() = clearAddress { it.copy(line1 = null) }
+    fun clearAddressLine2Error() = clearAddress { it.copy(line2 = null) }
+    fun clearAddressCityError() = clearAddress { it.copy(city = null) }
+    fun clearAddressStateError() = clearAddress { it.copy(state = null) }
+    fun clearAddressPincodeError() = clearAddress { it.copy(pincode = null) }
+
+    private fun clearAddress(transform: (AddressFieldErrors) -> AddressFieldErrors) {
+        val current = _addressFieldErrors.value ?: AddressFieldErrors()
+        _addressFieldErrors.value = transform(current)
     }
 
     fun submitAddress(
@@ -202,16 +313,13 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         state: String,
         pincode: String
     ) {
-        if (line1.isBlank() || city.isBlank() || state.isBlank() || pincode.isBlank()) {
-            _showStubMessage.value = R.string.error_required_fields
-            return
-        }
-        if (pincode.filter { it.isDigit() }.length != 6) {
-            _showStubMessage.value = R.string.error_invalid_pincode
-            return
-        }
+        val errors = AddressDetailsValidator.validate(line1, line2, city, state, pincode)
+        _addressFieldErrors.value = errors
+        if (errors.hasErrors) return
+
         saveAddressDraft(line1, line2, city, state, pincode)
         KycProgressRepository.markCompleted(KycStep.ADDRESS)
+        _addressFieldErrors.value = AddressFieldErrors()
         _inlineEditStep.value = null
         refresh()
     }
@@ -266,14 +374,23 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         refresh()
     }
 
-    fun submitOtherDocs(documentType: String, documentNumber: String) {
-        val number = documentNumber.trim()
-        if (number.length < 4) {
-            _showStubMessage.value = R.string.kyc_error_other_doc_number
-            return
+    fun clearOtherDocsNumberError() {
+        val current = _otherDocsFieldErrors.value ?: OtherDocsFieldErrors()
+        if (current.documentNumber != null || current.documentType != null) {
+            _otherDocsFieldErrors.value = OtherDocsFieldErrors()
         }
-        saveOtherDocsDraft(documentType, number)
+    }
+
+    fun submitOtherDocs(documentType: String, documentNumber: String) {
+        val errors = OtherDocsValidator.validate(documentType, documentNumber)
+        _otherDocsFieldErrors.value = errors
+        if (errors.hasErrors) return
+
+        val type = OtherDocumentType.fromLabel(documentType) ?: return
+        val normalized = OtherDocsValidator.normalize(type, documentNumber)
+        saveOtherDocsDraft(documentType, normalized)
         KycProgressRepository.markCompleted(KycStep.OTHER_DOCS)
+        _otherDocsFieldErrors.value = OtherDocsFieldErrors()
         _inlineEditStep.value = null
         refresh()
     }
@@ -285,6 +402,7 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
             KycStep.PERSONAL,
             KycStep.ADDRESS,
             KycStep.AADHAAR,
+            KycStep.BANK,
             KycStep.REFERENCE,
             KycStep.OTHER_DOCS ->
                 status == KycStepStatus.IN_PROGRESS ||
@@ -297,8 +415,7 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
     fun isFormEditable(step: KycStep, status: KycStepStatus): Boolean =
         status == KycStepStatus.IN_PROGRESS || isInlineEditing(step)
 
-    fun showsConsent(step: KycStep, status: KycStepStatus): Boolean =
-        status == KycStepStatus.IN_PROGRESS && step == KycStep.BANK
+    fun showsConsent(step: KycStep, status: KycStepStatus): Boolean = false
 
     fun showsSecondary(step: KycStep, status: KycStepStatus): Boolean =
         step == KycStep.OTHER_DOCS && isFormEditable(step, status)
@@ -356,7 +473,7 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun onSkipClicked() {
-        _showStubMessage.value = R.string.kyc_skip_stub
+        _navigateToHome.value = true
     }
 
     fun onContactSupport() {
@@ -365,6 +482,10 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
 
     fun clearNavigateToStep() {
         _navigateToStep.value = null
+    }
+
+    fun clearNavigateToHome() {
+        _navigateToHome.value = false
     }
 
     fun clearStubMessage() {

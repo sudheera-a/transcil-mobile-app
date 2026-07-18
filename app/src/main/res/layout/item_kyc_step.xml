@@ -142,10 +142,20 @@
                     android:drawablePadding="@dimen/spacing_sm"
                     android:hint="@string/full_name_hint"
                     android:inputType="textPersonName"
+                    android:maxLength="40"
                     android:paddingHorizontal="@dimen/spacing_md"
                     android:textColor="@color/text_primary"
                     android:textColorHint="@color/text_muted"
                     android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvPersonalNameError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -171,6 +181,15 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/tvPersonalEmailError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_md"
@@ -192,6 +211,15 @@
                     android:textColor="@color/text_primary"
                     android:textColorHint="@color/text_muted"
                     android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvPersonalDobError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -242,6 +270,15 @@
                         android:textColor="@color/text_primary"
                         android:textSize="13sp" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvPersonalGenderError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <!-- Present Address form (Figma accordion) -->
@@ -270,10 +307,20 @@
                     android:drawablePadding="@dimen/spacing_sm"
                     android:hint="@string/address_line1_hint"
                     android:inputType="textPostalAddress"
+                    android:maxLength="30"
                     android:paddingHorizontal="@dimen/spacing_md"
                     android:textColor="@color/text_primary"
                     android:textColorHint="@color/text_muted"
                     android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvAddressLine1Error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -293,10 +340,20 @@
                     android:drawablePadding="@dimen/spacing_sm"
                     android:hint="@string/address_line2_hint"
                     android:inputType="textPostalAddress"
+                    android:maxLength="30"
                     android:paddingHorizontal="@dimen/spacing_md"
                     android:textColor="@color/text_primary"
                     android:textColorHint="@color/text_muted"
                     android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvAddressLine2Error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -326,10 +383,20 @@
                             android:background="@drawable/bg_input_default"
                             android:hint="@string/city_hint"
                             android:inputType="textCapWords"
+                            android:maxLength="40"
                             android:paddingHorizontal="@dimen/spacing_md"
                             android:textColor="@color/text_primary"
                             android:textColorHint="@color/text_muted"
                             android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvAddressCityError"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:textColor="@color/error"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -345,18 +412,22 @@
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
 
-                        <EditText
-                            android:id="@+id/etAddressState"
+                        <Spinner
+                            android:id="@+id/spinnerAddressState"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/input_height"
                             android:layout_marginTop="@dimen/spacing_sm"
                             android:background="@drawable/bg_input_default"
-                            android:hint="@string/state_hint"
-                            android:inputType="textCapWords"
-                            android:paddingHorizontal="@dimen/spacing_md"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_muted"
-                            android:textSize="14sp" />
+                            android:paddingHorizontal="@dimen/spacing_md" />
+
+                        <TextView
+                            android:id="@+id/tvAddressStateError"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_xs"
+                            android:textColor="@color/error"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -381,6 +452,217 @@
                     android:textColor="@color/text_primary"
                     android:textColorHint="@color/text_muted"
                     android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvAddressPincodeError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Bank Verification form (Figma accordion) -->
+            <LinearLayout
+                android:id="@+id/bankForm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_info_outline"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_md">
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_shield" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_sm"
+                        android:layout_weight="1"
+                        android:text="@string/bank_secure_info"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:text="@string/account_holder_label"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/etBankHolderName"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/input_height"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:background="@drawable/bg_input_default"
+                    android:drawableStart="@drawable/ic_person"
+                    android:drawablePadding="@dimen/spacing_sm"
+                    android:hint="@string/account_holder_hint"
+                    android:inputType="textPersonName"
+                    android:maxLength="40"
+                    android:paddingHorizontal="@dimen/spacing_md"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvBankHolderError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:text="@string/account_number_label"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/etBankAccountNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/input_height"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:background="@drawable/bg_input_default"
+                    android:drawableStart="@drawable/ic_id_card"
+                    android:drawablePadding="@dimen/spacing_sm"
+                    android:hint="@string/account_number_hint"
+                    android:inputType="number"
+                    android:maxLength="18"
+                    android:paddingHorizontal="@dimen/spacing_md"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvBankAccountError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:text="@string/confirm_account_number_label"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/etBankConfirmAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/input_height"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:background="@drawable/bg_input_default"
+                    android:drawableStart="@drawable/ic_id_card"
+                    android:drawablePadding="@dimen/spacing_sm"
+                    android:hint="@string/confirm_account_number_hint"
+                    android:inputType="number"
+                    android:maxLength="18"
+                    android:paddingHorizontal="@dimen/spacing_md"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvBankConfirmError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:text="@string/ifsc_label"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/etBankIfsc"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/input_height"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:background="@drawable/bg_input_default"
+                    android:drawableStart="@drawable/ic_bank"
+                    android:drawablePadding="@dimen/spacing_sm"
+                    android:hint="@string/ifsc_hint"
+                    android:inputType="textCapCharacters"
+                    android:maxLength="11"
+                    android:paddingHorizontal="@dimen/spacing_md"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvBankIfscError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cbBankConsent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:button="@drawable/selector_checkbox_tick"
+                        android:minWidth="@dimen/check_size"
+                        android:minHeight="@dimen/check_size"
+                        android:paddingEnd="@dimen/spacing_sm"
+                        app:buttonTint="@null" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/kyc_bank_consent"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvBankConsentError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <!-- Aadhaar Verification form (Figma accordion) -->
@@ -734,18 +1016,29 @@
                     android:drawablePadding="@dimen/spacing_sm"
                     android:hint="@string/kyc_other_doc_number_hint"
                     android:inputType="textCapCharacters"
+                    android:maxLength="18"
                     android:paddingHorizontal="@dimen/spacing_md"
                     android:textColor="@color/text_primary"
                     android:textColorHint="@color/text_muted"
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/tvDocNumberHelper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_xs"
                     android:text="@string/kyc_other_doc_number_helper"
                     android:textColor="@color/text_muted"
                     android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tvDocNumberError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:textColor="@color/error"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <Button

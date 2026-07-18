@@ -1,9 +1,9 @@
 package com.example.transcilmobileapp.kyc
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import com.example.transcilmobileapp.databinding.ActivityCreatePersonalAccountBinding
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.SimpleDateFormat
@@ -42,6 +42,9 @@ class CreatePersonalAccountActivity :
         UiFormHelpers.bindFocusHighlight(binding.etFullName)
         UiFormHelpers.bindFocusHighlight(binding.etEmail)
 
+        binding.etFullName.doAfterTextChanged { viewModel.clearFullNameError() }
+        binding.etEmail.doAfterTextChanged { viewModel.clearEmailError() }
+
         viewModel.hydrateFromDraft()
         val draft = KycProgressRepository.personalDraft()
         if (draft.fullName.isNotBlank()) binding.etFullName.setText(draft.fullName)
@@ -55,17 +58,24 @@ class CreatePersonalAccountActivity :
                 binding.dobContainer.setBackgroundResource(R.drawable.bg_input_focused)
             }
         }
+        viewModel.fieldErrors.observe(this, ::renderFieldErrors)
         viewModel.navigateNext.observe(this) { go ->
             if (go == true) {
                 KycProgressRepository.markCompleted(KycStep.PERSONAL)
                 KycFlowNavigator.openProgress(this)
             }
         }
-        viewModel.errorMessage.observe(this) { message ->
-            if (!message.isNullOrBlank()) {
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-            }
+    }
+
+    private fun renderFieldErrors(errors: PersonalFieldErrors?) {
+        val value = errors ?: PersonalFieldErrors()
+        UiFormHelpers.setFieldError(binding.tvFullNameError, binding.fullNameContainer, value.fullName)
+        UiFormHelpers.setFieldError(binding.tvEmailError, binding.emailContainer, value.email)
+        UiFormHelpers.setFieldError(binding.tvDobError, binding.dobContainer, value.dateOfBirth)
+        if (value.dateOfBirth == null && !viewModel.dateOfBirth.value.isNullOrBlank()) {
+            binding.dobContainer.setBackgroundResource(R.drawable.bg_input_focused)
         }
+        UiFormHelpers.setFieldError(binding.tvGenderError, null, value.gender)
     }
 
     private fun renderGender(gender: Gender?) {

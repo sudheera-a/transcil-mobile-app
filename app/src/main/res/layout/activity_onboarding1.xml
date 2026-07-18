@@ -8,17 +8,25 @@
         android:background="@drawable/screen_background"
         android:padding="@dimen/screen_padding">
 
-        <ImageView
-            android:id="@+id/ivOnboarding"
+        <FrameLayout
+            android:id="@+id/ivOnboardingFrame"
             android:layout_width="0dp"
-            android:layout_height="280dp"
+            android:layout_height="@dimen/onboarding_image_height"
             android:layout_marginTop="@dimen/spacing_xl"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop"
-            android:src="@drawable/scooter_onboarding"
-            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/bg_rounded_media"
+            android:clipToOutline="true"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ivOnboarding"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                android:src="@drawable/scooter_onboarding" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tvTitle"
@@ -29,7 +37,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
-            app:layout_constraintTop_toBottomOf="@id/ivOnboarding"
+            app:layout_constraintTop_toBottomOf="@id/ivOnboardingFrame"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

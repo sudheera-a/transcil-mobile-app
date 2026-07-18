@@ -11,6 +11,7 @@ import com.example.transcilmobileapp.core.BaseActivity
 import com.example.transcilmobileapp.core.NavExtras
 import com.example.transcilmobileapp.core.UiFormHelpers
 import com.example.transcilmobileapp.journey.ChooseJourneyActivity
+import com.example.transcilmobileapp.kyc.KycProgressRepository
 
 class VerifyOtpActivity : BaseActivity<ActivityVerifyOtpBinding>(ActivityVerifyOtpBinding::inflate) {
 
@@ -35,6 +36,9 @@ class VerifyOtpActivity : BaseActivity<ActivityVerifyOtpBinding>(ActivityVerifyO
 
         viewModel.navigateToHome.observe(this) { shouldNavigate ->
             if (shouldNavigate) {
+                if (mobileNumber.isNotBlank()) {
+                    KycProgressRepository.saveSessionMobile(mobileNumber)
+                }
                 startActivity(Intent(this, ChooseJourneyActivity::class.java))
                 finish()
             }
