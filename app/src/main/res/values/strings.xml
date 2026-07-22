@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">TranscilMobileApp</string>
     <string name="app_tagline">Transcil</string>
+    <string name="cd_app_logo">Transcil logo</string>
     <string name="onboarding1_title">Smart EV Mobility</string>
     <string name="onboarding1_desc">Rent electric vehicles, swap batteries, or earn as a delivery rider</string>
     <string name="onboarding2_title">Wide Network</string>

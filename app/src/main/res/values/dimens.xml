@@ -57,4 +57,5 @@
     <dimen name="profile_avatar_size">64dp</dimen>
     <dimen name="profile_menu_icon">40dp</dimen>
     <dimen name="settings_icon_tile">40dp</dimen>
+    <dimen name="splash_logo_max_width">280dp</dimen>
 </resources>
