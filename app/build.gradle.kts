@@ -11,6 +11,7 @@ android {
     }
     buildFeatures {
         dataBinding = true
+        buildConfig = true
     }
 
     defaultConfig {
@@ -21,6 +22,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            "\"https://jsonplaceholder.typicode.com/\""
+        )
     }
 
     buildTypes {
@@ -48,6 +55,11 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.recyclerview)
     implementation(libs.material)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+    implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.junit)
     testImplementation(libs.androidx.arch.core.testing)
     androidTestImplementation(libs.androidx.espresso.core)

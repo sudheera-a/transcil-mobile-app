@@ -7,20 +7,21 @@
         android:layout_height="match_parent"
         android:background="@drawable/screen_background">
 
-        <TextView
-            android:id="@+id/tvSplashLogo"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/ivSplashLogo"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/app_tagline"
-            android:textSize="27sp"
-            android:lineSpacingExtra="5sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="@color/text_primary"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/screen_padding"
+            android:layout_marginEnd="@dimen/screen_padding"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/cd_app_logo"
+            android:scaleType="fitCenter"
+            android:src="@drawable/img_transcil_logo"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="@dimen/splash_logo_max_width" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
