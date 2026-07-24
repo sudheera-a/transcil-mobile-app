@@ -75,6 +75,12 @@ class KycProgressActivity :
                 viewModel.clearStubMessage()
             }
         }
+        viewModel.openDigioUrl.observe(this) { url ->
+            if (!url.isNullOrBlank()) {
+                DigioLauncher.open(this, url)
+                viewModel.clearOpenDigioUrl()
+            }
+        }
         viewModel.navigateToHome.observe(this) { go ->
             if (go == true) {
                 persistAllVisibleDrafts()
@@ -231,25 +237,15 @@ class KycProgressActivity :
                 )
             }
             stepUi.step == KycStep.BANK && editable -> {
-                viewModel.submitBank(
-                    itemBinding.etBankHolderName.text?.toString().orEmpty(),
-                    itemBinding.etBankAccountNumber.text?.toString().orEmpty(),
-                    itemBinding.etBankConfirmAccount.text?.toString().orEmpty(),
-                    itemBinding.etBankIfsc.text?.toString().orEmpty(),
-                    itemBinding.cbBankConsent.isChecked
-                )
+                persistDraftFrom(itemBinding, KycStep.BANK)
+                viewModel.startDigioFromBank(itemBinding.cbBankConsent.isChecked)
             }
             stepUi.step == KycStep.AADHAAR && editable -> {
                 persistDraftFrom(itemBinding, KycStep.AADHAAR)
-                val draft = KycProgressRepository.aadhaarDraft()
-                if (draft.otpSent) {
-                    viewModel.submitAadhaarOtp(readAadhaarOtp(itemBinding))
-                } else {
-                    viewModel.submitAadhaarNumber(
-                        itemBinding.etAadhaarNumber.text?.toString().orEmpty(),
-                        itemBinding.cbAadhaarConsent.isChecked
-                    )
-                }
+                viewModel.startDigioFromAadhaar(
+                    itemBinding.etAadhaarNumber.text?.toString().orEmpty(),
+                    itemBinding.cbAadhaarConsent.isChecked
+                )
             }
             stepUi.step == KycStep.REFERENCE && editable -> {
                 viewModel.submitReference(

@@ -4,10 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-
+import androidx.lifecycle.viewModelScope
 import com.example.transcilmobileapp.R
 import com.example.transcilmobileapp.core.Gender
 import com.example.transcilmobileapp.core.JourneyType
+import com.example.transcilmobileapp.repository.DigioKycRepository
+import kotlinx.coroutines.launch
 
 class KycProgressViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -34,6 +36,9 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
 
     private val _showStubMessage = MutableLiveData<Int?>()
     val showStubMessage: LiveData<Int?> = _showStubMessage
+
+    private val _openDigioUrl = MutableLiveData<String?>()
+    val openDigioUrl: LiveData<String?> = _openDigioUrl
 
     private val _navigateToHome = MutableLiveData<Boolean>()
     val navigateToHome: LiveData<Boolean> = _navigateToHome
@@ -105,7 +110,7 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
                     _expandedStep.value = step
                 }
                 KycStep.AADHAAR -> {
-                    // Re-open Aadhaar entry (OTP must be requested again after edit).
+                    // Re-open Aadhaar entry for Digio re-verify after edit.
                     val draft = KycProgressRepository.aadhaarDraft()
                     saveAadhaarDraft(
                         aadhaarNumber = draft.aadhaarNumber,
@@ -324,7 +329,7 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         refresh()
     }
 
-    fun submitAadhaarNumber(aadhaarNumber: String, consent: Boolean) {
+    fun startDigioFromAadhaar(aadhaarNumber: String, consent: Boolean) {
         val digits = aadhaarNumber.filter { it.isDigit() }
         if (digits.length != 12) {
             _showStubMessage.value = R.string.error_invalid_aadhaar
@@ -334,32 +339,29 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
             _showStubMessage.value = R.string.error_aadhaar_consent
             return
         }
-        saveAadhaarDraft(digits, consent = true, otpSent = true, otp = "")
-        _inlineEditStep.value = KycStep.AADHAAR
-        _expandedStep.value = KycStep.AADHAAR
-        refresh()
+        saveAadhaarDraft(digits, consent = true, otpSent = false, otp = "")
+        launchDigio()
     }
 
-    fun submitAadhaarOtp(otp: String) {
-        val draft = KycProgressRepository.aadhaarDraft()
-        val digits = otp.filter { it.isDigit() }
-        if (!draft.otpSent) {
-            _showStubMessage.value = R.string.error_invalid_aadhaar
+    fun startDigioFromBank(consent: Boolean) {
+        if (!consent) {
+            _showStubMessage.value = R.string.error_bank_consent
             return
         }
-        if (digits.length != 6) {
-            _showStubMessage.value = R.string.error_incomplete_otp
+        launchDigio()
+    }
+
+    private fun launchDigio() {
+        val name = KycProgressRepository.personalDraft().fullName.trim()
+        if (name.isBlank() || name.any { it.isDigit() }) {
+            _showStubMessage.value = R.string.kyc_digio_need_personal_name
             return
         }
-        saveAadhaarDraft(
-            aadhaarNumber = draft.aadhaarNumber,
-            consent = draft.consent,
-            otpSent = true,
-            otp = digits
-        )
-        KycProgressRepository.markCompleted(KycStep.AADHAAR)
-        _inlineEditStep.value = null
-        refresh()
+        viewModelScope.launch {
+            DigioKycRepository().start(name)
+                .onSuccess { _openDigioUrl.value = it.gatewayUrl }
+                .onFailure { _showStubMessage.value = R.string.kyc_digio_stub }
+        }
     }
 
     fun submitReference(relation: String, mobile: String) {
@@ -446,13 +448,7 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
             KycStep.REFERENCE,
             KycStep.OTHER_DOCS,
             KycStep.PAN -> R.string.kyc_action_submit
-            KycStep.AADHAAR -> {
-                if (KycProgressRepository.aadhaarDraft().otpSent) {
-                    R.string.verify_aadhaar_otp
-                } else {
-                    R.string.verify_aadhaar
-                }
-            }
+            KycStep.AADHAAR -> R.string.verify_aadhaar
             KycStep.BANK -> R.string.kyc_action_verify_digio
             KycStep.SELFIE -> R.string.kyc_action_capture_photo
         }
@@ -490,5 +486,9 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
 
     fun clearStubMessage() {
         _showStubMessage.value = null
+    }
+
+    fun clearOpenDigioUrl() {
+        _openDigioUrl.value = null
     }
 }

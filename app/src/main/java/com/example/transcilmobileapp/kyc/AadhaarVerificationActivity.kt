@@ -1,6 +1,5 @@
 package com.example.transcilmobileapp.kyc
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -31,9 +30,10 @@ class AadhaarVerificationActivity :
             viewModel.onVerifyClicked(binding.etAadhaar.text.toString())
         }
 
-        viewModel.navigateToOtp.observe(this) { go ->
-            if (go == true) {
-                startActivity(Intent(this, AadhaarOtpActivity::class.java))
+        viewModel.openDigioUrl.observe(this) { url ->
+            if (!url.isNullOrBlank()) {
+                DigioLauncher.open(this, url)
+                viewModel.clearOpenDigioUrl()
             }
         }
         viewModel.skipFlow.observe(this) { skip ->
