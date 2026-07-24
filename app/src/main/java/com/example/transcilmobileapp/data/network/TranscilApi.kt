@@ -4,6 +4,9 @@ import com.example.transcilmobileapp.data.model.ApiResponse
 import com.example.transcilmobileapp.data.model.HelpCenterDto
 import com.example.transcilmobileapp.data.model.HtmlDocumentDto
 import com.example.transcilmobileapp.data.model.auth.*
+import com.example.transcilmobileapp.data.model.kyc.DigioStartData
+import com.example.transcilmobileapp.data.model.kyc.DigioStartRequest
+import com.example.transcilmobileapp.data.model.kyc.DigioStatusData
 import com.google.gson.JsonObject
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -53,4 +56,18 @@ interface TranscilApi {
 
     @POST("v1/auth/logout")
     suspend fun authLogout(): ApiResponse<AuthLogoutData>
+
+    @POST("v1/kyc/start")
+    suspend fun kycStart(
+        @Header("Idempotency-Key") idempotencyKey: String,
+        @Body body: DigioStartRequest,
+    ): ApiResponse<DigioStartData>
+
+    @POST("v1/kyc/sync-status")
+    suspend fun kycSyncStatus(
+        @Header("Idempotency-Key") idempotencyKey: String,
+    ): ApiResponse<DigioStatusData>
+
+    @GET("v1/kyc/status")
+    suspend fun kycStatus(): ApiResponse<DigioStatusData>
 }

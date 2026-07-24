@@ -5,6 +5,9 @@ import com.example.transcilmobileapp.data.model.ApiResponse
 import com.example.transcilmobileapp.data.model.HelpCenterDto
 import com.example.transcilmobileapp.data.model.HtmlDocumentDto
 import com.example.transcilmobileapp.data.model.auth.*
+import com.example.transcilmobileapp.data.model.kyc.DigioStartData
+import com.example.transcilmobileapp.data.model.kyc.DigioStartRequest
+import com.example.transcilmobileapp.data.model.kyc.DigioStatusData
 import com.example.transcilmobileapp.data.network.TranscilApi
 import com.google.gson.JsonObject
 import kotlinx.coroutines.runBlocking
@@ -62,6 +65,17 @@ class AuthRepositoryTest {
         ): ApiResponse<AuthTokensData> = error("unused")
 
         override suspend fun authLogout(): ApiResponse<AuthLogoutData> = error("unused")
+
+        override suspend fun kycStart(
+            idempotencyKey: String,
+            body: DigioStartRequest,
+        ): ApiResponse<DigioStartData> = error("unused")
+
+        override suspend fun kycSyncStatus(
+            idempotencyKey: String,
+        ): ApiResponse<DigioStatusData> = error("unused")
+
+        override suspend fun kycStatus(): ApiResponse<DigioStatusData> = error("unused")
     }
 
     @Test
