@@ -75,6 +75,12 @@ class KycProgressActivity :
                 viewModel.clearStubMessage()
             }
         }
+        viewModel.toastMessage.observe(this) { message ->
+            if (!message.isNullOrBlank()) {
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                viewModel.clearToastMessage()
+            }
+        }
         viewModel.openDigioUrl.observe(this) { url ->
             if (!url.isNullOrBlank()) {
                 DigioLauncher.open(this, url)

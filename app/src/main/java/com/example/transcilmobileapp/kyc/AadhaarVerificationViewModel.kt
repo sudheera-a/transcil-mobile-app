@@ -47,8 +47,8 @@ class AadhaarVerificationViewModel(application: Application) : AndroidViewModel(
             DigioKycRepository().start(name)
                 .onSuccess { _openDigioUrl.value = it.gatewayUrl }
                 .onFailure {
-                    _errorMessage.value =
-                        getApplication<Application>().getString(R.string.kyc_digio_stub)
+                    _errorMessage.value = it.message?.takeIf { msg -> msg.isNotBlank() }
+                        ?: getApplication<Application>().getString(R.string.kyc_digio_failed)
                 }
         }
     }

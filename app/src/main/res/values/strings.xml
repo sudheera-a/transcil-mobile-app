@@ -388,6 +388,7 @@
     <string name="kyc_action_capture_photo">Capture Photo</string>
     <string name="kyc_bank_consent">I hereby consent to share my bank details for verification and payouts.</string>
     <string name="kyc_digio_stub">DIGIO verification will be available soon</string>
+    <string name="kyc_digio_failed">Couldn\'t start DIGIO verification. Please try again.</string>
     <string name="kyc_digio_need_personal_name">Add a valid full name in Personal details (letters only) before Digio verification</string>
     <string name="kyc_accordion_hint_personal">Review or edit your personal details.</string>
     <string name="kyc_accordion_hint_address">Add your present address to continue.</string>

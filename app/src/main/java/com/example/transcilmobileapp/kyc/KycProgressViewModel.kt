@@ -37,6 +37,9 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
     private val _showStubMessage = MutableLiveData<Int?>()
     val showStubMessage: LiveData<Int?> = _showStubMessage
 
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: LiveData<String?> = _toastMessage
+
     private val _openDigioUrl = MutableLiveData<String?>()
     val openDigioUrl: LiveData<String?> = _openDigioUrl
 
@@ -360,7 +363,10 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             DigioKycRepository().start(name)
                 .onSuccess { _openDigioUrl.value = it.gatewayUrl }
-                .onFailure { _showStubMessage.value = R.string.kyc_digio_stub }
+                .onFailure {
+                    _toastMessage.value = it.message?.takeIf { msg -> msg.isNotBlank() }
+                        ?: getApplication<Application>().getString(R.string.kyc_digio_failed)
+                }
         }
     }
 
@@ -486,6 +492,10 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
 
     fun clearStubMessage() {
         _showStubMessage.value = null
+    }
+
+    fun clearToastMessage() {
+        _toastMessage.value = null
     }
 
     fun clearOpenDigioUrl() {
