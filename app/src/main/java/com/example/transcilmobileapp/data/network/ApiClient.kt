@@ -13,7 +13,12 @@ object ApiClient {
     }
 
     private val okHttp = OkHttpClient.Builder()
+        // 1) Add Bearer token (if saved)
+        .addInterceptor(AuthInterceptor())
+        // 2) Log request/response (you'll see Authorization here)
         .addInterceptor(logging)
+        // 3) On 401 -> try recover / clear tokens
+        .authenticator(TokenAuthenticator())
         .build()
 
     private val retrofit: Retrofit = Retrofit.Builder()
@@ -23,4 +28,5 @@ object ApiClient {
         .build()
 
     val demoApi: DemoApi = retrofit.create(DemoApi::class.java)
+    val transcilApi: TranscilApi = retrofit.create(TranscilApi::class.java)
 }
