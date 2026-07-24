@@ -17,10 +17,19 @@ class VerifyOtpActivity : BaseActivity<ActivityVerifyOtpBinding>(ActivityVerifyO
 
     private val viewModel: VerifyOtpViewModel by viewModels()
 
+    private var otpSession: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val mobileNumber = intent.getStringExtra(NavExtras.MOBILE_NUMBER).orEmpty()
+        otpSession = intent.getStringExtra(NavExtras.OTP_SESSION).orEmpty()
+        if (otpSession.isBlank()) {
+            Toast.makeText(this, "OTP session missing. Please request a new OTP.", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
         binding.tvOtpSentTo.text = "${getString(R.string.otp_sent_prefix)} +91 $mobileNumber"
 
         val otpBoxes = listOf(
@@ -31,7 +40,25 @@ class VerifyOtpActivity : BaseActivity<ActivityVerifyOtpBinding>(ActivityVerifyO
 
         binding.ivBack.setOnClickListener { finish() }
         binding.btnVerify.setOnClickListener {
-            viewModel.onVerifyClicked(otpBoxes.joinToString("") { it.text.toString() })
+            viewModel.onVerifyClicked(
+                otpSession,
+                mobileNumber,
+                otpBoxes.joinToString("") { it.text.toString() },
+            )
+        }
+        binding.tvResendOtp.setOnClickListener {
+            viewModel.onResendClicked(mobileNumber)
+        }
+
+        viewModel.otpSession.observe(this) { session ->
+            if (!session.isNullOrBlank()) {
+                otpSession = session
+            }
+        }
+
+        viewModel.isLoading.observe(this) { loading ->
+            binding.btnVerify.isEnabled = loading != true
+            binding.tvResendOtp.isEnabled = loading != true
         }
 
         viewModel.navigateToHome.observe(this) { shouldNavigate ->

@@ -24,10 +24,15 @@ class WelcomeActivity : BaseActivity<ActivityWelcomeBinding>(ActivityWelcomeBind
             finish()
         }
 
-        viewModel.navigateToVerifyOtp.observe(this) { mobileNumber ->
+        viewModel.navigateToVerifyOtp.observe(this) { event ->
             val intent = Intent(this, VerifyOtpActivity::class.java)
-            intent.putExtra(NavExtras.MOBILE_NUMBER, mobileNumber)
+            intent.putExtra(NavExtras.MOBILE_NUMBER, event.mobile)
+            intent.putExtra(NavExtras.OTP_SESSION, event.session)
             startActivity(intent)
+        }
+
+        viewModel.isLoading.observe(this) { loading ->
+            binding.btnSendOtp.isEnabled = loading != true
         }
 
         viewModel.errorMessage.observe(this) { message ->
