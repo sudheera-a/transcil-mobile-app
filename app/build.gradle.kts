@@ -26,7 +26,7 @@ android {
         buildConfigField(
             "String",
             "BASE_URL",
-            "\"https://jsonplaceholder.typicode.com/\""
+            "\"http://10.0.2.2:4000/\""
         )
     }
 
@@ -60,8 +60,10 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.security.crypto)
     testImplementation(libs.junit)
     testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.okhttp.mockwebserver)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
 }
