@@ -186,12 +186,13 @@
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
-                        <EditText
+                        <AutoCompleteTextView
                             android:id="@+id/etCity"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/input_height"
                             android:layout_marginTop="@dimen/spacing_sm"
                             android:background="@drawable/bg_input_default"
+                            android:completionThreshold="1"
                             android:hint="@string/city_hint"
                             android:inputType="textCapWords"
                             android:maxLength="40"

@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.transcilmobileapp.R
+import com.example.transcilmobileapp.auth.AuthSession
 import com.example.transcilmobileapp.core.KycNavigator
 import com.example.transcilmobileapp.core.KycStatus
 import com.example.transcilmobileapp.databinding.FragmentProfileBinding
@@ -79,6 +81,22 @@ class ProfileFragment : Fragment() {
                     startActivity(Intent(requireContext(), KycProgressActivity::class.java))
                     viewModel.clearNavEvent()
                 }
+                is ProfileNavEvent.OpenContent -> {
+                    if (event.page == ContentPage.HELP) {
+                        findNavController().navigate(
+                            R.id.action_profile_to_help,
+                            null,
+                            navOptions { launchSingleTop = true },
+                        )
+                    } else {
+                        findNavController().navigate(
+                            R.id.action_profile_to_api_content,
+                            bundleOf(ApiContentFragment.ARG_PAGE to event.page.name),
+                            navOptions { launchSingleTop = true },
+                        )
+                    }
+                    viewModel.clearNavEvent()
+                }
                 is ProfileNavEvent.ShowStub -> {
                     Toast.makeText(
                         requireContext(),
@@ -87,12 +105,8 @@ class ProfileFragment : Fragment() {
                     ).show()
                     viewModel.clearNavEvent()
                 }
-                ProfileNavEvent.Logout -> {
-                    Toast.makeText(
-                        requireContext(),
-                        R.string.profile_logout_stub,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                ProfileNavEvent.SignedOut -> {
+                    AuthSession.openSignedOut(requireContext())
                     viewModel.clearNavEvent()
                 }
                 null -> Unit

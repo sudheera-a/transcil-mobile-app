@@ -27,7 +27,9 @@ class RentalCatalogTest {
     @Test
     fun prices_matchKnowledgeBasePaise() {
         assertEquals(154_900L, RentalCatalog.pricePaise(VehicleModelId.ELLOD_ELITE, PlanType.WEEKLY))
-        assertEquals(590_000L, RentalCatalog.pricePaise(VehicleModelId.ELLOD_ELITE, PlanType.MONTHLY))
+        assertEquals(520_000L, RentalCatalog.pricePaise(VehicleModelId.ELLOD_ELITE, PlanType.MONTHLY))
+        assertEquals(24_900L, RentalCatalog.pricePaise(VehicleModelId.ELLOD_ELITE, PlanType.DAILY))
+        assertEquals(173L, RentalCatalog.perDayRupees(VehicleModelId.ELLOD_ELITE, PlanType.MONTHLY))
         assertEquals(179_900L, RentalCatalog.pricePaise(VehicleModelId.ELACIL_2_5, PlanType.WEEKLY))
         assertEquals(650_000L, RentalCatalog.pricePaise(VehicleModelId.ELACIL_2_5, PlanType.MONTHLY))
     }

@@ -6,7 +6,7 @@ object WalletRepository {
 
     fun overview(): WalletOverview = WalletOverview(
         availableBalanceRes = R.string.wallet_balance_value,
-        pendingRes = R.string.wallet_pending_value,
+        pendingRes = R.string.wallet_spent_value,
         thisMonthRes = R.string.wallet_this_month_value,
         todayEarningsRes = R.string.wallet_today_value,
         weeklyEarningsRes = R.string.wallet_weekly_value

@@ -4,18 +4,26 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-
+import androidx.lifecycle.viewModelScope
 import com.example.transcilmobileapp.R
 import com.example.transcilmobileapp.core.Gender
 import com.example.transcilmobileapp.core.JourneyType
+import com.example.transcilmobileapp.repository.DigioKycRepository
+import com.example.transcilmobileapp.repository.OnboardingRepository
+import kotlinx.coroutines.launch
 
 class KycProgressViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val onboardingRepository = OnboardingRepository()
 
     private val _summaryTitleRes = MutableLiveData<Int>()
     val summaryTitleRes: LiveData<Int> = _summaryTitleRes
 
     private val _badgeText = MutableLiveData<String>()
     val badgeText: LiveData<String> = _badgeText
+
+    private val _stepsCountText = MutableLiveData<String>()
+    val stepsCountText: LiveData<String> = _stepsCountText
 
     private val _percent = MutableLiveData<Int>()
     val percent: LiveData<Int> = _percent
@@ -35,6 +43,12 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
     private val _showStubMessage = MutableLiveData<Int?>()
     val showStubMessage: LiveData<Int?> = _showStubMessage
 
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: LiveData<String?> = _toastMessage
+
+    private val _openDigioUrl = MutableLiveData<String?>()
+    val openDigioUrl: LiveData<String?> = _openDigioUrl
+
     private val _navigateToHome = MutableLiveData<Boolean>()
     val navigateToHome: LiveData<Boolean> = _navigateToHome
 
@@ -51,6 +65,14 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
     val otherDocsFieldErrors: LiveData<OtherDocsFieldErrors> = _otherDocsFieldErrors
 
     fun refresh() {
+        viewModelScope.launch {
+            onboardingRepository.getOnboarding()
+                .onSuccess { OnboardingSync.apply(it) }
+            renderLocal()
+        }
+    }
+
+    private fun renderLocal() {
         val journey = KycProgressRepository.currentJourney() ?: return
         _summaryTitleRes.value = when (journey) {
             JourneyType.RENT_EV -> R.string.kyc_progress_rent_title
@@ -58,11 +80,9 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         }
         val completed = KycProgressRepository.completedCount()
         val total = KycProgressRepository.totalCount()
-        _badgeText.value = getApplication<Application>().getString(
-            R.string.kyc_progress_complete_badge,
-            completed,
-            total
-        )
+        val app = getApplication<Application>()
+        _badgeText.value = app.getString(R.string.kyc_progress_fraction, completed, total)
+        _stepsCountText.value = app.getString(R.string.kyc_progress_of, completed, total)
         _percent.value = KycProgressRepository.progressPercent()
         _steps.value = KycProgressRepository.uiSteps()
 
@@ -105,7 +125,7 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
                     _expandedStep.value = step
                 }
                 KycStep.AADHAAR -> {
-                    // Re-open Aadhaar entry (OTP must be requested again after edit).
+                    // Re-open Aadhaar entry for Digio re-verify after edit.
                     val draft = KycProgressRepository.aadhaarDraft()
                     saveAadhaarDraft(
                         aadhaarNumber = draft.aadhaarNumber,
@@ -286,13 +306,20 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
     fun submitPersonal(fullName: String, email: String, dob: String, gender: Gender?) {
         val errors = PersonalDetailsValidator.validate(fullName, email, dob, gender)
         _personalFieldErrors.value = errors
-        if (errors.hasErrors) return
+        if (errors.hasErrors || gender == null) return
 
-        savePersonalDraft(fullName, email, dob, gender)
-        KycProgressRepository.markCompleted(KycStep.PERSONAL)
-        _personalFieldErrors.value = PersonalFieldErrors()
-        _inlineEditStep.value = null
-        refresh()
+        viewModelScope.launch {
+            onboardingRepository.patchProfile(fullName, email, dob, gender)
+                .onSuccess {
+                    savePersonalDraft(fullName, email, dob, gender)
+                    _personalFieldErrors.value = PersonalFieldErrors()
+                    _inlineEditStep.value = null
+                    refresh()
+                }
+                .onFailure { e ->
+                    _toastMessage.value = e.message ?: "Failed to save profile"
+                }
+        }
     }
 
     fun clearAddressLine1Error() = clearAddress { it.copy(line1 = null) }
@@ -317,14 +344,21 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         _addressFieldErrors.value = errors
         if (errors.hasErrors) return
 
-        saveAddressDraft(line1, line2, city, state, pincode)
-        KycProgressRepository.markCompleted(KycStep.ADDRESS)
-        _addressFieldErrors.value = AddressFieldErrors()
-        _inlineEditStep.value = null
-        refresh()
+        viewModelScope.launch {
+            onboardingRepository.putAddress(line1, line2, city, state, pincode)
+                .onSuccess {
+                    saveAddressDraft(line1, line2, city, state, pincode)
+                    _addressFieldErrors.value = AddressFieldErrors()
+                    _inlineEditStep.value = null
+                    refresh()
+                }
+                .onFailure { e ->
+                    _toastMessage.value = e.message ?: "Failed to save address"
+                }
+        }
     }
 
-    fun submitAadhaarNumber(aadhaarNumber: String, consent: Boolean) {
+    fun startDigioFromAadhaar(aadhaarNumber: String, consent: Boolean) {
         val digits = aadhaarNumber.filter { it.isDigit() }
         if (digits.length != 12) {
             _showStubMessage.value = R.string.error_invalid_aadhaar
@@ -334,32 +368,32 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
             _showStubMessage.value = R.string.error_aadhaar_consent
             return
         }
-        saveAadhaarDraft(digits, consent = true, otpSent = true, otp = "")
-        _inlineEditStep.value = KycStep.AADHAAR
-        _expandedStep.value = KycStep.AADHAAR
-        refresh()
+        saveAadhaarDraft(digits, consent = true, otpSent = false, otp = "")
+        launchDigio()
     }
 
-    fun submitAadhaarOtp(otp: String) {
-        val draft = KycProgressRepository.aadhaarDraft()
-        val digits = otp.filter { it.isDigit() }
-        if (!draft.otpSent) {
-            _showStubMessage.value = R.string.error_invalid_aadhaar
+    fun startDigioFromBank(consent: Boolean) {
+        if (!consent) {
+            _showStubMessage.value = R.string.error_bank_consent
             return
         }
-        if (digits.length != 6) {
-            _showStubMessage.value = R.string.error_incomplete_otp
+        launchDigio()
+    }
+
+    private fun launchDigio() {
+        val name = KycProgressRepository.personalDraft().fullName.trim()
+        if (name.isBlank() || name.any { it.isDigit() }) {
+            _showStubMessage.value = R.string.kyc_digio_need_personal_name
             return
         }
-        saveAadhaarDraft(
-            aadhaarNumber = draft.aadhaarNumber,
-            consent = draft.consent,
-            otpSent = true,
-            otp = digits
-        )
-        KycProgressRepository.markCompleted(KycStep.AADHAAR)
-        _inlineEditStep.value = null
-        refresh()
+        viewModelScope.launch {
+            DigioKycRepository().start(name)
+                .onSuccess { _openDigioUrl.value = it.gatewayUrl }
+                .onFailure {
+                    _toastMessage.value = it.message?.takeIf { msg -> msg.isNotBlank() }
+                        ?: getApplication<Application>().getString(R.string.kyc_digio_failed)
+                }
+        }
     }
 
     fun submitReference(relation: String, mobile: String) {
@@ -440,21 +474,18 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         if (status == KycStepStatus.COMPLETED && !isInlineEditing(step)) {
             return R.string.kyc_action_edit
         }
+        if (status == KycStepStatus.PENDING) {
+            return R.string.kyc_action_start
+        }
         return when (step) {
             KycStep.PERSONAL,
             KycStep.ADDRESS,
             KycStep.REFERENCE,
             KycStep.OTHER_DOCS,
             KycStep.PAN -> R.string.kyc_action_submit
-            KycStep.AADHAAR -> {
-                if (KycProgressRepository.aadhaarDraft().otpSent) {
-                    R.string.verify_aadhaar_otp
-                } else {
-                    R.string.verify_aadhaar
-                }
-            }
-            KycStep.BANK -> R.string.kyc_action_verify_digio
-            KycStep.SELFIE -> R.string.kyc_action_capture_photo
+            KycStep.AADHAAR -> R.string.aadhaar_verify_digio
+            KycStep.BANK -> R.string.aadhaar_verify_digio
+            KycStep.SELFIE -> R.string.selfie_take_cta
         }
     }
 
@@ -490,5 +521,13 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
 
     fun clearStubMessage() {
         _showStubMessage.value = null
+    }
+
+    fun clearToastMessage() {
+        _toastMessage.value = null
+    }
+
+    fun clearOpenDigioUrl() {
+        _openDigioUrl.value = null
     }
 }

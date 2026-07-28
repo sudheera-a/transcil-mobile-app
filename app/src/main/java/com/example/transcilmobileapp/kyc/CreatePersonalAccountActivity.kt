@@ -1,6 +1,7 @@
 package com.example.transcilmobileapp.kyc
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
@@ -13,7 +14,9 @@ import java.util.TimeZone
 
 import com.example.transcilmobileapp.R
 import com.example.transcilmobileapp.core.BaseActivity
+import com.example.transcilmobileapp.core.FeedbackUi
 import com.example.transcilmobileapp.core.Gender
+import com.example.transcilmobileapp.core.SegmentedStepper
 import com.example.transcilmobileapp.core.UiFormHelpers
 
 class CreatePersonalAccountActivity :
@@ -26,6 +29,10 @@ class CreatePersonalAccountActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding.navyHeader.findViewById<TextView>(R.id.headerTitle).setText(R.string.personal_tell_us)
+        binding.navyHeader.findViewById<TextView>(R.id.headerSubtitle).setText(R.string.personal_why_we_ask)
+        SegmentedStepper.apply(binding.navyHeader, filledCount = 4, navyInactive = true)
 
         binding.ivBack.setOnClickListener { finish() }
         binding.chipMale.setOnClickListener { viewModel.onGenderSelected(Gender.MALE) }
@@ -45,10 +52,12 @@ class CreatePersonalAccountActivity :
         binding.etFullName.doAfterTextChanged { viewModel.clearFullNameError() }
         binding.etEmail.doAfterTextChanged { viewModel.clearEmailError() }
 
-        viewModel.hydrateFromDraft()
-        val draft = KycProgressRepository.personalDraft()
-        if (draft.fullName.isNotBlank()) binding.etFullName.setText(draft.fullName)
-        if (draft.email.isNotBlank()) binding.etEmail.setText(draft.email)
+        viewModel.load()
+        viewModel.prefill.observe(this) { prefill ->
+            if (prefill == null) return@observe
+            if (prefill.fullName.isNotBlank()) binding.etFullName.setText(prefill.fullName)
+            if (prefill.email.isNotBlank()) binding.etEmail.setText(prefill.email)
+        }
 
         viewModel.selectedGender.observe(this, ::renderGender)
         viewModel.dateOfBirth.observe(this) { value ->
@@ -59,9 +68,17 @@ class CreatePersonalAccountActivity :
             }
         }
         viewModel.fieldErrors.observe(this, ::renderFieldErrors)
+        viewModel.isLoading.observe(this) { loading ->
+            binding.btnContinue.isEnabled = loading != true
+        }
+        viewModel.errorMessage.observe(this) { message ->
+            if (!message.isNullOrBlank()) {
+                FeedbackUi.toast(this, message)
+                viewModel.clearError()
+            }
+        }
         viewModel.navigateNext.observe(this) { go ->
             if (go == true) {
-                KycProgressRepository.markCompleted(KycStep.PERSONAL)
                 KycFlowNavigator.openProgress(this)
             }
         }

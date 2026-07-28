@@ -5,65 +5,56 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/screen_background"
-        android:paddingHorizontal="@dimen/screen_padding">
+        android:background="@drawable/bg_surface_page">
+
+        <include
+            android:id="@+id/navyHeader"
+            layout="@layout/layout_navy_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/ivBack"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="@dimen/spacing_lg"
+            android:layout_width="@dimen/back_icon_size"
+            android:layout_height="@dimen/back_icon_size"
+            android:layout_marginStart="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/spacing_xl"
+            android:contentDescription="@string/cd_back"
             android:src="@drawable/ic_back"
-            android:contentDescription="@string/personal_details_toolbar"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/tvToolbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_md"
-            android:text="@string/personal_details_toolbar"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="@id/ivBack"
-            app:layout_constraintBottom_toBottomOf="@id/ivBack"
-            app:layout_constraintStart_toEndOf="@id/ivBack" />
+            app:tint="@color/text_on_navy" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollContent"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/spacing_lg"
+            android:layout_marginTop="@dimen/pull_up_overlap"
+            android:background="@drawable/bg_pull_up_card"
+            android:clipToPadding="false"
             android:fillViewport="true"
-            app:layout_constraintTop_toBottomOf="@id/ivBack"
+            android:paddingHorizontal="@dimen/screen_padding"
+            android:paddingTop="@dimen/spacing_xl"
+            android:paddingBottom="@dimen/spacing_lg"
             app:layout_constraintBottom_toTopOf="@id/btnContinue"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/navyHeader">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/spacing_lg">
-
-                <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/create_personal_account_title"
-                    android:textColor="@color/text_primary"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xl"
+                    android:fontFamily="@font/manrope_family"
                     android:text="@string/full_name_label"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -80,8 +71,9 @@
                     <ImageView
                         android:layout_width="@dimen/icon_size"
                         android:layout_height="@dimen/icon_size"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_person"
-                        android:contentDescription="@null" />
+                        app:tint="@color/text_muted" />
 
                     <EditText
                         android:id="@+id/etFullName"
@@ -90,6 +82,7 @@
                         android:layout_marginStart="@dimen/spacing_md"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:fontFamily="@font/manrope_family"
                         android:hint="@string/full_name_hint"
                         android:inputType="textPersonName"
                         android:maxLength="40"
@@ -103,6 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_xs"
+                    android:fontFamily="@font/manrope_family"
                     android:textColor="@color/error"
                     android:textSize="12sp"
                     android:visibility="gone" />
@@ -111,8 +105,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_lg"
+                    android:fontFamily="@font/manrope_family"
                     android:text="@string/email_label"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -129,8 +124,9 @@
                     <ImageView
                         android:layout_width="@dimen/icon_size"
                         android:layout_height="@dimen/icon_size"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_email"
-                        android:contentDescription="@null" />
+                        app:tint="@color/text_muted" />
 
                     <EditText
                         android:id="@+id/etEmail"
@@ -139,6 +135,7 @@
                         android:layout_marginStart="@dimen/spacing_md"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:fontFamily="@font/manrope_family"
                         android:hint="@string/email_hint"
                         android:inputType="textEmailAddress"
                         android:textColor="@color/text_primary"
@@ -151,6 +148,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_xs"
+                    android:fontFamily="@font/manrope_family"
                     android:textColor="@color/error"
                     android:textSize="12sp"
                     android:visibility="gone" />
@@ -159,8 +157,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_lg"
+                    android:fontFamily="@font/manrope_family"
                     android:text="@string/dob_label"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -179,8 +178,9 @@
                     <ImageView
                         android:layout_width="@dimen/icon_size"
                         android:layout_height="@dimen/icon_size"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_calendar"
-                        android:contentDescription="@null" />
+                        app:tint="@color/text_muted" />
 
                     <TextView
                         android:id="@+id/tvDob"
@@ -188,6 +188,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/spacing_md"
                         android:layout_weight="1"
+                        android:fontFamily="@font/manrope_family"
                         android:text="@string/dob_hint"
                         android:textColor="@color/text_muted"
                         android:textSize="14sp" />
@@ -198,6 +199,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_xs"
+                    android:fontFamily="@font/manrope_family"
                     android:textColor="@color/error"
                     android:textSize="12sp"
                     android:visibility="gone" />
@@ -206,8 +208,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_lg"
+                    android:fontFamily="@font/manrope_family"
                     android:text="@string/gender_label"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -220,10 +223,11 @@
                     <TextView
                         android:id="@+id/chipMale"
                         android:layout_width="0dp"
-                        android:layout_height="44dp"
+                        android:layout_height="@dimen/input_height"
                         android:layout_marginEnd="@dimen/spacing_sm"
                         android:layout_weight="1"
                         android:background="@drawable/bg_chip_default"
+                        android:fontFamily="@font/manrope_family"
                         android:gravity="center"
                         android:text="@string/gender_male"
                         android:textColor="@color/text_primary"
@@ -232,10 +236,11 @@
                     <TextView
                         android:id="@+id/chipFemale"
                         android:layout_width="0dp"
-                        android:layout_height="44dp"
+                        android:layout_height="@dimen/input_height"
                         android:layout_marginEnd="@dimen/spacing_sm"
                         android:layout_weight="1"
                         android:background="@drawable/bg_chip_default"
+                        android:fontFamily="@font/manrope_family"
                         android:gravity="center"
                         android:text="@string/gender_female"
                         android:textColor="@color/text_primary"
@@ -244,9 +249,10 @@
                     <TextView
                         android:id="@+id/chipOther"
                         android:layout_width="0dp"
-                        android:layout_height="44dp"
+                        android:layout_height="@dimen/input_height"
                         android:layout_weight="1"
                         android:background="@drawable/bg_chip_default"
+                        android:fontFamily="@font/manrope_family"
                         android:gravity="center"
                         android:text="@string/gender_other"
                         android:textColor="@color/text_primary"
@@ -258,6 +264,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_xs"
+                    android:fontFamily="@font/manrope_family"
                     android:textColor="@color/error"
                     android:textSize="12sp"
                     android:visibility="gone" />
@@ -268,16 +275,18 @@
             android:id="@+id/btnContinue"
             android:layout_width="0dp"
             android:layout_height="@dimen/button_height"
-            android:layout_marginBottom="@dimen/spacing_xl"
+            android:layout_marginHorizontal="@dimen/screen_padding"
+            android:layout_marginBottom="@dimen/cta_bottom_margin"
             android:background="@drawable/bg_button_primary"
+            android:fontFamily="@font/sora_family"
             android:text="@string/continue_button"
             android:textAllCaps="false"
             android:textColor="@color/text_on_brand"
             android:textStyle="bold"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

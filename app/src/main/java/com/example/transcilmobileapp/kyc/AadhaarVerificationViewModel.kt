@@ -4,16 +4,18 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-
+import androidx.lifecycle.viewModelScope
 import com.example.transcilmobileapp.R
+import com.example.transcilmobileapp.repository.DigioKycRepository
+import kotlinx.coroutines.launch
 
 class AadhaarVerificationViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _consentChecked = MutableLiveData(false)
     val consentChecked: LiveData<Boolean> = _consentChecked
 
-    private val _navigateToOtp = MutableLiveData<Boolean>()
-    val navigateToOtp: LiveData<Boolean> = _navigateToOtp
+    private val _openDigioUrl = MutableLiveData<String?>()
+    val openDigioUrl: LiveData<String?> = _openDigioUrl
 
     private val _skipFlow = MutableLiveData<Boolean>()
     val skipFlow: LiveData<Boolean> = _skipFlow
@@ -35,10 +37,27 @@ class AadhaarVerificationViewModel(application: Application) : AndroidViewModel(
             _errorMessage.value = getApplication<Application>().getString(R.string.error_aadhaar_consent)
             return
         }
-        _navigateToOtp.value = true
+        val name = KycProgressRepository.personalDraft().fullName.trim()
+        if (name.isBlank() || name.any { it.isDigit() }) {
+            _errorMessage.value =
+                getApplication<Application>().getString(R.string.kyc_digio_need_personal_name)
+            return
+        }
+        viewModelScope.launch {
+            DigioKycRepository().start(name)
+                .onSuccess { _openDigioUrl.value = it.gatewayUrl }
+                .onFailure {
+                    _errorMessage.value = it.message?.takeIf { msg -> msg.isNotBlank() }
+                        ?: getApplication<Application>().getString(R.string.kyc_digio_failed)
+                }
+        }
     }
 
     fun onSkipClicked() {
         _skipFlow.value = true
+    }
+
+    fun clearOpenDigioUrl() {
+        _openDigioUrl.value = null
     }
 }

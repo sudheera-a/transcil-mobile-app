@@ -72,6 +72,12 @@ object KycProgressRepository {
         // Keep sessionMobile across journey reset — it belongs to auth, not KYC drafts.
     }
 
+    /** Full local wipe on logout (drafts + auth-linked mobile). */
+    fun clearAuthLocal() {
+        reset()
+        sessionMobile = ""
+    }
+
     fun startJourney(journey: JourneyType) {
         // Keep progress/drafts when continuing the same journey; wipe when switching.
         if (this.journey != null && this.journey != journey) {
@@ -93,6 +99,15 @@ object KycProgressRepository {
     fun markCompleted(step: KycStep, completedSubtitle: String = "Completed just now") {
         if (step !in orderedSteps()) return
         completed[step] = completedSubtitle
+    }
+
+    /** Replace catalog step completion from GET /me/onboarding (server truth). */
+    fun syncStepStatuses(completedSteps: Map<KycStep, String>) {
+        val catalog = orderedSteps().toSet()
+        completed.keys.filter { it in catalog }.forEach { completed.remove(it) }
+        completedSteps.forEach { (step, subtitle) ->
+            if (step in catalog) completed[step] = subtitle
+        }
     }
 
     fun isCompleted(step: KycStep): Boolean = step in completed

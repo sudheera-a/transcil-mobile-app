@@ -37,11 +37,40 @@
         <action
             android:id="@+id/action_profile_to_settings"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_profile_to_api_content"
+            app:destination="@id/apiContentFragment" />
+        <action
+            android:id="@+id/action_profile_to_help"
+            app:destination="@id/helpFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="com.example.transcilmobileapp.home.HelpFragment"
+        android:label="@string/help_native_title"
+        tools:layout="@layout/fragment_help" />
 
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.transcilmobileapp.home.SettingsFragment"
         android:label="@string/profile_menu_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settings_to_api_content"
+            app:destination="@id/apiContentFragment" />
+        <action
+            android:id="@+id/action_settings_to_help"
+            app:destination="@id/helpFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/apiContentFragment"
+        android:name="com.example.transcilmobileapp.home.ApiContentFragment"
+        android:label="@string/settings_help_center"
+        tools:layout="@layout/fragment_api_content">
+        <argument
+            android:name="page"
+            app:argType="string" />
+    </fragment>
 </navigation>

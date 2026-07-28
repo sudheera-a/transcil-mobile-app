@@ -1,187 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/screen_background"
-        android:padding="24dp">
+        android:background="@color/surface_page">
 
-        <ImageView
-            android:id="@+id/ivBack"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="16dp"
-            android:contentDescription="@string/cd_back"
-            android:src="@drawable/ic_back"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/tvToolbarTitle"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/navyHeaderInclude"
+            layout="@layout/layout_navy_header"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/verify_otp_title"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            app:layout_constraintTop_toTopOf="@id/ivBack"
-            app:layout_constraintBottom_toBottomOf="@id/ivBack"
-            app:layout_constraintStart_toEndOf="@id/ivBack"
-            android:layout_marginStart="12dp" />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:text="@string/enter_otp_title"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            app:layout_constraintTop_toBottomOf="@id/ivBack"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <TextView
-            android:id="@+id/tvOtpSentTo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="13sp"
-            android:textColor="@color/text_secondary"
-            app:layout_constraintTop_toBottomOf="@id/tvTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/otpContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/tvOtpSentTo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <EditText
-                android:id="@+id/etOtp1"
-                android:layout_width="44dp"
-                android:layout_height="52dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1"
-                android:textSize="18sp"
-                android:background="@android:drawable/edit_text" />
-
-            <EditText
-                android:id="@+id/etOtp2"
-                android:layout_width="44dp"
-                android:layout_height="52dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1"
-                android:textSize="18sp"
-                android:background="@android:drawable/edit_text" />
-
-            <EditText
-                android:id="@+id/etOtp3"
-                android:layout_width="44dp"
-                android:layout_height="52dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1"
-                android:textSize="18sp"
-                android:background="@android:drawable/edit_text" />
-
-            <EditText
-                android:id="@+id/etOtp4"
-                android:layout_width="44dp"
-                android:layout_height="52dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1"
-                android:textSize="18sp"
-                android:background="@android:drawable/edit_text" />
-
-            <EditText
-                android:id="@+id/etOtp5"
-                android:layout_width="44dp"
-                android:layout_height="52dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1"
-                android:textSize="18sp"
-                android:background="@android:drawable/edit_text" />
-
-            <EditText
-                android:id="@+id/etOtp6"
-                android:layout_width="44dp"
-                android:layout_height="52dp"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1"
-                android:textSize="18sp"
-                android:background="@android:drawable/edit_text" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvResendOtp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/resend_otp"
-            android:textColor="@color/brand_primary"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/otpContainer"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <TextView
-            android:id="@+id/tvTimer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/text_muted"
-            android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@id/tvResendOtp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <TextView
-            android:id="@+id/tvTerms"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:gravity="center"
-            android:padding="16dp"
-            android:text="@string/otp_terms"
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"
-            android:background="@android:drawable/edit_text"
-            app:layout_constraintBottom_toTopOf="@id/btnVerify"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <Button
-            android:id="@+id/btnVerify"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/button_height"
-            android:layout_marginBottom="@dimen/cta_bottom_margin"
-            android:backgroundTint="@color/brand_primary"
-            android:text="@string/verify_otp_button"
-            android:textColor="@color/text_on_brand"
+            android:layout_height="0dp"
+            android:layout_marginTop="-20dp"
+            android:background="@drawable/bg_pull_up_card"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/screen_padding"
+            android:paddingTop="@dimen/spacing_xl"
+            android:paddingEnd="@dimen/screen_padding"
+            android:paddingBottom="@dimen/cta_bottom_margin"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/navyHeaderInclude">
 
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="@dimen/back_icon_size"
+                android:layout_height="@dimen/back_icon_size"
+                android:contentDescription="@string/cd_back"
+                android:src="@drawable/ic_back"
+                app:tint="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/tvOtpSentTo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                tools:text="Enter the 6-digit code sent to +91 98765 43210" />
+
+            <TextView
+                android:id="@+id/btnEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/spacing_xs"
+                android:text="@string/otp_edit"
+                android:textColor="@color/brand_primary"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/otpContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xl"
+                android:orientation="horizontal">
+
+                <com.example.transcilmobileapp.core.OtpDigitEditText
+                    android:id="@+id/etOtp1"
+                    style="@style/OtpBox" />
+
+                <com.example.transcilmobileapp.core.OtpDigitEditText
+                    android:id="@+id/etOtp2"
+                    style="@style/OtpBox"
+                    android:layout_marginStart="@dimen/spacing_sm" />
+
+                <com.example.transcilmobileapp.core.OtpDigitEditText
+                    android:id="@+id/etOtp3"
+                    style="@style/OtpBox"
+                    android:layout_marginStart="@dimen/spacing_sm" />
+
+                <com.example.transcilmobileapp.core.OtpDigitEditText
+                    android:id="@+id/etOtp4"
+                    style="@style/OtpBox"
+                    android:layout_marginStart="@dimen/spacing_sm" />
+
+                <com.example.transcilmobileapp.core.OtpDigitEditText
+                    android:id="@+id/etOtp5"
+                    style="@style/OtpBox"
+                    android:layout_marginStart="@dimen/spacing_sm" />
+
+                <com.example.transcilmobileapp.core.OtpDigitEditText
+                    android:id="@+id/etOtp6"
+                    style="@style/OtpBox"
+                    android:layout_marginStart="@dimen/spacing_sm" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvTimer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:gravity="center"
+                android:textColor="@color/text_muted"
+                android:textSize="13sp"
+                tools:text="Resend code in 0:24" />
+
+            <TextView
+                android:id="@+id/tvResendOtp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/spacing_sm"
+                android:text="@string/resend_otp"
+                android:textColor="@color/brand_primary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAutoDetect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/otp_auto_detect"
+                android:textColor="@color/text_muted"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvTerms"
+                android:layout_marginTop="@dimen/spacing_xl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/otp_terms"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/btnVerify"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:background="@drawable/bg_button_primary"
+                android:fontFamily="@font/sora_family"
+                android:gravity="center"
+                android:text="@string/verify_otp_button"
+                android:textColor="@color/text_on_brand"
+                android:textStyle="bold" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

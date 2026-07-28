@@ -3,12 +3,55 @@
     <style name="Base.Theme.TranscilMobileApp" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:fontFamily">@font/manrope_family</item>
         <item name="fontFamily">@font/manrope_family</item>
-        <item name="android:windowBackground">@drawable/screen_background</item>
+        <item name="android:windowBackground">@color/surface_page</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorOnPrimary">@color/text_on_brand</item>
+        <item name="colorSecondary">@color/brand_navy</item>
     </style>
 
     <style name="Theme.TranscilMobileApp" parent="Base.Theme.TranscilMobileApp" />
+
+    <style name="TextAppearance.Transcil.Title" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">@font/sora_family</item>
+        <item name="fontFamily">@font/sora_family</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Transcil.Title.OnNavy" parent="TextAppearance.Transcil.Title">
+        <item name="android:textColor">@color/text_on_navy</item>
+    </style>
+
+    <style name="TextAppearance.Transcil.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/manrope_family</item>
+        <item name="fontFamily">@font/manrope_family</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="Widget.Transcil.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:fontFamily">@font/sora_family</item>
+        <item name="fontFamily">@font/sora_family</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="backgroundTint">@color/brand_primary</item>
+        <item name="android:textColor">@color/text_on_brand</item>
+        <item name="cornerRadius">@dimen/radius_button</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+    </style>
+
+    <style name="OtpBox">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/bg_otp_box</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/sora_family</item>
+    </style>
 </resources>

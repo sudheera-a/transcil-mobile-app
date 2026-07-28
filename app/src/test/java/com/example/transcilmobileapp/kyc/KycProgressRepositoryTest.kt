@@ -118,4 +118,11 @@ class KycProgressRepositoryTest {
         KycProgressRepository.startJourney(JourneyType.THREE_PL)
         assertEquals("9876543210", KycProgressRepository.sessionMobile())
     }
+
+    @Test
+    fun clearAuthLocal_wipesSessionMobile() {
+        KycProgressRepository.saveSessionMobile("9876543210")
+        KycProgressRepository.clearAuthLocal()
+        assertEquals("", KycProgressRepository.sessionMobile())
+    }
 }

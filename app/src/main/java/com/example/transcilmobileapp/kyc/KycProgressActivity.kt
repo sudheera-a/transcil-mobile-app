@@ -6,7 +6,6 @@ import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -50,14 +49,13 @@ class KycProgressActivity :
         binding.tvSkip.setOnClickListener { viewModel.onSkipClicked() }
         binding.tvContactSupport.setOnClickListener { viewModel.onContactSupport() }
 
-        viewModel.summaryTitleRes.observe(this) { resId ->
-            if (resId != null) binding.tvSummaryTitle.setText(resId)
-        }
         viewModel.badgeText.observe(this) { text ->
-            binding.tvBadge.text = text
+            binding.tvPercent.text = text
+        }
+        viewModel.stepsCountText.observe(this) { text ->
+            binding.tvStepsCount.text = text
         }
         viewModel.percent.observe(this) { percent ->
-            binding.tvPercent.text = getString(R.string.kyc_progress_percent_format, percent ?: 0)
             updateProgressFill(percent ?: 0)
         }
         viewModel.steps.observe(this) { renderSteps(it.orEmpty()) }
@@ -73,6 +71,18 @@ class KycProgressActivity :
             if (resId != null) {
                 Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
                 viewModel.clearStubMessage()
+            }
+        }
+        viewModel.toastMessage.observe(this) { message ->
+            if (!message.isNullOrBlank()) {
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                viewModel.clearToastMessage()
+            }
+        }
+        viewModel.openDigioUrl.observe(this) { url ->
+            if (!url.isNullOrBlank()) {
+                DigioLauncher.open(this, url)
+                viewModel.clearOpenDigioUrl()
             }
         }
         viewModel.navigateToHome.observe(this) { go ->
@@ -108,13 +118,7 @@ class KycProgressActivity :
     }
 
     private fun updateProgressFill(percent: Int) {
-        binding.progressTrack.post {
-            val trackWidth = binding.progressTrack.width
-            val fillWidth = (trackWidth * percent.coerceIn(0, 100) / 100f).toInt()
-            val params = binding.progressFill.layoutParams
-            params.width = fillWidth
-            binding.progressFill.layoutParams = params
-        }
+        binding.progressRing.setProgressCompat(percent.coerceIn(0, 100), true)
     }
 
     private fun renderSteps(steps: List<KycStepUi>) {
@@ -124,23 +128,22 @@ class KycProgressActivity :
         val expanded = viewModel.expandedStep.value
         steps.forEachIndexed { index, stepUi ->
             val itemBinding = ItemKycStepBinding.inflate(layoutInflater, binding.llSteps, false)
-            bindStepRow(itemBinding, stepUi, expanded == stepUi.step)
-            boundSteps[stepUi.step] = itemBinding
-            val lp = ViewGroup.MarginLayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+            bindStepRow(
+                itemBinding,
+                stepUi,
+                isExpanded = expanded == stepUi.step,
+                showDivider = index < steps.lastIndex
             )
-            if (index > 0) {
-                lp.topMargin = resources.getDimensionPixelSize(R.dimen.spacing_sm)
-            }
-            binding.llSteps.addView(itemBinding.root, lp)
+            boundSteps[stepUi.step] = itemBinding
+            binding.llSteps.addView(itemBinding.root)
         }
     }
 
     private fun bindStepRow(
         itemBinding: ItemKycStepBinding,
         stepUi: KycStepUi,
-        isExpanded: Boolean
+        isExpanded: Boolean,
+        showDivider: Boolean
     ) {
         val status = stepUi.status
         itemBinding.tvStepTitle.setText(stepUi.titleRes)
@@ -150,29 +153,49 @@ class KycProgressActivity :
         when (status) {
             KycStepStatus.COMPLETED -> {
                 itemBinding.cardRoot.setBackgroundResource(
-                    if (isExpanded) R.drawable.bg_kyc_step_active else R.drawable.bg_kyc_step_default
+                    if (isExpanded) R.drawable.bg_kyc_step_row_active else R.drawable.bg_kyc_step_row
                 )
                 itemBinding.ivStepIcon.setImageResource(R.drawable.ic_kyc_step_done)
+                itemBinding.tvStepTitle.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+                itemBinding.tvStepSubtitle.setTextColor(ContextCompat.getColor(this, R.color.text_muted))
                 itemBinding.tvStepSubtitle.text =
                     stepUi.subtitle ?: getString(R.string.kyc_step_completed_just_now)
+                itemBinding.tvStartChip.visibility = View.GONE
             }
             KycStepStatus.IN_PROGRESS -> {
-                itemBinding.cardRoot.setBackgroundResource(R.drawable.bg_kyc_step_active)
+                itemBinding.cardRoot.setBackgroundResource(R.drawable.bg_kyc_step_row_active)
                 itemBinding.ivStepIcon.setImageResource(R.drawable.ic_kyc_step_progress)
+                itemBinding.tvStepTitle.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+                itemBinding.tvStepSubtitle.setTextColor(
+                    ContextCompat.getColor(this, R.color.brand_primary_dark)
+                )
                 itemBinding.tvStepSubtitle.setText(R.string.kyc_step_in_progress)
+                itemBinding.tvStartChip.visibility = if (isExpanded) View.GONE else View.VISIBLE
             }
             KycStepStatus.PENDING -> {
-                itemBinding.cardRoot.setBackgroundResource(R.drawable.bg_kyc_step_default)
+                itemBinding.cardRoot.setBackgroundResource(R.drawable.bg_kyc_step_row)
                 itemBinding.ivStepIcon.setImageResource(R.drawable.ic_kyc_step_pending)
+                itemBinding.tvStepTitle.setTextColor(ContextCompat.getColor(this, R.color.text_muted))
+                itemBinding.tvStepSubtitle.setTextColor(ContextCompat.getColor(this, R.color.text_muted))
                 itemBinding.tvStepSubtitle.setText(R.string.kyc_step_pending)
+                itemBinding.tvStartChip.visibility = View.GONE
             }
         }
 
         itemBinding.expandBody.visibility = if (isExpanded) View.VISIBLE else View.GONE
-        itemBinding.ivChevron.rotation = if (isExpanded) 180f else 0f
+        itemBinding.stepDivider.visibility =
+            if (!isExpanded && showDivider) View.VISIBLE else View.GONE
         itemBinding.headerRow.setOnClickListener {
             persistDraftFrom(itemBinding, stepUi.step)
             viewModel.onHeaderClicked(stepUi.step)
+        }
+        itemBinding.tvStartChip.setOnClickListener {
+            persistDraftFrom(itemBinding, stepUi.step)
+            if (!isExpanded) {
+                viewModel.onHeaderClicked(stepUi.step)
+            } else {
+                handlePrimaryClick(itemBinding, stepUi)
+            }
         }
 
         if (!isExpanded) return
@@ -231,25 +254,15 @@ class KycProgressActivity :
                 )
             }
             stepUi.step == KycStep.BANK && editable -> {
-                viewModel.submitBank(
-                    itemBinding.etBankHolderName.text?.toString().orEmpty(),
-                    itemBinding.etBankAccountNumber.text?.toString().orEmpty(),
-                    itemBinding.etBankConfirmAccount.text?.toString().orEmpty(),
-                    itemBinding.etBankIfsc.text?.toString().orEmpty(),
-                    itemBinding.cbBankConsent.isChecked
-                )
+                persistDraftFrom(itemBinding, KycStep.BANK)
+                viewModel.startDigioFromBank(itemBinding.cbBankConsent.isChecked)
             }
             stepUi.step == KycStep.AADHAAR && editable -> {
                 persistDraftFrom(itemBinding, KycStep.AADHAAR)
-                val draft = KycProgressRepository.aadhaarDraft()
-                if (draft.otpSent) {
-                    viewModel.submitAadhaarOtp(readAadhaarOtp(itemBinding))
-                } else {
-                    viewModel.submitAadhaarNumber(
-                        itemBinding.etAadhaarNumber.text?.toString().orEmpty(),
-                        itemBinding.cbAadhaarConsent.isChecked
-                    )
-                }
+                viewModel.startDigioFromAadhaar(
+                    itemBinding.etAadhaarNumber.text?.toString().orEmpty(),
+                    itemBinding.cbAadhaarConsent.isChecked
+                )
             }
             stepUi.step == KycStep.REFERENCE && editable -> {
                 viewModel.submitReference(

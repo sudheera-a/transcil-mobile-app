@@ -8,7 +8,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.transcilmobileapp.R
 import com.example.transcilmobileapp.databinding.FragmentWalletBinding
+import com.example.transcilmobileapp.payment.PaymentActivity
 
 class WalletFragment : Fragment() {
 
@@ -38,6 +40,18 @@ class WalletFragment : Fragment() {
         }
         binding.btnWithdraw.setOnClickListener { viewModel.onWithdraw() }
         binding.btnViewAll.setOnClickListener { viewModel.onViewAll() }
+        binding.btnAddMoney.setOnClickListener {
+            Toast.makeText(requireContext(), R.string.wallet_add_money_stub, Toast.LENGTH_SHORT).show()
+        }
+        binding.btnPayRent.setOnClickListener {
+            startActivity(
+                PaymentActivity.createIntent(
+                    requireContext(),
+                    RentalCatalog.defaultActiveModel().id.name,
+                    PlanType.MONTHLY.name,
+                ),
+            )
+        }
 
         viewModel.overview.observe(viewLifecycleOwner) { overview ->
             if (overview == null) return@observe

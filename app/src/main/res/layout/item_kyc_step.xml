@@ -7,28 +7,30 @@
         android:id="@+id/cardRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_kyc_step_default"
+        android:background="@drawable/bg_kyc_step_row"
         android:orientation="vertical"
-        android:padding="@dimen/spacing_lg">
+        android:paddingHorizontal="18dp"
+        android:paddingTop="15dp">
 
         <LinearLayout
             android:id="@+id/headerRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="15dp">
 
             <ImageView
                 android:id="@+id/ivStepIcon"
-                android:layout_width="@dimen/kyc_step_icon_size"
-                android:layout_height="@dimen/kyc_step_icon_size"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:contentDescription="@null"
                 tools:src="@drawable/ic_kyc_step_done" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_md"
+                android:layout_marginStart="13dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -36,8 +38,9 @@
                     android:id="@+id/tvStepTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/sora_family"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp"
+                    android:textSize="14.5sp"
                     android:textStyle="bold"
                     tools:text="Personal Details" />
 
@@ -45,26 +48,49 @@
                     android:id="@+id/tvStepSubtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xs"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="@font/manrope_family"
+                    android:textColor="@color/text_muted"
+                    android:textSize="11.5sp"
                     tools:text="Completed just now" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvStartChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_button_primary"
+                android:fontFamily="@font/sora_family"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
+                android:text="@string/kyc_action_start"
+                android:textColor="@color/text_on_brand"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <ImageView
                 android:id="@+id/ivChevron"
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_chevron_down" />
+                android:src="@drawable/ic_chevron_down"
+                android:visibility="gone" />
         </LinearLayout>
+
+        <View
+            android:id="@+id/stepDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/kyc_step_divider" />
 
         <LinearLayout
             android:id="@+id/expandBody"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_lg"
             android:orientation="vertical"
+            android:paddingBottom="15dp"
             android:visibility="gone"
             tools:visibility="visible">
 
@@ -678,40 +704,98 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_info_outline"
+                    android:background="@drawable/bg_secondary_action"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="@dimen/spacing_lg">
+                    android:padding="15dp">
 
-                    <ImageView
-                        android:layout_width="@dimen/icon_size"
-                        android:layout_height="@dimen/icon_size"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_shield" />
+                    <FrameLayout
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:background="@drawable/bg_circle_brand_soft">
+
+                        <ImageView
+                            android:layout_width="17dp"
+                            android:layout_height="17dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_shield"
+                            app:tint="@color/brand_primary" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_md"
+                        android:layout_marginStart="12dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/aadhaar_secure_title"
+                            android:fontFamily="@font/sora_family"
+                            android:text="@string/aadhaar_encrypted_title"
                             android:textColor="@color/text_primary"
-                            android:textSize="13sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_xs"
-                            android:text="@string/aadhaar_secure_body"
+                            android:layout_marginTop="3dp"
+                            android:fontFamily="@font/manrope_family"
+                            android:text="@string/aadhaar_encrypted_body"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_guideline_check" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="9dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/manrope_family"
+                        android:text="@string/aadhaar_bullet_time"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12.5sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="9dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_guideline_check" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="9dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/manrope_family"
+                        android:text="@string/aadhaar_bullet_otp"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12.5sp" />
                 </LinearLayout>
 
                 <TextView
@@ -1046,9 +1130,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="@dimen/spacing_lg"
-                android:backgroundTint="@color/brand_primary"
-                android:textColor="@color/text_on_brand"
+                android:background="@drawable/bg_button_outline_primary"
+                android:fontFamily="@font/sora_family"
+                android:textAllCaps="false"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
                 android:visibility="gone"
+                app:backgroundTint="@null"
                 tools:text="Capture Photo / Attach Doc" />
 
             <Button
@@ -1056,9 +1144,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginTop="@dimen/spacing_md"
-                android:backgroundTint="@color/brand_primary"
+                android:background="@drawable/bg_button_primary"
+                android:fontFamily="@font/sora_family"
+                android:textAllCaps="false"
                 android:textColor="@color/text_on_brand"
-                tools:text="Edit" />
+                android:textStyle="bold"
+                app:backgroundTint="@null"
+                tools:text="Start" />
         </LinearLayout>
     </LinearLayout>
 </layout>
