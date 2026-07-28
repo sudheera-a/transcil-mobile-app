@@ -6,216 +6,150 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/screen_background"
-        android:paddingHorizontal="@dimen/screen_padding">
+        android:background="@color/home_surface">
 
-        <ImageView
-            android:id="@+id/ivBack"
-            android:layout_width="@dimen/back_icon_size"
-            android:layout_height="@dimen/back_icon_size"
-            android:layout_marginTop="@dimen/spacing_lg"
-            android:contentDescription="@string/cd_back"
-            android:src="@drawable/ic_back"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/navyHeader"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_md"
-            android:text="@string/selfie_title"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/ivBack"
-            app:layout_constraintStart_toEndOf="@id/ivBack"
-            app:layout_constraintTop_toTopOf="@id/ivBack" />
+            android:background="@drawable/bg_navy_header"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/screen_padding"
+            android:paddingTop="@dimen/spacing_xl"
+            android:paddingBottom="28dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="@dimen/back_icon_size"
+                android:layout_height="@dimen/back_icon_size"
+                android:contentDescription="@string/cd_back"
+                android:src="@drawable/ic_back"
+                app:tint="@color/text_on_navy" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:fontFamily="@font/sora_family"
+                android:text="@string/selfie_title_redesign"
+                android:textColor="@color/text_on_navy"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_sm"
+                android:fontFamily="@font/manrope_family"
+                android:text="@string/selfie_subtitle_redesign"
+                android:textColor="@color/text_on_navy_muted"
+                android:textSize="14sp" />
+        </LinearLayout>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollContent"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/spacing_lg"
+            android:layout_marginTop="@dimen/pull_up_overlap"
+            android:background="@drawable/bg_pull_up_card"
             android:clipToPadding="false"
             android:fillViewport="true"
+            android:paddingHorizontal="18dp"
+            android:paddingTop="@dimen/spacing_xl"
             android:paddingBottom="@dimen/spacing_lg"
             app:layout_constraintBottom_toTopOf="@id/bottomActions"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivBack">
+            app:layout_constraintTop_toBottomOf="@id/navyHeader">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_selfie_guidelines"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_lg">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/selfie_guidelines_title"
-                        android:textColor="@color/text_primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="@dimen/check_size"
-                            android:layout_height="@dimen/check_size"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_guideline_check" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/spacing_sm"
-                            android:layout_weight="1"
-                            android:text="@string/selfie_guideline_lighting"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="13sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_sm"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="@dimen/check_size"
-                            android:layout_height="@dimen/check_size"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_guideline_check" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/spacing_sm"
-                            android:layout_weight="1"
-                            android:text="@string/selfie_guideline_glasses"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="13sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_sm"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="@dimen/check_size"
-                            android:layout_height="@dimen/check_size"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_guideline_check" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/spacing_sm"
-                            android:layout_weight="1"
-                            android:text="@string/selfie_guideline_centered"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="13sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_sm"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="@dimen/check_size"
-                            android:layout_height="@dimen/check_size"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_guideline_check" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/spacing_sm"
-                            android:layout_weight="1"
-                            android:text="@string/selfie_guideline_expression"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="13sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/selfie_frame_height"
-                    android:layout_marginTop="@dimen/spacing_xl"
-                    android:background="@drawable/bg_selfie_frame">
+                    android:layout_height="180dp"
+                    android:background="@drawable/bg_selfie_navy_frame">
 
                     <ImageView
                         android:id="@+id/ivSelfiePreview"
-                        android:layout_width="@dimen/selfie_placeholder_size"
-                        android:layout_height="@dimen/selfie_placeholder_size"
+                        android:layout_width="96dp"
+                        android:layout_height="118dp"
                         android:layout_gravity="center"
                         android:contentDescription="@string/selfie_title"
-                        android:src="@drawable/ic_person" />
+                        android:src="@drawable/bg_selfie_oval_guide" />
+
+                    <TextView
+                        android:id="@+id/tvPositionHint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="@font/manrope_family"
+                        android:gravity="center"
+                        android:text="@string/selfie_align_face"
+                        android:textColor="@color/text_on_navy_muted"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
                 </FrameLayout>
 
                 <LinearLayout
                     android:id="@+id/captureHints"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_lg"
-                    android:gravity="center_horizontal"
+                    android:layout_marginTop="14dp"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvPositionHint"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_selfie_hint_pill"
-                        android:paddingHorizontal="@dimen/spacing_lg"
-                        android:paddingVertical="@dimen/spacing_sm"
-                        android:text="@string/selfie_position_hint"
-                        android:textColor="@color/brand_primary"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_lg"
-                        android:background="@drawable/bg_info_filled"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/spacing_md">
+                        android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="@dimen/info_icon_size"
-                            android:layout_height="@dimen/info_icon_size"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
                             android:contentDescription="@null"
-                            android:src="@drawable/ic_info" />
+                            android:src="@drawable/ic_guideline_check" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/spacing_sm"
+                            android:layout_marginStart="9dp"
                             android:layout_weight="1"
-                            android:text="@string/selfie_identity_hint"
+                            android:fontFamily="@font/manrope_family"
+                            android:text="@string/selfie_guideline_lighting_redesign"
                             android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
+                            android:textSize="12.5sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="9dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_guideline_no" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="9dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/manrope_family"
+                            android:text="@string/selfie_guideline_no_accessories"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12.5sp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -227,7 +161,7 @@
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:visibility="gone"
-                    tools:visibility="visible">
+                    tools:visibility="gone">
 
                     <ImageView
                         android:layout_width="@dimen/selfie_captured_icon_size"
@@ -240,6 +174,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_sm"
+                        android:fontFamily="@font/sora_family"
                         android:text="@string/selfie_photo_captured"
                         android:textColor="@color/text_primary"
                         android:textSize="16sp"
@@ -252,8 +187,11 @@
             android:id="@+id/bottomActions"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_xl"
+            android:background="@color/surface_card"
             android:orientation="vertical"
+            android:paddingHorizontal="18dp"
+            android:paddingTop="@dimen/spacing_md"
+            android:paddingBottom="@dimen/spacing_xl"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -265,9 +203,10 @@
                 android:background="@drawable/bg_button_primary"
                 android:drawablePadding="@dimen/spacing_sm"
                 android:drawableStart="@drawable/ic_camera"
+                android:fontFamily="@font/sora_family"
                 android:gravity="center"
                 android:paddingHorizontal="@dimen/spacing_xl"
-                android:text="@string/selfie_capture"
+                android:text="@string/selfie_take_cta"
                 android:textAllCaps="false"
                 android:textColor="@color/text_on_brand"
                 android:textStyle="bold"
@@ -279,13 +218,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:background="@drawable/bg_button_primary"
+                android:fontFamily="@font/sora_family"
                 android:text="@string/continue_button"
                 android:textAllCaps="false"
                 android:textColor="@color/text_on_brand"
                 android:textStyle="bold"
                 android:visibility="gone"
                 app:backgroundTint="@null"
-                tools:visibility="visible" />
+                tools:visibility="gone" />
 
             <Button
                 android:id="@+id/btnRetake"
@@ -295,6 +235,7 @@
                 android:background="@drawable/bg_button_outline_primary"
                 android:drawablePadding="@dimen/spacing_sm"
                 android:drawableStart="@drawable/ic_camera"
+                android:fontFamily="@font/sora_family"
                 android:gravity="center"
                 android:paddingHorizontal="@dimen/spacing_xl"
                 android:text="@string/selfie_retake"
@@ -304,7 +245,7 @@
                 android:visibility="gone"
                 app:backgroundTint="@null"
                 app:drawableTint="@color/text_primary"
-                tools:visibility="visible" />
+                tools:visibility="gone" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

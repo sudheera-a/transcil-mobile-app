@@ -6,196 +6,287 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/screen_background">
+        android:background="@color/home_surface">
 
-        <ImageView
-            android:id="@+id/ivBack"
-            android:layout_width="@dimen/back_icon_size"
-            android:layout_height="@dimen/back_icon_size"
-            android:layout_marginStart="@dimen/screen_padding"
-            android:layout_marginTop="@dimen/spacing_lg"
-            android:contentDescription="@string/cd_back"
-            android:src="@drawable/ic_back"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tvTitle"
+        <LinearLayout
+            android:id="@+id/navyHeader"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/kyc_progress_title"
-            android:textColor="@color/text_primary"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/ivBack"
-            app:layout_constraintEnd_toStartOf="@id/tvSkip"
-            app:layout_constraintStart_toEndOf="@id/ivBack"
-            app:layout_constraintTop_toTopOf="@id/ivBack" />
-
-        <TextView
-            android:id="@+id/tvSkip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/screen_padding"
-            android:padding="@dimen/spacing_xs"
-            android:text="@string/kyc_progress_skip"
-            android:textColor="@color/brand_primary"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/ivBack"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ivBack" />
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/spacing_lg"
-            android:clipToPadding="false"
-            android:fillViewport="true"
-            android:paddingHorizontal="@dimen/screen_padding"
-            android:paddingBottom="@dimen/spacing_xl"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/bg_navy_header"
+            android:orientation="vertical"
+            android:paddingBottom="28dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivBack">
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/screen_padding"
+                android:paddingTop="@dimen/spacing_xl">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/ivBack"
+                    android:layout_width="@dimen/back_icon_size"
+                    android:layout_height="@dimen/back_icon_size"
+                    android:contentDescription="@string/cd_back"
+                    android:src="@drawable/ic_back"
+                    app:tint="@color/text_on_navy" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tvSkip"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_kyc_summary_card"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_lg">
+                    android:fontFamily="@font/manrope_family"
+                    android:padding="@dimen/spacing_xs"
+                    android:text="@string/kyc_progress_skip"
+                    android:textColor="@color/text_on_navy"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tvSummaryTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="@color/text_primary"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        tools:text="@string/kyc_progress_rent_title" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/screen_padding">
 
-                    <TextView
-                        android:id="@+id/tvBadge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:background="@drawable/bg_progress_badge"
-                        android:paddingHorizontal="@dimen/spacing_md"
-                        android:paddingVertical="@dimen/spacing_xs"
-                        android:textColor="@color/progress_badge_text"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        tools:text="3/6 COMPLETE" />
+                <FrameLayout
+                    android:layout_width="@dimen/kyc_header_ring_size"
+                    android:layout_height="@dimen/kyc_header_ring_size">
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/progressRing"
+                        android:layout_width="@dimen/kyc_header_ring_size"
+                        android:layout_height="@dimen/kyc_header_ring_size"
+                        android:layout_gravity="center"
+                        android:indeterminate="false"
+                        app:indicatorColor="@color/brand_primary"
+                        app:indicatorSize="@dimen/kyc_header_ring_size"
+                        app:trackColor="@color/step_track_navy_inactive"
+                        app:trackThickness="@dimen/kyc_header_ring_stroke"
+                        tools:progress="43" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_lg"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/kyc_progress_overall"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="13sp" />
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tvPercent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
+                            android:fontFamily="@font/sora_family"
+                            android:textColor="@color/text_on_navy"
+                            android:textSize="19sp"
                             android:textStyle="bold"
-                            tools:text="50%" />
+                            tools:text="3/7" />
+
+                        <TextView
+                            android:id="@+id/tvBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_family"
+                            android:text="@string/kyc_progress_done_label"
+                            android:textColor="@color/text_on_navy_soft"
+                            android:textSize="9.5sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_md"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvHeaderTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sora_family"
+                        android:text="@string/kyc_almost_there_redesign"
+                        android:textColor="@color/text_on_navy"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvHeaderSubtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/manrope_family"
+                        android:lineSpacingMultiplier="1.3"
+                        android:text="@string/kyc_almost_there_body"
+                        android:textColor="@color/text_on_navy_muted"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:paddingBottom="@dimen/spacing_xl"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/navyHeader">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="18dp"
+                android:paddingTop="@dimen/spacing_lg">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_rental_due_banner"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="14dp">
 
                     <FrameLayout
-                        android:id="@+id/progressTrack"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/kyc_progress_bar_height"
-                        android:layout_marginTop="@dimen/spacing_sm"
-                        android:background="@drawable/bg_progress_track">
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:background="@drawable/bg_warning_icon_tile">
 
-                        <View
-                            android:id="@+id/progressFill"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/bg_progress_fill" />
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_info"
+                            app:tint="@color/text_on_brand" />
                     </FrameLayout>
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:text="@string/kyc_progress_helper"
-                        android:textColor="@color/text_muted"
-                        android:textSize="12sp" />
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/manrope_family"
+                        android:lineSpacingMultiplier="1.35"
+                        android:text="@string/kyc_docs_hub_note"
+                        android:textColor="@color/rental_due_title"
+                        android:textSize="12.5sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xl"
-                    android:text="@string/kyc_verification_steps"
-                    android:textColor="@color/brand_primary"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:layout_marginTop="22dp"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="2dp">
+
+                    <TextView
+                        android:id="@+id/tvSummaryTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sora_family"
+                        android:text="@string/kyc_verification_steps"
+                        android:textColor="@color/brand_navy"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvStepsCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/manrope_family"
+                        android:textColor="@color/brand_primary_dark"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        tools:text="3 of 7" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/llSteps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_md"
-                    android:orientation="vertical" />
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_home_hero_card"
+                    android:orientation="vertical"
+                    android:paddingVertical="2dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xl"
-                    android:background="@drawable/bg_kyc_summary_card"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_lg">
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/bg_home_hero_card"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/kyc_need_help_title"
-                        android:textColor="@color/text_primary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                    <FrameLayout
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_secondary_action">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_sm"
-                        android:text="@string/kyc_need_help_body"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
+                        <ImageView
+                            android:layout_width="19dp"
+                            android:layout_height="19dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_help"
+                            app:tint="@color/text_secondary" />
+                    </FrameLayout>
 
-                    <TextView
-                        android:id="@+id/tvContactSupport"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:drawablePadding="@dimen/spacing_sm"
-                        android:drawableStart="@drawable/ic_help"
-                        android:gravity="center_vertical"
-                        android:paddingVertical="@dimen/spacing_xs"
-                        android:text="@string/kyc_contact_support"
-                        android:textColor="@color/brand_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:layout_marginStart="13dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sora_family"
+                            android:text="@string/kyc_need_help_title"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:fontFamily="@font/manrope_family"
+                            android:text="@string/kyc_need_help_body"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tvContactSupport"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:fontFamily="@font/manrope_family"
+                            android:text="@string/kyc_contact_support"
+                            android:textColor="@color/brand_primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

@@ -6,11 +6,15 @@
     <dimen name="spacing_lg">16dp</dimen>
     <dimen name="spacing_xl">24dp</dimen>
     <dimen name="screen_padding">24dp</dimen>
+    <dimen name="radius_xl">20dp</dimen>
     <dimen name="radius_card">16dp</dimen>
-    <dimen name="radius_input">12dp</dimen>
-    <dimen name="radius_chip">12dp</dimen>
-    <dimen name="radius_button">28dp</dimen>
-    <dimen name="radius_icon_tile">12dp</dimen>
+    <dimen name="radius_input">14dp</dimen>
+    <dimen name="radius_chip">14dp</dimen>
+    <dimen name="radius_button">14dp</dimen>
+    <dimen name="radius_pill">999dp</dimen>
+    <dimen name="radius_icon_tile">15dp</dimen>
+    <dimen name="radius_journey_card">18dp</dimen>
+
     <dimen name="icon_tile_size">40dp</dimen>
     <dimen name="icon_size">20dp</dimen>
     <dimen name="back_icon_size">24dp</dimen>
@@ -58,4 +62,10 @@
     <dimen name="profile_menu_icon">40dp</dimen>
     <dimen name="settings_icon_tile">40dp</dimen>
     <dimen name="splash_logo_max_width">280dp</dimen>
+    <dimen name="splash_wordmark_max_width">320dp</dimen>
+    <dimen name="pull_up_overlap">20dp</dimen>
+    <dimen name="kyc_ring_size">120dp</dimen>
+    <dimen name="kyc_ring_stroke">8dp</dimen>
+    <dimen name="kyc_header_ring_size">84dp</dimen>
+    <dimen name="kyc_header_ring_stroke">9dp</dimen>
 </resources>

@@ -2,11 +2,17 @@ package com.example.transcilmobileapp.journey
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-
+import androidx.lifecycle.viewModelScope
 import com.example.transcilmobileapp.core.BaseViewModel
 import com.example.transcilmobileapp.core.JourneyType
+import com.example.transcilmobileapp.kyc.KycProgressRepository
+import com.example.transcilmobileapp.repository.OnboardingRepository
+import com.example.transcilmobileapp.repository.toRiderRole
+import kotlinx.coroutines.launch
 
-class ChooseJourneyViewModel : BaseViewModel() {
+class ChooseJourneyViewModel(
+    private val onboardingRepository: OnboardingRepository = OnboardingRepository(),
+) : BaseViewModel() {
 
     private val _selectedJourney = MutableLiveData<JourneyType?>()
     val selectedJourney: LiveData<JourneyType?> = _selectedJourney
@@ -17,16 +23,50 @@ class ChooseJourneyViewModel : BaseViewModel() {
     private val _navigateToPersonalAccount = MutableLiveData<Boolean>()
     val navigateToPersonalAccount: LiveData<Boolean> = _navigateToPersonalAccount
 
+    private val _enabledRoles = MutableLiveData<Set<String>>(emptySet())
+    val enabledRoles: LiveData<Set<String>> = _enabledRoles
+
+    init {
+        loadJourneyOptions()
+    }
+
+    fun loadJourneyOptions() {
+        viewModelScope.launch {
+            onboardingRepository.journeyOptions()
+                .onSuccess { options ->
+                    _enabledRoles.value = options.map { it.roleKey.lowercase() }.toSet()
+                }
+                .onFailure {
+                    // Soft-fail: hard-coded cards stay selectable.
+                    _enabledRoles.value = setOf("rider", "3pl")
+                }
+        }
+    }
+
     fun onJourneySelected(type: JourneyType) {
+        val roles = _enabledRoles.value.orEmpty()
+        val role = type.toRiderRole()
+        if (roles.isNotEmpty() && role !in roles) {
+            showError("This journey is not available right now")
+            return
+        }
         _selectedJourney.value = type
         _continueEnabled.value = true
     }
 
     fun onContinueClicked() {
-        when (_selectedJourney.value) {
-            JourneyType.RENT_EV, JourneyType.THREE_PL ->
-                _navigateToPersonalAccount.value = true
-            null -> Unit
+        val type = _selectedJourney.value ?: return
+        viewModelScope.launch {
+            showLoading()
+            onboardingRepository.setRiderRole(type)
+                .onSuccess {
+                    KycProgressRepository.startJourney(type)
+                    _navigateToPersonalAccount.value = true
+                }
+                .onFailure { e ->
+                    showError(e.message ?: "Failed to save journey")
+                }
+            hideLoading()
         }
     }
 }

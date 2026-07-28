@@ -26,7 +26,7 @@ android {
         buildConfigField(
             "String",
             "BASE_URL",
-            "\"http://10.0.2.2:4000/\""
+            "\"https://api.transcil.in/\""
         )
     }
 
@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.security.crypto)
+    implementation(libs.play.services.auth.api.phone)
     testImplementation(libs.junit)
     testImplementation(libs.androidx.arch.core.testing)
     testImplementation(libs.okhttp.mockwebserver)

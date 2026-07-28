@@ -34,8 +34,9 @@ class HomeDashboardActivity :
 
         bindBottomNav()
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            val isSettings = destination.id == R.id.settingsFragment
-            binding.bottomNav.visibility = if (isSettings) View.GONE else View.VISIBLE
+            val hideBottomNav = destination.id == R.id.settingsFragment ||
+                destination.id == R.id.apiContentFragment
+            binding.bottomNav.visibility = if (hideBottomNav) View.GONE else View.VISIBLE
             renderBottomNav(destinationIdToTab(destination.id))
         }
 
@@ -127,7 +128,7 @@ class HomeDashboardActivity :
         R.id.nearbyHubsFragment -> HomeNavTab.MAP
         R.id.batterySwapFragment -> HomeNavTab.BATTERY
         R.id.walletFragment -> HomeNavTab.WALLET
-        R.id.profileFragment, R.id.settingsFragment -> HomeNavTab.PROFILE
+        R.id.profileFragment, R.id.settingsFragment, R.id.apiContentFragment -> HomeNavTab.PROFILE
         else -> HomeNavTab.HOME
     }
 

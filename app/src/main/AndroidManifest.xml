@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TranscilMobileApp"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="false">
 
         <activity
             android:name=".splash.MainActivity"
@@ -25,10 +25,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".onboarding.Onboarding1Activity" android:exported="false" />
-        <activity android:name=".onboarding.Onboarding2Activity" android:exported="false" />
-        <activity android:name=".onboarding.Onboarding3Activity" android:exported="false" />
-        <activity android:name=".onboarding.Onboarding4Activity" android:exported="false" />
+        <activity android:name=".onboarding.OnboardingActivity" android:exported="false" />
 
         <activity android:name=".auth.WelcomeActivity" android:exported="false" />
         <activity android:name=".auth.VerifyOtpActivity" android:exported="false" />
@@ -78,6 +75,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".home.HomeDashboardActivity" android:exported="false" />
+        <activity android:name=".rental.VehiclesActivity" android:exported="false" />
+        <activity android:name=".rental.RentalPlansActivity" android:exported="false" />
+        <activity android:name=".payment.PaymentActivity" android:exported="false" />
 
     </application>
 

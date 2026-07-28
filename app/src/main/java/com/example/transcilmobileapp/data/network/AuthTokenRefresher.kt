@@ -9,6 +9,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.util.UUID
 
 /**
  * Synchronous refresh via plain OkHttp (no Authenticator — avoids 401 refresh loops).
@@ -25,6 +26,8 @@ object AuthTokenRefresher {
     private val responseType = object : TypeToken<ApiResponse<AuthTokensData>>() {}.type
 
     fun refreshBlocking(refreshToken: String): String? {
+        if (refreshToken.isBlank()) return null
+
         val base = (baseUrlOverride ?: BuildConfig.BASE_URL).let {
             if (it.endsWith("/")) it else "$it/"
         }
@@ -34,6 +37,7 @@ object AuthTokenRefresher {
 
         val request = Request.Builder()
             .url(url)
+            .header("Idempotency-Key", UUID.randomUUID().toString())
             .post(body)
             .build()
 
@@ -42,6 +46,7 @@ object AuthTokenRefresher {
                 if (!response.isSuccessful) return null
                 val raw = response.body?.string() ?: return null
                 val parsed = gson.fromJson<ApiResponse<AuthTokensData>>(raw, responseType)
+                if (parsed.error != null) return null
                 parsed.data?.accessToken?.takeIf { it.isNotBlank() }
             }
         } catch (_: Exception) {

@@ -30,13 +30,14 @@ object AddressDetailsValidator {
         line2: String,
         city: String,
         state: String,
-        pincode: String
+        pincode: String,
+        allowedStates: Set<String>? = null,
     ): AddressFieldErrors {
         return AddressFieldErrors(
             line1 = validateLine1(line1),
             line2 = validateLine2(line2),
             city = validateCity(city),
-            state = validateState(state),
+            state = validateState(state, allowedStates),
             pincode = validatePincode(pincode)
         )
     }
@@ -67,10 +68,13 @@ object AddressDetailsValidator {
         return null
     }
 
-    private fun validateState(raw: String): Int? {
+    private fun validateState(raw: String, allowedStates: Set<String>?): Int? {
         val value = raw.trim()
         if (value.isEmpty() || value == IndianStates.PLACEHOLDER) {
             return R.string.error_state_required
+        }
+        if (allowedStates != null) {
+            return if (value in allowedStates) null else R.string.error_state_required
         }
         if (!IndianStates.isValid(value)) return R.string.error_state_required
         return null

@@ -6,16 +6,18 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
-import com.example.transcilmobileapp.databinding.ActivityAddressDetailsBinding
-
 import com.example.transcilmobileapp.core.BaseActivity
+import com.example.transcilmobileapp.core.FeedbackUi
 import com.example.transcilmobileapp.core.UiFormHelpers
+import com.example.transcilmobileapp.data.model.onboarding.StateOption
+import com.example.transcilmobileapp.databinding.ActivityAddressDetailsBinding
 
 class AddressDetailsActivity :
     BaseActivity<ActivityAddressDetailsBinding>(ActivityAddressDetailsBinding::inflate) {
 
     private val viewModel: AddressDetailsViewModel by viewModels()
     private var bindingInProgress = false
+    private var stateOptions: List<StateOption> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +27,7 @@ class AddressDetailsActivity :
         UiFormHelpers.bindFocusHighlight(binding.etAddressLine2)
 
         setupStateSpinner()
-        hydrateFromDraft()
+        viewModel.load()
 
         binding.ivBack.setOnClickListener { finish() }
         binding.btnContinue.setOnClickListener {
@@ -33,8 +35,8 @@ class AddressDetailsActivity :
                 line1 = binding.etAddressLine1.text.toString(),
                 line2 = binding.etAddressLine2.text.toString(),
                 city = binding.etCity.text.toString(),
-                state = selectedState(),
-                pincode = binding.etPincode.text.toString()
+                stateOption = selectedStateOption(),
+                pincode = binding.etPincode.text.toString(),
             )
         }
 
@@ -43,52 +45,90 @@ class AddressDetailsActivity :
         binding.etCity.doAfterTextChanged { viewModel.clearCityError() }
         binding.etPincode.doAfterTextChanged { viewModel.clearPincodeError() }
 
+        viewModel.states.observe(this, ::bindStates)
+        viewModel.cities.observe(this, ::bindCities)
+        viewModel.prefill.observe(this, ::applyPrefill)
         viewModel.fieldErrors.observe(this, ::renderFieldErrors)
+        viewModel.isLoading.observe(this) { loading ->
+            binding.btnContinue.isEnabled = loading != true
+        }
+        viewModel.errorMessage.observe(this) { message ->
+            if (!message.isNullOrBlank()) {
+                FeedbackUi.toast(this, message)
+                viewModel.clearError()
+            }
+        }
         viewModel.navigateNext.observe(this) { go ->
             if (go == true) {
-                KycProgressRepository.markCompleted(KycStep.ADDRESS)
                 KycFlowNavigator.openProgress(this)
             }
         }
     }
 
     private fun setupStateSpinner() {
-        binding.spinnerState.adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            IndianStates.ALL_WITH_PLACEHOLDER
-        )
         binding.spinnerState.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
                     view: View?,
                     position: Int,
-                    id: Long
+                    id: Long,
                 ) {
-                    if (!bindingInProgress) {
-                        viewModel.clearStateError()
-                    }
+                    if (bindingInProgress) return
+                    viewModel.onStateSelected(stateOptions.getOrNull(position))
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) = Unit
             }
     }
 
-    private fun hydrateFromDraft() {
-        val draft = KycProgressRepository.addressDraft()
+    private fun bindStates(options: List<StateOption>?) {
+        val rows = listOf(StateOption(code = "", name = IndianStates.PLACEHOLDER)) +
+            (options ?: emptyList())
+        stateOptions = rows
         bindingInProgress = true
-        if (draft.line1.isNotBlank()) binding.etAddressLine1.setText(draft.line1)
-        if (draft.line2.isNotBlank()) binding.etAddressLine2.setText(draft.line2)
-        if (draft.city.isNotBlank()) binding.etCity.setText(draft.city)
-        if (draft.pincode.isNotBlank()) binding.etPincode.setText(draft.pincode)
-        binding.spinnerState.setSelection(IndianStates.indexOf(draft.state))
+        binding.spinnerState.adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            rows,
+        )
+        viewModel.prefill.value?.let { applyStateSelection(it.state) }
         bindingInProgress = false
     }
 
-    private fun selectedState(): String {
-        val selected = binding.spinnerState.selectedItem?.toString().orEmpty()
-        return if (selected == IndianStates.PLACEHOLDER) "" else selected
+    private fun bindCities(cities: List<String>?) {
+        binding.etCity.setAdapter(
+            ArrayAdapter(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                cities.orEmpty(),
+            )
+        )
+    }
+
+    private fun applyPrefill(prefill: AddressPrefill?) {
+        val value = prefill ?: return
+        bindingInProgress = true
+        if (value.line1.isNotBlank()) binding.etAddressLine1.setText(value.line1)
+        if (value.line2.isNotBlank()) binding.etAddressLine2.setText(value.line2)
+        if (value.city.isNotBlank()) binding.etCity.setText(value.city)
+        if (value.pincode.isNotBlank()) binding.etPincode.setText(value.pincode)
+        applyStateSelection(value.state)
+        bindingInProgress = false
+        selectedStateOption()?.let { viewModel.onStateSelected(it) }
+    }
+
+    private fun applyStateSelection(state: String) {
+        if (state.isBlank() || stateOptions.isEmpty()) return
+        val index = stateOptions.indexOfFirst {
+            it.code.equals(state, ignoreCase = true) || it.name.equals(state, ignoreCase = true)
+        }
+        if (index >= 0) binding.spinnerState.setSelection(index)
+    }
+
+    private fun selectedStateOption(): StateOption? {
+        val position = binding.spinnerState.selectedItemPosition
+        return stateOptions.getOrNull(position)
     }
 
     private fun renderFieldErrors(errors: AddressFieldErrors?) {
@@ -96,12 +136,12 @@ class AddressDetailsActivity :
         UiFormHelpers.setFieldError(
             binding.tvAddressLine1Error,
             binding.addressLine1Container,
-            value.line1
+            value.line1,
         )
         UiFormHelpers.setFieldError(
             binding.tvAddressLine2Error,
             binding.addressLine2Container,
-            value.line2
+            value.line2,
         )
         UiFormHelpers.setFieldError(binding.tvCityError, binding.etCity, value.city)
         UiFormHelpers.setFieldError(binding.tvStateError, binding.spinnerState, value.state)

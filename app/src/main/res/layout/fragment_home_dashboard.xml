@@ -3,29 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/home_surface">
+        android:background="@color/home_surface"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingBottom="@dimen/spacing_xl">
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollContent"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:fillViewport="true"
-            android:paddingHorizontal="@dimen/screen_padding"
-            android:paddingTop="@dimen/spacing_lg"
-            android:paddingBottom="@dimen/spacing_lg"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <!-- Navy header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:background="@drawable/bg_home_navy_header"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/spacing_xl"
+                android:paddingTop="@dimen/spacing_lg"
+                android:paddingEnd="@dimen/spacing_xl"
+                android:paddingBottom="36dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -38,900 +39,604 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvGreetingLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_greeting_label"
+                            android:textColor="@color/text_on_navy_muted"
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvGreeting"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
+                            android:layout_marginTop="2dp"
+                            android:fontFamily="@font/sora_family"
+                            android:textColor="@color/text_on_navy"
                             android:textSize="22sp"
                             android:textStyle="bold"
-                            tools:text="Good Morning, Sai" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_xs"
-                            android:text="@string/home_greeting_subtitle"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="13sp" />
+                            tools:text="Rahul Sharma" />
                     </LinearLayout>
 
                     <FrameLayout
                         android:id="@+id/btnNotifications"
-                        android:layout_width="@dimen/home_quick_icon_size"
-                        android:layout_height="@dimen/home_quick_icon_size"
-                        android:background="@drawable/bg_home_quick_tile"
-                        android:clickable="true"
-                        android:contentDescription="@string/home_notifications_cd"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless">
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_notif_tile_navy"
+                        android:contentDescription="@string/home_notifications_cd">
 
                         <ImageView
-                            android:layout_width="@dimen/icon_size"
-                            android:layout_height="@dimen/icon_size"
+                            android:layout_width="21dp"
+                            android:layout_height="21dp"
                             android:layout_gravity="center"
-                            android:contentDescription="@null"
                             android:src="@drawable/ic_notifications"
-                            app:tint="@color/brand_primary" />
+                            app:tint="@color/text_on_navy_muted" />
 
                         <View
                             android:id="@+id/notificationDot"
-                            android:layout_width="@dimen/home_notification_dot"
-                            android:layout_height="@dimen/home_notification_dot"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
                             android:layout_gravity="top|end"
-                            android:layout_marginTop="@dimen/spacing_sm"
-                            android:layout_marginEnd="@dimen/spacing_sm"
+                            android:layout_marginTop="9dp"
+                            android:layout_marginEnd="11dp"
                             android:background="@drawable/bg_notification_dot" />
                     </FrameLayout>
                 </LinearLayout>
+            </LinearLayout>
 
-                <!-- Pending frame: profile + KYC badge -->
+            <!-- Pending KYC card -->
+            <LinearLayout
+                android:id="@+id/cardProfilePending"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_lg"
+                android:layout_marginTop="-16dp"
+                android:layout_marginEnd="@dimen/spacing_lg"
+                android:background="@drawable/bg_home_hero_card"
+                android:elevation="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_lg"
+                android:visibility="gone"
+                tools:visibility="gone">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_circle_brand_soft"
+                    android:padding="@dimen/spacing_sm"
+                    android:src="@drawable/ic_person"
+                    app:tint="@color/brand_primary" />
+
                 <LinearLayout
-                    android:id="@+id/cardProfilePending"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_lg"
-                    android:background="@drawable/bg_home_card"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/spacing_lg"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <ImageView
-                        android:layout_width="@dimen/home_quick_icon_size"
-                        android:layout_height="@dimen/home_quick_icon_size"
-                        android:background="@drawable/bg_circle_brand_soft"
-                        android:contentDescription="@null"
-                        android:padding="@dimen/spacing_sm"
-                        android:src="@drawable/ic_person" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_md"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tvProfileName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            tools:text="User Name" />
-
-                        <TextView
-                            android:id="@+id/tvTranscilId"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_xs"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            tools:text="Transcil ID: TC-1001" />
-                    </LinearLayout>
+                    android:layout_marginStart="@dimen/spacing_md"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tvKycBadge"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvProfileName"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_badge_pending"
-                        android:paddingHorizontal="@dimen/spacing_md"
-                        android:paddingVertical="@dimen/spacing_sm"
-                        android:text="@string/home_status_pending"
-                        android:textColor="@color/status_pending"
-                        android:textSize="12sp"
+                        android:fontFamily="@font/sora_family"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvTranscilId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
-                <!-- Approved frame: active vehicle hero -->
-                <LinearLayout
-                    android:id="@+id/cardActiveVehicle"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tvKycBadge"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_lg"
-                    android:background="@drawable/bg_home_card"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_lg"
-                    android:visibility="gone"
-                    tools:visibility="gone">
+                    android:background="@drawable/bg_badge_pending"
+                    android:paddingHorizontal="@dimen/spacing_md"
+                    android:paddingVertical="@dimen/spacing_sm"
+                    android:text="@string/home_status_pending"
+                    android:textColor="@color/status_pending"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+            <!-- Pending: browse vehicles -->
+            <LinearLayout
+                android:id="@+id/cardAvailableVehicle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_lg"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:layout_marginEnd="@dimen/spacing_lg"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="gone">
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/home_active_plate"
-                                android:textColor="@color/text_primary"
-                                android:textSize="20sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_xs"
-                                android:text="@string/home_active_model"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="13sp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_badge_approved"
-                            android:paddingHorizontal="@dimen/spacing_md"
-                            android:paddingVertical="@dimen/spacing_sm"
-                            android:text="@string/home_active_badge"
-                            android:textColor="@color/status_approved"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:drawableStart="@drawable/ic_bolt"
-                            android:drawablePadding="@dimen/spacing_sm"
-                            android:text="@string/home_battery_percent"
-                            android:textColor="@color/brand_primary"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/home_battery_range"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:drawableStart="@drawable/ic_location"
-                            android:drawablePadding="@dimen/spacing_sm"
-                            android:gravity="center_vertical"
-                            android:text="@string/home_hub_name"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_calendar"
-                            android:drawablePadding="@dimen/spacing_sm"
-                            android:gravity="center_vertical"
-                            android:text="@string/home_due_date"
-                            android:textColor="@color/alert_warning"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Quick icons -->
-                <LinearLayout
+                <TextView
+                    android:id="@+id/btnBrowseVehicles"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_lg"
-                    android:orientation="horizontal">
+                    android:layout_height="@dimen/button_height"
+                    android:background="@drawable/bg_button_primary"
+                    android:fontFamily="@font/sora_family"
+                    android:gravity="center"
+                    android:text="@string/home_browse_evs"
+                    android:textColor="@color/text_on_brand"
+                    android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:id="@+id/actionBatterySwap"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-                        <FrameLayout
-                            android:layout_width="@dimen/home_quick_icon_size"
-                            android:layout_height="@dimen/home_quick_icon_size"
-                            android:background="@drawable/bg_home_quick_tile">
-
-                            <ImageView
-                                android:layout_width="@dimen/home_quick_glyph_size"
-                                android:layout_height="@dimen/home_quick_glyph_size"
-                                android:layout_gravity="center"
-                                android:contentDescription="@string/home_quick_battery_swap"
-                                android:src="@drawable/ic_home_battery_swap" />
-                        </FrameLayout>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_sm"
-                            android:gravity="center"
-                            android:lineSpacingExtra="1dp"
-                            android:text="@string/home_quick_battery_swap"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/actionNavigateQuick"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-                        <FrameLayout
-                            android:layout_width="@dimen/home_quick_icon_size"
-                            android:layout_height="@dimen/home_quick_icon_size"
-                            android:background="@drawable/bg_home_quick_tile">
-
-                            <ImageView
-                                android:layout_width="@dimen/home_quick_glyph_size"
-                                android:layout_height="@dimen/home_quick_glyph_size"
-                                android:layout_gravity="center"
-                                android:contentDescription="@string/home_quick_navigate"
-                                android:src="@drawable/ic_home_navigate" />
-                        </FrameLayout>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_sm"
-                            android:gravity="center"
-                            android:text="@string/home_quick_navigate"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/actionHubs"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-                        <FrameLayout
-                            android:layout_width="@dimen/home_quick_icon_size"
-                            android:layout_height="@dimen/home_quick_icon_size"
-                            android:background="@drawable/bg_home_quick_tile">
-
-                            <ImageView
-                                android:layout_width="@dimen/home_quick_glyph_size"
-                                android:layout_height="@dimen/home_quick_glyph_size"
-                                android:layout_gravity="center"
-                                android:contentDescription="@string/home_quick_hubs"
-                                android:src="@drawable/ic_home_nearby_hubs" />
-                        </FrameLayout>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_sm"
-                            android:gravity="center"
-                            android:lineSpacingExtra="1dp"
-                            android:text="@string/home_quick_hubs"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/actionExtend"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-                        <FrameLayout
-                            android:layout_width="@dimen/home_quick_icon_size"
-                            android:layout_height="@dimen/home_quick_icon_size"
-                            android:background="@drawable/bg_home_quick_tile">
-
-                            <ImageView
-                                android:layout_width="@dimen/home_quick_glyph_size"
-                                android:layout_height="@dimen/home_quick_glyph_size"
-                                android:layout_gravity="center"
-                                android:contentDescription="@string/home_quick_extend"
-                                android:src="@drawable/ic_home_extend_rental" />
-                        </FrameLayout>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_sm"
-                            android:gravity="center"
-                            android:lineSpacingExtra="1dp"
-                            android:text="@string/home_quick_extend"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Pending: vehicle carousel (Ellod Elite, Elacil 2.5) -->
                 <HorizontalScrollView
-                    android:id="@+id/cardAvailableVehicle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_lg"
-                    android:clipToPadding="false"
-                    android:scrollbars="none"
-                    android:visibility="gone"
-                    tools:visibility="visible">
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:scrollbars="none">
 
                     <LinearLayout
                         android:id="@+id/vehicleCarouselRow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingEnd="@dimen/spacing_sm" />
+                        android:orientation="horizontal" />
                 </HorizontalScrollView>
+            </LinearLayout>
 
-                <!-- Rental alert -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_lg"
-                    android:background="@drawable/bg_alert_warning"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_lg">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_info"
-                        android:drawablePadding="@dimen/spacing_sm"
-                        android:gravity="center_vertical"
-                        android:text="@string/home_rental_alert_title"
-                        android:textColor="@color/alert_warning"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_sm"
-                        android:text="@string/home_rental_alert_body"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
-
-                    <Button
-                        android:id="@+id/btnPayNow"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/button_height"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:background="@drawable/bg_button_outline_warning"
-                        android:text="@string/home_pay_now"
-                        android:textAllCaps="false"
-                        android:textColor="@color/alert_warning"
-                        app:backgroundTint="@null" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xl"
-                    android:text="@string/home_quick_actions"
-                    android:textColor="@color/text_muted"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+            <!-- Approved hero ride card -->
+            <LinearLayout
+                android:id="@+id/cardActiveVehicle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_lg"
+                android:layout_marginTop="-16dp"
+                android:layout_marginEnd="@dimen/spacing_lg"
+                android:background="@drawable/bg_home_hero_card"
+                android:elevation="6dp"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <LinearLayout
-                    android:id="@+id/rowSwapBattery"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_md"
-                    android:background="@drawable/bg_home_card"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/spacing_lg">
-
-                    <ImageView
-                        android:layout_width="@dimen/home_quick_icon_size"
-                        android:layout_height="@dimen/home_quick_icon_size"
-                        android:background="@drawable/bg_circle_brand_soft"
-                        android:contentDescription="@null"
-                        android:padding="@dimen/spacing_sm"
-                        android:src="@drawable/ic_home_battery_swap" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_md"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/home_swap_battery_title"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_xs"
-                            android:text="@string/home_swap_battery_sub"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/rowNavigate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_sm"
-                    android:background="@drawable/bg_home_card"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/spacing_lg">
-
-                    <ImageView
-                        android:layout_width="@dimen/home_quick_icon_size"
-                        android:layout_height="@dimen/home_quick_icon_size"
-                        android:background="@drawable/bg_circle_navigate_soft"
-                        android:contentDescription="@null"
-                        android:padding="@dimen/spacing_sm"
-                        android:src="@drawable/ic_nav_navigate" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_md"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/home_navigate_title"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_xs"
-                            android:text="@string/home_navigate_sub"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_xl"
-                    android:text="@string/home_todays_stats"
-                    android:textColor="@color/text_muted"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_md"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/spacing_sm"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_home_card"
-                        android:minHeight="@dimen/home_stat_min_height"
-                        android:orientation="vertical"
-                        android:padding="@dimen/spacing_md">
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/home_stat_distance"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp" />
+                            android:fontFamily="@font/sora_family"
+                            android:text="@string/home_hero_vehicle"
+                            android:textColor="@color/text_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_sm"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:layout_marginTop="2dp"
+                            android:text="@string/home_assigned_to_you"
+                            android:textColor="@color/text_muted"
+                            android:textSize="13sp" />
+                    </LinearLayout>
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/home_stat_distance_value"
-                                android:textColor="@color/text_primary"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_chip_selected"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="6dp"
+                        android:text="@string/home_active_chip"
+                        android:textColor="@color/brand_primary_dark"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="@dimen/home_stat_icon_size"
-                                android:layout_height="@dimen/home_stat_icon_size"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_location"
-                                app:tint="@color/action_navigate" />
-                        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_xs"
-                            android:drawableStart="@drawable/ic_trend_up"
-                            android:drawablePadding="@dimen/spacing_xs"
-                            android:gravity="center_vertical"
-                            android:text="@string/home_stat_distance_trend_label"
-                            android:textColor="@color/brand_primary"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_home_card"
-                        android:minHeight="@dimen/home_stat_min_height"
-                        android:orientation="vertical"
-                        android:padding="@dimen/spacing_md">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/home_stat_earnings"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_sm"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/home_stat_earnings_value"
-                                android:textColor="@color/text_primary"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-
-                            <ImageView
-                                android:layout_width="@dimen/home_stat_icon_size"
-                                android:layout_height="@dimen/home_stat_icon_size"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_stat_earnings"
-                                app:tint="@color/action_navigate" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_sm"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/spacing_sm"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_home_card"
-                        android:minHeight="@dimen/home_stat_min_height"
-                        android:orientation="vertical"
-                        android:padding="@dimen/spacing_md">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/home_stat_trips"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_sm"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/home_stat_trips_value"
-                                android:textColor="@color/text_primary"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-
-                            <ImageView
-                                android:layout_width="@dimen/home_stat_icon_size"
-                                android:layout_height="@dimen/home_stat_icon_size"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_trend_up"
-                                app:tint="@color/action_navigate" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_home_card"
-                        android:minHeight="@dimen/home_stat_min_height"
-                        android:orientation="vertical"
-                        android:padding="@dimen/spacing_md">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/home_stat_hours"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_sm"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/home_stat_hours_value"
-                                android:textColor="@color/text_primary"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-
-                            <ImageView
-                                android:layout_width="@dimen/home_stat_icon_size"
-                                android:layout_height="@dimen/home_stat_icon_size"
-                                android:contentDescription="@null"
-                                android:src="@drawable/ic_stat_hours"
-                                app:tint="@color/action_navigate" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_lg"
-                    android:background="@drawable/bg_home_card"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_lg">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/home_battery_health"
+                            android:fontFamily="@font/sora_family"
+                            android:text="@string/home_battery_percent"
                             android:textColor="@color/text_primary"
+                            android:textSize="28sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_battery_label"
+                            android:textColor="@color/text_muted"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sora_family"
+                            android:text="@string/home_est_range_value"
+                            android:textColor="@color/text_primary"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_est_range"
+                            android:textColor="@color/text_muted"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sora_family"
+                            android:text="@string/home_battery_good"
+                            android:textColor="@color/brand_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_badge_approved"
-                            android:paddingHorizontal="@dimen/spacing_md"
-                            android:paddingVertical="@dimen/spacing_sm"
-                            android:text="@string/home_battery_good_badge"
-                            android:textColor="@color/status_approved"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/home_battery_level"
-                            android:textColor="@color/text_secondary"
+                            android:text="@string/home_health"
+                            android:textColor="@color/text_muted"
                             android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_nav_battery"
-                            android:drawablePadding="@dimen/spacing_sm"
-                            android:drawableTint="@color/brand_primary"
-                            android:gravity="center_vertical"
-                            android:text="@string/home_battery_level_value"
-                            android:textColor="@color/brand_primary"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/home_battery_est_range"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/home_battery_est_range_value"
-                            android:textColor="@color/text_primary"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/home_battery_last_swap"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/home_battery_last_swap_value"
-                            android:textColor="@color/text_primary"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/home_divider_height"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:background="@color/stroke_default" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:text="@string/home_battery_tip"
-                        android:textColor="@color/text_muted"
-                        android:textSize="11sp" />
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:text="@string/home_last_swap_value"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_md"
-                    android:layout_marginBottom="@dimen/spacing_lg"
-                    android:background="@drawable/bg_home_card"
+                    android:layout_marginTop="18dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/spacing_lg">
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/btnSwapBattery"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_primary"
+                        android:fontFamily="@font/sora_family"
+                        android:gravity="center"
+                        android:text="@string/home_swap_battery"
+                        android:textColor="@color/text_on_brand"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <ImageView
-                        android:layout_width="@dimen/home_quick_icon_size"
-                        android:layout_height="@dimen/home_quick_icon_size"
-                        android:background="@drawable/bg_circle_brand_soft"
-                        android:contentDescription="@null"
-                        android:padding="@dimen/spacing_sm"
-                        android:src="@drawable/ic_check_circle" />
+                        android:id="@+id/btnNavigateHero"
+                        android:layout_width="52dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="@dimen/spacing_sm"
+                        android:background="@drawable/bg_secondary_action"
+                        android:contentDescription="@string/home_navigate_title"
+                        android:padding="14dp"
+                        android:src="@drawable/ic_home_navigate"
+                        app:tint="@color/text_primary" />
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/spacing_md"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/home_next_service_title"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_xs"
-                            android:text="@string/home_next_service_body"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/btnHubsHero"
+                        android:layout_width="52dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="@dimen/spacing_sm"
+                        android:background="@drawable/bg_secondary_action"
+                        android:contentDescription="@string/home_quick_hubs"
+                        android:padding="14dp"
+                        android:src="@drawable/ic_location"
+                        app:tint="@color/text_primary" />
                 </LinearLayout>
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Rental due -->
+            <LinearLayout
+                android:id="@+id/bannerRentalDue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_lg"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:layout_marginEnd="@dimen/spacing_lg"
+                android:background="@drawable/bg_rental_due_banner"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+
+                <FrameLayout
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_bolt_panel">
+
+                    <ImageView
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_calendar"
+                        app:tint="@color/text_on_brand" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sora_family"
+                        android:text="@string/home_rental_due_line"
+                        android:textColor="@color/rental_due_title"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home_next_payment"
+                        android:textColor="@color/rental_due_subtitle"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnPayNow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pay_chip_navy"
+                    android:fontFamily="@font/sora_family"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="9dp"
+                    android:text="@string/home_pay"
+                    android:textColor="@color/text_on_navy"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Offer -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_lg"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:layout_marginEnd="@dimen/spacing_lg"
+                android:background="@drawable/bg_card_default"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <FrameLayout
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:background="@drawable/bg_secondary_action">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_document"
+                        app:tint="@color/text_muted" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sora_family"
+                        android:text="@string/home_offer_headline"
+                        android:textColor="@color/text_primary"
+                        android:textSize="13.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/home_offer_body"
+                        android:textColor="@color/text_muted"
+                        android:textSize="11.5sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_secondary_action"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="3dp"
+                    android:text="@string/home_ad_label"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Today -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/sora_family"
+                    android:text="@string/home_today"
+                    android:textColor="@color/text_primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/home_today_trend"
+                    android:textColor="@color/brand_primary"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_lg"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="@dimen/spacing_lg"
+                android:background="@drawable/bg_earnings_card"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="18dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home_earnings_today"
+                        android:textColor="@color/text_on_navy_muted"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/sora_family"
+                        android:text="@string/home_earnings_value"
+                        android:textColor="@color/text_on_navy"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/home_earnings_meta"
+                        android:textColor="@color/earnings_meta"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_chart"
+                    app:tint="@color/brand_primary" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_lg"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="@dimen/spacing_lg"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_home_hero_card"
+                    android:orientation="vertical"
+                    android:padding="15dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home_stat_distance"
+                        android:textColor="@color/text_muted"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/sora_family"
+                        android:text="@string/home_stat_distance_value"
+                        android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_home_hero_card"
+                    android:orientation="vertical"
+                    android:padding="15dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home_stat_rating"
+                        android:textColor="@color/text_muted"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/sora_family"
+                        android:text="@string/home_stat_rating_value"
+                        android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

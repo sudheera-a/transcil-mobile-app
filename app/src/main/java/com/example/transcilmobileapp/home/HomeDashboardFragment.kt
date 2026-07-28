@@ -12,6 +12,8 @@ import com.example.transcilmobileapp.core.KycNavigator
 import com.example.transcilmobileapp.core.KycStatus
 import com.example.transcilmobileapp.databinding.FragmentHomeDashboardBinding
 import com.example.transcilmobileapp.databinding.ItemHomeVehicleCardBinding
+import com.example.transcilmobileapp.payment.PaymentActivity
+import com.example.transcilmobileapp.rental.VehiclesActivity
 
 class HomeDashboardFragment : Fragment() {
 
@@ -41,7 +43,7 @@ class HomeDashboardFragment : Fragment() {
         bindActions()
         viewModel.kycStatus.observe(viewLifecycleOwner, ::renderStatus)
         viewModel.riderName.observe(viewLifecycleOwner) { name ->
-            binding.tvGreeting.text = getString(R.string.home_greeting, name)
+            binding.tvGreeting.text = name
             binding.tvProfileName.text = name
         }
         viewModel.transcilId.observe(viewLifecycleOwner) { id ->
@@ -90,11 +92,7 @@ class HomeDashboardFragment : Fragment() {
                 ).show()
             }
             cardBinding.btnVehicleSelect.setOnClickListener {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.home_vehicle_selected_stub, modelName),
-                    Toast.LENGTH_SHORT
-                ).show()
+                startActivity(VehiclesActivity.createIntent(requireContext()))
             }
             row.addView(cardBinding.root)
         }
@@ -105,6 +103,7 @@ class HomeDashboardFragment : Fragment() {
         binding.cardProfilePending.visibility = if (approved) View.GONE else View.VISIBLE
         binding.cardAvailableVehicle.visibility = if (approved) View.GONE else View.VISIBLE
         binding.cardActiveVehicle.visibility = if (approved) View.VISIBLE else View.GONE
+        binding.bannerRentalDue.visibility = if (approved) View.VISIBLE else View.GONE
 
         if (approved) {
             binding.tvKycBadge.text = getString(R.string.home_status_approved)
@@ -120,27 +119,27 @@ class HomeDashboardFragment : Fragment() {
     private fun bindActions() {
         binding.btnNotifications.setOnClickListener { viewModel.onActionClicked() }
 
-        binding.actionBatterySwap.setOnClickListener {
+        binding.btnSwapBattery.setOnClickListener {
             viewModel.onQuickAction(HomeQuickAction.BATTERY_SWAP)
         }
-        binding.actionNavigateQuick.setOnClickListener {
+        binding.btnNavigateHero.setOnClickListener {
             viewModel.onQuickAction(HomeQuickAction.NAVIGATE)
         }
-        binding.actionHubs.setOnClickListener {
+        binding.btnHubsHero.setOnClickListener {
             viewModel.onQuickAction(HomeQuickAction.NEARBY_HUBS)
         }
-        binding.actionExtend.setOnClickListener {
-            viewModel.onQuickAction(HomeQuickAction.EXTEND_RENTAL)
+        binding.btnBrowseVehicles.setOnClickListener {
+            startActivity(VehiclesActivity.createIntent(requireContext()))
         }
-
-        binding.rowSwapBattery.setOnClickListener {
-            viewModel.onQuickAction(HomeQuickAction.BATTERY_SWAP)
+        binding.btnPayNow.setOnClickListener {
+            startActivity(
+                PaymentActivity.createIntent(
+                    requireContext(),
+                    RentalCatalog.defaultActiveModel().id.name,
+                    PlanType.MONTHLY.name,
+                ),
+            )
         }
-        binding.rowNavigate.setOnClickListener {
-            viewModel.onQuickAction(HomeQuickAction.NAVIGATE)
-        }
-
-        binding.btnPayNow.setOnClickListener { viewModel.onActionClicked() }
     }
 
     override fun onDestroyView() {

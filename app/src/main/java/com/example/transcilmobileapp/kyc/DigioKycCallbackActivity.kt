@@ -2,9 +2,10 @@ package com.example.transcilmobileapp.kyc
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.transcilmobileapp.R
+import com.example.transcilmobileapp.core.FeedbackUi
 import com.example.transcilmobileapp.repository.DigioKycRepository
 import kotlinx.coroutines.launch
 
@@ -20,19 +21,17 @@ class DigioKycCallbackActivity : AppCompatActivity() {
                         KycProgressRepository.markCompleted(KycStep.AADHAAR)
                         KycProgressRepository.markCompleted(KycStep.BANK)
                     } else {
-                        Toast.makeText(
+                        FeedbackUi.toast(
                             this@DigioKycCallbackActivity,
-                            "KYC verification is still pending",
-                            Toast.LENGTH_SHORT,
-                        ).show()
+                            getString(R.string.digio_kyc_pending),
+                        )
                     }
                 }
                 .onFailure {
-                    Toast.makeText(
+                    FeedbackUi.toast(
                         this@DigioKycCallbackActivity,
-                        "Could not sync KYC status",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                        getString(R.string.digio_kyc_sync_failed),
+                    )
                 }
             openProgressAndFinish()
         }

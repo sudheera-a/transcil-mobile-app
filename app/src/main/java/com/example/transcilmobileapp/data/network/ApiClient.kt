@@ -8,18 +8,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
 
-    private val logging = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
-    }
-
-    private val okHttp = OkHttpClient.Builder()
-        // 1) Add Bearer token (if saved)
-        .addInterceptor(AuthInterceptor())
-        // 2) Log request/response (you'll see Authorization here)
-        .addInterceptor(logging)
-        // 3) On 401 -> try recover / clear tokens
-        .authenticator(TokenAuthenticator())
-        .build()
+    private val okHttp: OkHttpClient = OkHttpClient.Builder().apply {
+        addInterceptor(AuthInterceptor())
+        if (BuildConfig.DEBUG) {
+            addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                },
+            )
+        }
+        authenticator(TokenAuthenticator())
+    }.build()
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)

@@ -4,15 +4,19 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.transcilmobileapp.R
+import com.example.transcilmobileapp.auth.AuthSession
 import com.example.transcilmobileapp.core.KycStatus
 import com.example.transcilmobileapp.kyc.KycProgressRepository
+import kotlinx.coroutines.launch
 
 sealed class ProfileNavEvent {
     data object OpenSettings : ProfileNavEvent()
     data object OpenDocuments : ProfileNavEvent()
+    data class OpenContent(val page: ContentPage) : ProfileNavEvent()
     data class ShowStub(val titleRes: Int) : ProfileNavEvent()
-    data object Logout : ProfileNavEvent()
+    data object SignedOut : ProfileNavEvent()
 }
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
@@ -43,6 +47,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     private val _toastMessage = MutableLiveData<Int?>()
     val toastMessage: LiveData<Int?> = _toastMessage
+
+    @Volatile private var signingOut = false
 
     fun bind(status: KycStatus) {
         _kycStatus.value = status
@@ -76,16 +82,21 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 _navEvent.value = ProfileNavEvent.OpenDocuments
             }
             ProfileMenuAction.HELP -> {
-                _navEvent.value = ProfileNavEvent.ShowStub(R.string.profile_menu_help)
+                _navEvent.value = ProfileNavEvent.OpenContent(ContentPage.HELP)
             }
             ProfileMenuAction.PRIVACY -> {
-                _navEvent.value = ProfileNavEvent.ShowStub(R.string.profile_menu_privacy)
+                _navEvent.value = ProfileNavEvent.OpenContent(ContentPage.PRIVACY)
             }
         }
     }
 
     fun onLogout() {
-        _navEvent.value = ProfileNavEvent.Logout
+        if (signingOut) return
+        signingOut = true
+        viewModelScope.launch {
+            AuthSession.signOut()
+            _navEvent.value = ProfileNavEvent.SignedOut
+        }
     }
 
     fun clearNavEvent() {

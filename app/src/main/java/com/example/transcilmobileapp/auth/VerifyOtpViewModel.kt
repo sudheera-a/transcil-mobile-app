@@ -12,8 +12,8 @@ class VerifyOtpViewModel(
     private val authRepository: AuthRepository = AuthRepository(),
 ) : BaseViewModel() {
 
-    private val _navigateToHome = MutableLiveData<Boolean>()
-    val navigateToHome: LiveData<Boolean> get() = _navigateToHome
+    private val _navigateToChooseJourney = MutableLiveData<Boolean>()
+    val navigateToChooseJourney: LiveData<Boolean> get() = _navigateToChooseJourney
 
     private val _otpSession = MutableLiveData<String>()
     val otpSession: LiveData<String> get() = _otpSession
@@ -28,7 +28,7 @@ class VerifyOtpViewModel(
             authRepository.verify(session, mobile, otp)
                 .onSuccess { tokens ->
                     TokenStore.save(tokens.accessToken, tokens.refreshToken)
-                    _navigateToHome.value = true
+                    _navigateToChooseJourney.value = true
                 }
                 .onFailure { e ->
                     showError(e.message ?: "OTP verification failed")

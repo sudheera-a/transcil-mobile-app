@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/segmentedStepper"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <View
+        android:id="@+id/stepSegment1"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/step_segment_height"
+        android:layout_weight="1"
+        android:background="@drawable/bg_step_segment_inactive" />
+
+    <View
+        android:id="@+id/stepSegment2"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/step_segment_height"
+        android:layout_marginStart="@dimen/spacing_xs"
+        android:layout_weight="1"
+        android:background="@drawable/bg_step_segment_inactive" />
+
+    <View
+        android:id="@+id/stepSegment3"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/step_segment_height"
+        android:layout_marginStart="@dimen/spacing_xs"
+        android:layout_weight="1"
+        android:background="@drawable/bg_step_segment_inactive" />
+
+    <View
+        android:id="@+id/stepSegment4"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/step_segment_height"
+        android:layout_marginStart="@dimen/spacing_xs"
+        android:layout_weight="1"
+        android:background="@drawable/bg_step_segment_inactive" />
+</LinearLayout>

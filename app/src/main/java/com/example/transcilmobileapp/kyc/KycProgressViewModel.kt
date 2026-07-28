@@ -9,15 +9,21 @@ import com.example.transcilmobileapp.R
 import com.example.transcilmobileapp.core.Gender
 import com.example.transcilmobileapp.core.JourneyType
 import com.example.transcilmobileapp.repository.DigioKycRepository
+import com.example.transcilmobileapp.repository.OnboardingRepository
 import kotlinx.coroutines.launch
 
 class KycProgressViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val onboardingRepository = OnboardingRepository()
 
     private val _summaryTitleRes = MutableLiveData<Int>()
     val summaryTitleRes: LiveData<Int> = _summaryTitleRes
 
     private val _badgeText = MutableLiveData<String>()
     val badgeText: LiveData<String> = _badgeText
+
+    private val _stepsCountText = MutableLiveData<String>()
+    val stepsCountText: LiveData<String> = _stepsCountText
 
     private val _percent = MutableLiveData<Int>()
     val percent: LiveData<Int> = _percent
@@ -59,6 +65,14 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
     val otherDocsFieldErrors: LiveData<OtherDocsFieldErrors> = _otherDocsFieldErrors
 
     fun refresh() {
+        viewModelScope.launch {
+            onboardingRepository.getOnboarding()
+                .onSuccess { OnboardingSync.apply(it) }
+            renderLocal()
+        }
+    }
+
+    private fun renderLocal() {
         val journey = KycProgressRepository.currentJourney() ?: return
         _summaryTitleRes.value = when (journey) {
             JourneyType.RENT_EV -> R.string.kyc_progress_rent_title
@@ -66,11 +80,9 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         }
         val completed = KycProgressRepository.completedCount()
         val total = KycProgressRepository.totalCount()
-        _badgeText.value = getApplication<Application>().getString(
-            R.string.kyc_progress_complete_badge,
-            completed,
-            total
-        )
+        val app = getApplication<Application>()
+        _badgeText.value = app.getString(R.string.kyc_progress_fraction, completed, total)
+        _stepsCountText.value = app.getString(R.string.kyc_progress_of, completed, total)
         _percent.value = KycProgressRepository.progressPercent()
         _steps.value = KycProgressRepository.uiSteps()
 
@@ -294,13 +306,20 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
     fun submitPersonal(fullName: String, email: String, dob: String, gender: Gender?) {
         val errors = PersonalDetailsValidator.validate(fullName, email, dob, gender)
         _personalFieldErrors.value = errors
-        if (errors.hasErrors) return
+        if (errors.hasErrors || gender == null) return
 
-        savePersonalDraft(fullName, email, dob, gender)
-        KycProgressRepository.markCompleted(KycStep.PERSONAL)
-        _personalFieldErrors.value = PersonalFieldErrors()
-        _inlineEditStep.value = null
-        refresh()
+        viewModelScope.launch {
+            onboardingRepository.patchProfile(fullName, email, dob, gender)
+                .onSuccess {
+                    savePersonalDraft(fullName, email, dob, gender)
+                    _personalFieldErrors.value = PersonalFieldErrors()
+                    _inlineEditStep.value = null
+                    refresh()
+                }
+                .onFailure { e ->
+                    _toastMessage.value = e.message ?: "Failed to save profile"
+                }
+        }
     }
 
     fun clearAddressLine1Error() = clearAddress { it.copy(line1 = null) }
@@ -325,11 +344,18 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         _addressFieldErrors.value = errors
         if (errors.hasErrors) return
 
-        saveAddressDraft(line1, line2, city, state, pincode)
-        KycProgressRepository.markCompleted(KycStep.ADDRESS)
-        _addressFieldErrors.value = AddressFieldErrors()
-        _inlineEditStep.value = null
-        refresh()
+        viewModelScope.launch {
+            onboardingRepository.putAddress(line1, line2, city, state, pincode)
+                .onSuccess {
+                    saveAddressDraft(line1, line2, city, state, pincode)
+                    _addressFieldErrors.value = AddressFieldErrors()
+                    _inlineEditStep.value = null
+                    refresh()
+                }
+                .onFailure { e ->
+                    _toastMessage.value = e.message ?: "Failed to save address"
+                }
+        }
     }
 
     fun startDigioFromAadhaar(aadhaarNumber: String, consent: Boolean) {
@@ -448,15 +474,18 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         if (status == KycStepStatus.COMPLETED && !isInlineEditing(step)) {
             return R.string.kyc_action_edit
         }
+        if (status == KycStepStatus.PENDING) {
+            return R.string.kyc_action_start
+        }
         return when (step) {
             KycStep.PERSONAL,
             KycStep.ADDRESS,
             KycStep.REFERENCE,
             KycStep.OTHER_DOCS,
             KycStep.PAN -> R.string.kyc_action_submit
-            KycStep.AADHAAR -> R.string.verify_aadhaar
-            KycStep.BANK -> R.string.kyc_action_verify_digio
-            KycStep.SELFIE -> R.string.kyc_action_capture_photo
+            KycStep.AADHAAR -> R.string.aadhaar_verify_digio
+            KycStep.BANK -> R.string.aadhaar_verify_digio
+            KycStep.SELFIE -> R.string.selfie_take_cta
         }
     }
 

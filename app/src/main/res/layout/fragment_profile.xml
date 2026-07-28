@@ -65,7 +65,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_home_card"
+                    android:background="@drawable/bg_navy_header"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="@dimen/spacing_lg">
@@ -73,11 +73,11 @@
                     <ImageView
                         android:layout_width="@dimen/profile_avatar_size"
                         android:layout_height="@dimen/profile_avatar_size"
-                        android:background="@drawable/bg_profile_avatar"
+                        android:background="@drawable/bg_bolt_panel"
                         android:contentDescription="@null"
                         android:padding="@dimen/spacing_lg"
                         android:src="@drawable/ic_person"
-                        app:tint="@color/wallet_accent" />
+                        app:tint="@color/text_on_brand" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -90,7 +90,8 @@
                             android:id="@+id/tvProfileName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
+                            android:fontFamily="@font/sora_family"
+                            android:textColor="@color/text_on_navy"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             tools:text="Rahul Sharma" />
@@ -100,7 +101,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/spacing_xs"
-                            android:textColor="@color/text_secondary"
+                            android:textColor="@color/text_on_navy_muted"
                             android:textSize="13sp"
                             tools:text="Rider ID: TC-RDR-12345" />
 

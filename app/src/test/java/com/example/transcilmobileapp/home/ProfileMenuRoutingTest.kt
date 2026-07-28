@@ -23,9 +23,9 @@ class ProfileMenuRoutingTest {
     }
 
     @Test
-    fun helpAndPrivacy_routeToStub() {
-        assertEquals(Route.STUB, routeFor(ProfileMenuAction.HELP))
-        assertEquals(Route.STUB, routeFor(ProfileMenuAction.PRIVACY))
+    fun helpAndPrivacy_routeToApiContent() {
+        assertEquals(Route.CONTENT, routeFor(ProfileMenuAction.HELP))
+        assertEquals(Route.CONTENT, routeFor(ProfileMenuAction.PRIVACY))
     }
 
     @Test
@@ -48,11 +48,11 @@ class ProfileMenuRoutingTest {
         )
     }
 
-    private enum class Route { SETTINGS, DOCUMENTS, STUB }
+    private enum class Route { SETTINGS, DOCUMENTS, CONTENT, STUB }
 
     private fun routeFor(action: ProfileMenuAction): Route = when (action) {
         ProfileMenuAction.SETTINGS, ProfileMenuAction.NOTIFICATIONS -> Route.SETTINGS
         ProfileMenuAction.DOCUMENTS -> Route.DOCUMENTS
-        ProfileMenuAction.HELP, ProfileMenuAction.PRIVACY -> Route.STUB
+        ProfileMenuAction.HELP, ProfileMenuAction.PRIVACY -> Route.CONTENT
     }
 }

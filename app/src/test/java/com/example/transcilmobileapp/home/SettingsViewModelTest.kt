@@ -31,10 +31,23 @@ class SettingsViewModelTest {
         assertEquals(R.string.settings_item_stub, vm.toastMessage.value)
         vm.clearToast()
         assertNull(vm.toastMessage.value)
+    }
 
-        vm.onLogout()
-        assertEquals(R.string.settings_logout_stub, vm.toastMessage.value)
-        vm.clearToast()
-        assertNull(vm.toastMessage.value)
+    @Test
+    fun helpAndTerms_openApiContent() {
+        val vm = SettingsViewModel()
+        vm.onHelpCenter()
+        assertEquals(
+            SettingsNavEvent.OpenContent(ContentPage.HELP),
+            vm.navEvent.value
+        )
+        vm.clearNavEvent()
+        assertNull(vm.navEvent.value)
+
+        vm.onTerms()
+        assertEquals(
+            SettingsNavEvent.OpenContent(ContentPage.TERMS_PRIVACY),
+            vm.navEvent.value
+        )
     }
 }

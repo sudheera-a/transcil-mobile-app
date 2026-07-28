@@ -7,11 +7,14 @@ import com.example.transcilmobileapp.data.model.auth.*
 import com.example.transcilmobileapp.data.model.kyc.DigioStartData
 import com.example.transcilmobileapp.data.model.kyc.DigioStartRequest
 import com.example.transcilmobileapp.data.model.kyc.DigioStatusData
+import com.example.transcilmobileapp.data.model.onboarding.*
 import com.google.gson.JsonObject
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface TranscilApi {
 
@@ -70,4 +73,40 @@ interface TranscilApi {
 
     @GET("v1/kyc/status")
     suspend fun kycStatus(): ApiResponse<DigioStatusData>
+
+    @GET("v1/onboarding/journey-options")
+    suspend fun getJourneyOptions(): ApiResponse<List<JourneyOptionDto>>
+
+    @PUT("v1/me/rider-role")
+    suspend fun setRiderRole(
+        @Body body: RiderRoleRequest,
+    ): ApiResponse<RiderRoleData>
+
+    @GET("v1/me/profile")
+    suspend fun getProfile(): ApiResponse<ProfileData>
+
+    @PATCH("v1/me/profile")
+    suspend fun patchProfile(
+        @Header("Idempotency-Key") idempotencyKey: String,
+        @Body body: ProfilePatchRequest,
+    ): ApiResponse<ProfileData>
+
+    @GET("v1/me/address")
+    suspend fun getAddress(): ApiResponse<AddressData>
+
+    @PUT("v1/me/address")
+    suspend fun putAddress(
+        @Body body: AddressUpsertRequest,
+    ): ApiResponse<AddressData>
+
+    @GET("v1/me/onboarding")
+    suspend fun getOnboarding(): ApiResponse<OnboardingData>
+
+    @GET("v1/reference/states")
+    suspend fun getStates(): ApiResponse<List<ReferenceStateDto>>
+
+    @GET("v1/reference/states/{stateCode}/cities")
+    suspend fun getCities(
+        @retrofit2.http.Path("stateCode") stateCode: String,
+    ): ApiResponse<List<ReferenceCityDto>>
 }

@@ -7,54 +7,70 @@ import okhttp3.Response
 import okhttp3.Route
 
 /**
- * Runs only when server returns 401.
+ * OkHttp [Authenticator] for HTTP 401: single-flight refresh, then retry once.
  *
- * Learning version:
- * - Prevents infinite retry loops
- * - Clears tokens if we cannot refresh
- *
- * Later (when backend gives refresh API):
- * - Call refresh endpoint with refreshToken
- * - Save new accessToken
- * - Retry original request with new Bearer header
+ * Best-practice behavior:
+ * - Never authenticate the refresh call itself (avoids loops)
+ * - Cap retries via prior-response chain
+ * - If another thread already refreshed, reuse the new access token
+ * - Clear local tokens when recovery is impossible
  */
 class TokenAuthenticator : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        // 1) Already retried? Give up to avoid infinite loop
+        if (isRefreshRequest(response.request)) {
+            TokenStore.clear()
+            return null
+        }
+
+        // One authenticator-driven retry only (original + 1).
         if (responseCount(response) >= 2) {
             TokenStore.clear()
             return null
         }
 
-        // 2) If the failed call was refresh itself, don't loop
-        val path = response.request.url.encodedPath
-        if (path.contains("auth/refresh") || path.contains("token/refresh")) {
-            TokenStore.clear()
-            return null
-        }
+        val failedAccess = bearerToken(response.request)
 
-        // 3) No refresh token available yet -> cannot recover
-        val refreshToken = TokenStore.getRefreshToken()
-        if (refreshToken.isNullOrBlank()) {
-            TokenStore.clear()
-            return null // null = do not retry; caller sees 401
-        }
+        synchronized(lock) {
+            val currentAccess = TokenStore.getAccessToken()
+            // Another concurrent 401 already refreshed successfully.
+            if (!currentAccess.isNullOrBlank() && currentAccess != failedAccess) {
+                return authorized(response.request, currentAccess)
+            }
 
-        val newAccess = AuthTokenRefresher.refreshBlocking(refreshToken) ?: run {
-            TokenStore.clear()
-            return null
+            val refreshToken = TokenStore.getRefreshToken()
+            if (refreshToken.isNullOrBlank()) {
+                TokenStore.clear()
+                return null
+            }
+
+            val newAccess = AuthTokenRefresher.refreshBlocking(refreshToken)
+            if (newAccess.isNullOrBlank()) {
+                TokenStore.clear()
+                return null
+            }
+
+            TokenStore.save(newAccess, refreshToken)
+            return authorized(response.request, newAccess)
         }
-        TokenStore.save(newAccess, refreshToken)
-        return response.request.newBuilder()
-            .header("Authorization", "Bearer $newAccess")
-            .build()
     }
 
-    /**
-     * Counts how many times this request was already tried.
-     * Stops endless 401 -> authenticate -> 401 loops.
-     */
+    private fun authorized(request: Request, accessToken: String): Request =
+        request.newBuilder()
+            .header(HEADER_AUTHORIZATION, "$BEARER_PREFIX$accessToken")
+            .build()
+
+    private fun bearerToken(request: Request): String? {
+        val header = request.header(HEADER_AUTHORIZATION) ?: return null
+        return header.removePrefix(BEARER_PREFIX).trim().takeIf { it.isNotEmpty() }
+    }
+
+    private fun isRefreshRequest(request: Request): Boolean {
+        val path = request.url.encodedPath
+        return path.endsWith("/auth/refresh") || path.endsWith("/token/refresh")
+    }
+
+    /** Counts this response plus any prior responses in the retry chain. */
     private fun responseCount(response: Response): Int {
         var result = 1
         var prior = response.priorResponse
@@ -63,5 +79,11 @@ class TokenAuthenticator : Authenticator {
             prior = prior.priorResponse
         }
         return result
+    }
+
+    companion object {
+        private val lock = Any()
+        private const val HEADER_AUTHORIZATION = "Authorization"
+        private const val BEARER_PREFIX = "Bearer "
     }
 }

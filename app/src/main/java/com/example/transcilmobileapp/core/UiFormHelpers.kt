@@ -1,5 +1,6 @@
 package com.example.transcilmobileapp.core
 
+import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -40,7 +41,39 @@ object UiFormHelpers {
                     boxes[i + 1].requestFocus()
                 }
             })
+            val stepBack = {
+                val prev = OtpInput.previousIndexOnEmptyDelete(i, box.text.isNullOrEmpty())
+                if (prev != null) {
+                    boxes[prev].requestFocus()
+                    boxes[prev].text?.clear()
+                }
+            }
+            if (box is OtpDigitEditText) {
+                box.onDeleteWhenEmpty = stepBack
+            } else {
+                box.setOnKeyListener { _, keyCode, event ->
+                    if (keyCode == KeyEvent.KEYCODE_DEL &&
+                        event.action == KeyEvent.ACTION_DOWN &&
+                        box.text.isNullOrEmpty()
+                    ) {
+                        stepBack()
+                        true
+                    } else {
+                        false
+                    }
+                }
+            }
         }
+    }
+
+    fun fillOtpBoxes(boxes: List<EditText>, otp: String) {
+        val digits = otp.filter { it.isDigit() }.take(boxes.size)
+        boxes.forEachIndexed { index, box ->
+            box.setText(digits.getOrNull(index)?.toString().orEmpty())
+        }
+        val focusIndex = (digits.length - 1).coerceIn(0, boxes.lastIndex)
+        boxes[focusIndex].requestFocus()
+        boxes[focusIndex].setSelection(boxes[focusIndex].text?.length ?: 0)
     }
 
     fun setFieldError(errorView: TextView, container: View?, messageRes: Int?) {

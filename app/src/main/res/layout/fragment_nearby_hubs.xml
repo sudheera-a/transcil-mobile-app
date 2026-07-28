@@ -26,16 +26,40 @@
                 android:src="@drawable/ic_back"
                 app:tint="@color/text_primary" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_md"
                 android:layout_weight="1"
-                android:text="@string/nearby_hubs_title"
-                android:textColor="@color/text_primary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sora_family"
+                    android:text="@string/nearby_hubs_title"
+                    android:textColor="@color/text_primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hubs_sorted_by_distance"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/etSearchHubs"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:background="@drawable/bg_input_default"
+            android:hint="@string/hubs_search_hint"
+            android:paddingHorizontal="@dimen/spacing_lg"
+            android:textColorHint="@color/text_muted" />
 
         <FrameLayout
             android:id="@+id/mapPlaceholder"

@@ -1,21 +1,17 @@
 package com.example.transcilmobileapp.repository
 
 import com.example.transcilmobileapp.data.model.ApiResponse
-import com.example.transcilmobileapp.data.model.HelpCenterDto
-import com.example.transcilmobileapp.data.model.HtmlDocumentDto
-import com.example.transcilmobileapp.data.model.auth.*
 import com.example.transcilmobileapp.data.model.kyc.DigioStartData
 import com.example.transcilmobileapp.data.model.kyc.DigioStartRequest
 import com.example.transcilmobileapp.data.model.kyc.DigioStatusData
-import com.example.transcilmobileapp.data.network.TranscilApi
-import com.google.gson.JsonObject
+import com.example.transcilmobileapp.data.network.FakeTranscilApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
 
 class DigioKycRepositoryTest {
 
-    private class FakeApi : TranscilApi {
+    private class FakeApi : FakeTranscilApi() {
         var lastStart: DigioStartRequest? = null
         var startCalled = false
         var startResponse: ApiResponse<DigioStartData> = ApiResponse(
@@ -29,31 +25,6 @@ class DigioKycRepositoryTest {
             null,
         )
 
-        override suspend fun getSettings(): ApiResponse<JsonObject> = ApiResponse(null, null, null)
-        override suspend fun getTerms(): ApiResponse<HtmlDocumentDto> = ApiResponse(null, null, null)
-        override suspend fun getPrivacy(): ApiResponse<HtmlDocumentDto> = ApiResponse(null, null, null)
-        override suspend fun getHelpCenter(): ApiResponse<HelpCenterDto> = ApiResponse(null, null, null)
-        override suspend fun getAds(): ApiResponse<JsonObject> = ApiResponse(null, null, null)
-        override suspend fun getReturnGuidance(): ApiResponse<JsonObject> = ApiResponse(null, null, null)
-        override suspend fun getRiderPrograms3pl(): ApiResponse<JsonObject> = ApiResponse(null, null, null)
-
-        override suspend fun authStart(
-            idempotencyKey: String,
-            body: AuthStartRequest,
-        ): ApiResponse<AuthStartData> = error("unused")
-
-        override suspend fun authVerify(
-            idempotencyKey: String,
-            body: AuthVerifyRequest,
-        ): ApiResponse<AuthTokensData> = error("unused")
-
-        override suspend fun authRefresh(
-            idempotencyKey: String,
-            body: AuthRefreshRequest,
-        ): ApiResponse<AuthTokensData> = error("unused")
-
-        override suspend fun authLogout(): ApiResponse<AuthLogoutData> = error("unused")
-
         override suspend fun kycStart(
             idempotencyKey: String,
             body: DigioStartRequest,
@@ -66,8 +37,6 @@ class DigioKycRepositoryTest {
         override suspend fun kycSyncStatus(
             idempotencyKey: String,
         ): ApiResponse<DigioStatusData> = syncResponse
-
-        override suspend fun kycStatus(): ApiResponse<DigioStatusData> = error("unused")
     }
 
     @Test
