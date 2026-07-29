@@ -436,6 +436,11 @@
     <string name="kyc_action_submit">Submit</string>
     <string name="kyc_action_verify_digio">Verify with DIGIO</string>
     <string name="kyc_action_capture_attach">Capture Photo / Attach Doc</string>
+    <string name="kyc_action_change_attach">Change attached document</string>
+    <string name="kyc_other_doc_file_label">Document file</string>
+    <string name="kyc_action_attach_doc">Attach document</string>
+    <string name="kyc_action_change_doc">Change document</string>
+    <string name="kyc_attach_label">Attached: %1$s (%2$d KB)</string>
     <string name="kyc_action_capture_photo">Capture Photo</string>
     <string name="kyc_bank_consent">I hereby consent to share my bank details for verification and payouts.</string>
     <string name="kyc_digio_stub">DIGIO verification will be available soon</string>
@@ -475,6 +480,12 @@
     <string name="kyc_reference_summary">%1$s · %2$s</string>
     <string name="kyc_other_docs_summary">%1$s · %2$s</string>
     <string name="kyc_attach_stub">Document capture will be available soon</string>
+    <string name="kyc_attach_required">Attach a document photo before submitting</string>
+    <string name="kyc_attach_ready">Document attached. You can submit now.</string>
+    <string name="kyc_upload_failed_retry">Upload failed. Please retry.</string>
+    <string name="kyc_doc_conflict">A document is already pending review. Refreshing status.</string>
+    <string name="kyc_pan_name_mismatch">PAN name does not match (%1$s). You can continue or update personal details.</string>
+    <string name="kyc_pan_name_mismatch_generic">PAN name does not match registered name. You can continue or update personal details.</string>
 
     <string name="kyc_almost_there">Almost there!</string>
     <string name="kyc_almost_there_subtitle">Just a few more steps to complete your verification.</string>

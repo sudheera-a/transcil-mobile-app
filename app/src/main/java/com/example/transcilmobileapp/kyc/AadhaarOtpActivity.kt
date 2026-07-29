@@ -43,7 +43,7 @@ class AadhaarOtpActivity :
         }
         viewModel.navigateNext.observe(this) { go ->
             if (go == true) {
-                KycProgressRepository.markCompleted(KycStep.AADHAAR)
+                // Direct Aadhaar OTP is not the Phase C happy path; never local-complete.
                 KycFlowNavigator.openProgress(this)
             }
         }

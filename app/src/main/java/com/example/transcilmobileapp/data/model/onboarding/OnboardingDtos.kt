@@ -89,6 +89,13 @@ data class OnboardingStepDto(
     @SerializedName("consent_captured") val consentCaptured: Boolean = false,
     @SerializedName("edit_endpoint") val editEndpoint: String? = null,
     val fields: Map<String, String>? = null,
+    val options: OnboardingStepOptions? = null,
+)
+
+/** `steps[].options` — relations / doc_types for form spinners. */
+data class OnboardingStepOptions(
+    val relations: List<String>? = null,
+    @SerializedName("doc_types") val docTypes: List<String>? = null,
 )
 
 data class ReferenceStateDto(

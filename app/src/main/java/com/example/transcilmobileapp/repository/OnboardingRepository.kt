@@ -2,6 +2,10 @@ package com.example.transcilmobileapp.repository
 
 import com.example.transcilmobileapp.core.Gender
 import com.example.transcilmobileapp.core.JourneyType
+import com.example.transcilmobileapp.data.model.kyc.PanVerifyData
+import com.example.transcilmobileapp.data.model.kyc.PanVerifyRequest
+import com.example.transcilmobileapp.data.model.kyc.ReferenceData
+import com.example.transcilmobileapp.data.model.kyc.ReferenceUpsertRequest
 import com.example.transcilmobileapp.data.model.onboarding.*
 import com.example.transcilmobileapp.data.network.TranscilApi
 import java.text.SimpleDateFormat
@@ -114,7 +118,7 @@ class OnboardingRepository(
             state = state.trim(),
             pincode = pincode.filter { it.isDigit() }.take(6),
         )
-        val res = api.putAddress(body)
+        val res = api.putAddress(UUID.randomUUID().toString(), body)
         res.error?.let { error(it.message ?: it.code ?: "ADDRESS_PUT_FAILED") }
         res.data ?: error("ADDRESS_PUT_EMPTY")
     }
@@ -123,6 +127,40 @@ class OnboardingRepository(
         val res = api.getOnboarding()
         res.error?.let { error(it.message ?: it.code ?: "ONBOARDING_GET_FAILED") }
         res.data ?: error("ONBOARDING_EMPTY")
+    }
+
+    suspend fun putReference(relationLabel: String, mobile10: String): Result<ReferenceData> =
+        runCatching {
+            val digits = mobile10.filter { it.isDigit() }.takeLast(10)
+            require(digits.length == 10) { "INVALID_MOBILE" }
+            val body = ReferenceUpsertRequest(
+                relation = relationLabel.trim().lowercase(Locale.US),
+                mobileE164 = "+91$digits",
+            )
+            val res = api.putReference(UUID.randomUUID().toString(), body)
+            res.error?.let { error(it.message ?: it.code ?: "REFERENCE_PUT_FAILED") }
+            res.data ?: error("REFERENCE_PUT_EMPTY")
+        }
+
+    suspend fun getReference(): Result<ReferenceData> = runCatching {
+        val res = api.getReference()
+        res.error?.let { error(it.message ?: it.code ?: "REFERENCE_GET_FAILED") }
+        res.data ?: error("REFERENCE_EMPTY")
+    }
+
+    suspend fun verifyPan(
+        panNumber: String,
+        name: String,
+        uiDob: String? = null,
+    ): Result<PanVerifyData> = runCatching {
+        val body = PanVerifyRequest(
+            panNumber = panNumber.trim().uppercase(Locale.US),
+            name = name.trim(),
+            dob = uiDob?.takeIf { it.isNotBlank() }?.let { toApiDob(it) },
+        )
+        val res = api.verifyPan(UUID.randomUUID().toString(), body)
+        res.error?.let { error(it.message ?: it.code ?: "PAN_VERIFY_FAILED") }
+        res.data ?: error("PAN_VERIFY_EMPTY")
     }
 
     suspend fun listStates(): Result<List<StateOption>> = runCatching {

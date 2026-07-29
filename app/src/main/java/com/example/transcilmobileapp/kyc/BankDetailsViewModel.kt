@@ -38,6 +38,7 @@ class BankDetailsViewModel(application: Application) : AndroidViewModel(applicat
             }
             return
         }
+        // ponytail: no bank-verify API yet — local IFSC/format gate only; restore Digio when API lands.
         KycProgressRepository.saveBank(
             BankDraft(
                 holderName = holderName.trim(),
@@ -46,6 +47,10 @@ class BankDetailsViewModel(application: Application) : AndroidViewModel(applicat
                 ifsc = ifsc.trim().uppercase().take(11),
                 consent = true
             )
+        )
+        KycProgressRepository.markCompletedLocalOnly(
+            KycStep.BANK,
+            OnboardingSync.formatCompletedNow(),
         )
         _navigateNext.value = true
     }
