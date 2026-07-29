@@ -37,7 +37,6 @@ class BankDetailsActivity :
 
         viewModel.navigateNext.observe(this) { go ->
             if (go == true) {
-                KycProgressRepository.markCompleted(KycStep.BANK)
                 KycFlowNavigator.openProgress(this)
             }
         }

@@ -85,10 +85,15 @@ class OnboardingRepositoryTest {
     }
 
     @Test
-    fun putAddress_trimsAndDigits() = runBlocking {
+    fun putAddress_trimsAndDigits_sendsIdempotencyKey() = runBlocking {
         var captured: AddressUpsertRequest? = null
+        var key: String? = null
         val api = object : FakeTranscilApi() {
-            override suspend fun putAddress(body: AddressUpsertRequest): ApiResponse<AddressData> {
+            override suspend fun putAddress(
+                idempotencyKey: String,
+                body: AddressUpsertRequest,
+            ): ApiResponse<AddressData> {
+                key = idempotencyKey
                 captured = body
                 return ApiResponse(AddressData(city = body.city), null, null)
             }
@@ -105,5 +110,31 @@ class OnboardingRepositoryTest {
         assertEquals(null, captured?.addressLine2)
         assertEquals("Hyderabad", captured?.city)
         assertEquals("500001", captured?.pincode)
+        assertTrue(!key.isNullOrBlank())
+    }
+
+    @Test
+    fun putReference_mapsE164AndRelation() = runBlocking {
+        var captured: com.example.transcilmobileapp.data.model.kyc.ReferenceUpsertRequest? = null
+        var key: String? = null
+        val api = object : FakeTranscilApi() {
+            override suspend fun putReference(
+                idempotencyKey: String,
+                body: com.example.transcilmobileapp.data.model.kyc.ReferenceUpsertRequest,
+            ): ApiResponse<com.example.transcilmobileapp.data.model.kyc.ReferenceData> {
+                key = idempotencyKey
+                captured = body
+                return ApiResponse(
+                    com.example.transcilmobileapp.data.model.kyc.ReferenceData(relation = body.relation),
+                    null,
+                    null,
+                )
+            }
+        }
+        val result = OnboardingRepository(api).putReference("Mother", "9876543210")
+        assertTrue(result.isSuccess)
+        assertEquals("mother", captured?.relation)
+        assertEquals("+919876543210", captured?.mobileE164)
+        assertTrue(!key.isNullOrBlank())
     }
 }

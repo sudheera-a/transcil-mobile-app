@@ -1123,6 +1123,41 @@
                     android:textColor="@color/error"
                     android:textSize="12sp"
                     android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_md"
+                    android:text="@string/kyc_other_doc_file_label"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/btnAttachDoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:background="@drawable/bg_button_outline_primary"
+                    android:fontFamily="@font/sora_family"
+                    android:text="@string/kyc_action_attach_doc"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    app:backgroundTint="@null" />
+
+                <TextView
+                    android:id="@+id/tvDocAttached"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:background="@drawable/bg_input_default"
+                    android:paddingHorizontal="@dimen/spacing_md"
+                    android:paddingVertical="@dimen/spacing_sm"
+                    android:textColor="@color/brand_primary_dark"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    tools:text="Attached: pan.jpg (120 KB)"
+                    tools:visibility="visible" />
             </LinearLayout>
 
             <Button

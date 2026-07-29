@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.transcilmobileapp.R
 import com.example.transcilmobileapp.core.FeedbackUi
-import com.example.transcilmobileapp.repository.DigioKycRepository
 import kotlinx.coroutines.launch
 
 class DigioKycCallbackActivity : AppCompatActivity() {
@@ -15,24 +14,14 @@ class DigioKycCallbackActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
-            DigioKycRepository().syncStatus()
-                .onSuccess { data ->
-                    if (data.status.equals("approved", ignoreCase = true)) {
-                        KycProgressRepository.markCompleted(KycStep.AADHAAR)
-                        KycProgressRepository.markCompleted(KycStep.BANK)
-                    } else {
-                        FeedbackUi.toast(
-                            this@DigioKycCallbackActivity,
-                            getString(R.string.digio_kyc_pending),
-                        )
-                    }
-                }
-                .onFailure {
-                    FeedbackUi.toast(
-                        this@DigioKycCallbackActivity,
-                        getString(R.string.digio_kyc_sync_failed),
-                    )
-                }
+            val outcome = DigioReturnSync.applyAfterReturn()
+            when (DigioReturnSync.toastFor(outcome)) {
+                DigioReturnSync.ToastKind.SYNC_FAILED ->
+                    FeedbackUi.toast(this@DigioKycCallbackActivity, getString(R.string.digio_kyc_sync_failed))
+                DigioReturnSync.ToastKind.PENDING ->
+                    FeedbackUi.toast(this@DigioKycCallbackActivity, getString(R.string.digio_kyc_pending))
+                DigioReturnSync.ToastKind.NONE -> Unit
+            }
             openProgressAndFinish()
         }
     }

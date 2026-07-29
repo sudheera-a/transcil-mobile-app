@@ -7,6 +7,15 @@ import com.example.transcilmobileapp.data.model.auth.*
 import com.example.transcilmobileapp.data.model.kyc.DigioStartData
 import com.example.transcilmobileapp.data.model.kyc.DigioStartRequest
 import com.example.transcilmobileapp.data.model.kyc.DigioStatusData
+import com.example.transcilmobileapp.data.model.kyc.KycDocumentSummary
+import com.example.transcilmobileapp.data.model.kyc.KycListData
+import com.example.transcilmobileapp.data.model.kyc.KycSubmitRequest
+import com.example.transcilmobileapp.data.model.kyc.KycUploadData
+import com.example.transcilmobileapp.data.model.kyc.KycUploadRequest
+import com.example.transcilmobileapp.data.model.kyc.PanVerifyData
+import com.example.transcilmobileapp.data.model.kyc.PanVerifyRequest
+import com.example.transcilmobileapp.data.model.kyc.ReferenceData
+import com.example.transcilmobileapp.data.model.kyc.ReferenceUpsertRequest
 import com.example.transcilmobileapp.data.model.onboarding.*
 import com.google.gson.JsonObject
 
@@ -48,8 +57,29 @@ open class FakeTranscilApi : TranscilApi {
         body: ProfilePatchRequest,
     ): ApiResponse<ProfileData> = unused()
     override suspend fun getAddress(): ApiResponse<AddressData> = unused()
-    override suspend fun putAddress(body: AddressUpsertRequest): ApiResponse<AddressData> = unused()
+    override suspend fun putAddress(
+        idempotencyKey: String,
+        body: AddressUpsertRequest,
+    ): ApiResponse<AddressData> = unused()
     override suspend fun getOnboarding(): ApiResponse<OnboardingData> = unused()
+    override suspend fun getReference(): ApiResponse<ReferenceData> = unused()
+    override suspend fun putReference(
+        idempotencyKey: String,
+        body: ReferenceUpsertRequest,
+    ): ApiResponse<ReferenceData> = unused()
+    override suspend fun kycUploadRequest(
+        idempotencyKey: String,
+        body: KycUploadRequest,
+    ): ApiResponse<KycUploadData> = unused()
+    override suspend fun kycSubmit(
+        idempotencyKey: String,
+        body: KycSubmitRequest,
+    ): ApiResponse<KycDocumentSummary> = unused()
+    override suspend fun listKyc(): ApiResponse<KycListData> = unused()
+    override suspend fun verifyPan(
+        idempotencyKey: String,
+        body: PanVerifyRequest,
+    ): ApiResponse<PanVerifyData> = unused()
     override suspend fun getStates(): ApiResponse<List<ReferenceStateDto>> = unused()
     override suspend fun getCities(stateCode: String): ApiResponse<List<ReferenceCityDto>> = unused()
 

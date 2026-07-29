@@ -8,13 +8,20 @@ import androidx.lifecycle.viewModelScope
 import com.example.transcilmobileapp.R
 import com.example.transcilmobileapp.core.Gender
 import com.example.transcilmobileapp.core.JourneyType
+import com.example.transcilmobileapp.core.KycStatus
+import com.example.transcilmobileapp.data.model.onboarding.OnboardingData
 import com.example.transcilmobileapp.repository.DigioKycRepository
+import com.example.transcilmobileapp.repository.KycDocumentRepository
 import com.example.transcilmobileapp.repository.OnboardingRepository
 import kotlinx.coroutines.launch
 
 class KycProgressViewModel(application: Application) : AndroidViewModel(application) {
 
     private val onboardingRepository = OnboardingRepository()
+    private val kycDocumentRepository = KycDocumentRepository()
+
+    private var pendingDocBytes: ByteArray? = null
+    private var pendingDocContentType: String = "image/jpeg"
 
     private val _summaryTitleRes = MutableLiveData<Int>()
     val summaryTitleRes: LiveData<Int> = _summaryTitleRes
@@ -52,6 +59,15 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
     private val _navigateToHome = MutableLiveData<Boolean>()
     val navigateToHome: LiveData<Boolean> = _navigateToHome
 
+    private val _openDocumentsStatus = MutableLiveData<KycStatus?>()
+    val openDocumentsStatus: LiveData<KycStatus?> = _openDocumentsStatus
+
+    private val _pickOtherDocsFile = MutableLiveData<Boolean>()
+    val pickOtherDocsFile: LiveData<Boolean> = _pickOtherDocsFile
+
+    private val _otherDocsFileLabel = MutableLiveData<String?>()
+    val otherDocsFileLabel: LiveData<String?> = _otherDocsFileLabel
+
     private val _personalFieldErrors = MutableLiveData(PersonalFieldErrors())
     val personalFieldErrors: LiveData<PersonalFieldErrors> = _personalFieldErrors
 
@@ -64,11 +80,60 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
     private val _otherDocsFieldErrors = MutableLiveData(OtherDocsFieldErrors())
     val otherDocsFieldErrors: LiveData<OtherDocsFieldErrors> = _otherDocsFieldErrors
 
-    fun refresh() {
+    /**
+     * @param allowStatusRedirect when false (Profile → Documents browse), stay on progress
+     * even if the server already reports verified / in review. Completion flows keep this true.
+     */
+    fun refresh(allowStatusRedirect: Boolean = true) {
         viewModelScope.launch {
             onboardingRepository.getOnboarding()
-                .onSuccess { OnboardingSync.apply(it) }
+                .onSuccess { data ->
+                    OnboardingSync.apply(data)
+                    if (allowStatusRedirect) {
+                        statusRedirectFor(data)?.let { _openDocumentsStatus.value = it }
+                    }
+                }
+            // Fallback when onboarding step fields omit reference contact details.
+            onboardingRepository.getReference()
+                .onSuccess { ref ->
+                    OnboardingSync.applyReference(ref.relation, ref.mobileE164)
+                }
             renderLocal()
+        }
+    }
+
+    companion object {
+        /** Pure gate used by [refresh]; null means stay on KYC progress. */
+        fun statusRedirectFor(
+            verified: Boolean,
+            allComplete: Boolean,
+            documentsOverall: String?,
+        ): KycStatus? = when {
+            verified -> KycStatus.APPROVED
+            allComplete && documentsOverall.equals("in_progress", ignoreCase = true) ->
+                KycStatus.PENDING
+            else -> null
+        }
+
+        fun statusRedirectFor(data: OnboardingData): KycStatus? =
+            statusRedirectFor(
+                verified = data.documents?.verified == true,
+                allComplete = data.allComplete,
+                documentsOverall = data.documents?.overall,
+            )
+
+        /**
+         * Show the API dropdown form while the user still needs to upload.
+         * Lock only after a real submit (draft present + complete / server in_progress).
+         */
+        fun isOtherDocsFormEditable(
+            status: KycStepStatus,
+            hasSubmittedDraft: Boolean,
+            inlineEditing: Boolean,
+        ): Boolean {
+            if (inlineEditing) return true
+            if (hasSubmittedDraft) return false
+            return status == KycStepStatus.IN_PROGRESS
         }
     }
 
@@ -155,12 +220,56 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun onSecondaryAction(step: KycStep) {
-        if (step != KycStep.OTHER_DOCS) return
-        if (!KycProgressRepository.canOpen(step)) {
+        // Other docs uses a dedicated attach button inside the form.
+    }
+
+    fun onAttachOtherDocs() {
+        if (!KycProgressRepository.canOpen(KycStep.OTHER_DOCS)) {
             _showStubMessage.value = R.string.kyc_step_locked
             return
         }
-        _showStubMessage.value = R.string.kyc_attach_stub
+        _pickOtherDocsFile.value = true
+    }
+
+    fun clearPickOtherDocsFile() {
+        _pickOtherDocsFile.value = false
+    }
+
+    fun setPendingOtherDocsFile(
+        bytes: ByteArray,
+        contentType: String,
+        displayName: String? = null,
+    ) {
+        if (bytes.isEmpty()) {
+            _showStubMessage.value = R.string.kyc_attach_required
+            return
+        }
+        val mime = contentType.ifBlank { "image/jpeg" }
+        pendingDocBytes = bytes
+        pendingDocContentType = mime
+        _otherDocsFileLabel.value = attachmentLabel(bytes, mime, displayName)
+        _toastMessage.value = getApplication<Application>().getString(R.string.kyc_attach_ready)
+    }
+
+    private fun attachmentLabel(
+        bytes: ByteArray,
+        contentType: String,
+        displayName: String?,
+    ): String {
+        val name = displayName?.substringAfterLast('/')?.takeIf { it.isNotBlank() }
+            ?: when {
+                contentType.startsWith("image/") -> "photo.jpg"
+                contentType == "application/pdf" -> "document.pdf"
+                else -> "document"
+            }
+        val kb = ((bytes.size + 1023) / 1024).coerceAtLeast(1)
+        return getApplication<Application>().getString(R.string.kyc_attach_label, name, kb)
+    }
+
+    fun clearOtherDocsAttachment() {
+        pendingDocBytes = null
+        pendingDocContentType = "image/jpeg"
+        _otherDocsFileLabel.value = null
     }
 
     fun savePersonalDraft(fullName: String, email: String, dob: String, gender: Gender?) {
@@ -268,8 +377,12 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         _bankFieldErrors.value = errors
         if (errors.hasErrors) return
 
+        // ponytail: no bank-verify API yet — local IFSC/format gate only; restore Digio when API lands.
         saveBankDraft(holderName, accountNumber, confirmAccountNumber, ifsc, consent)
-        KycProgressRepository.markCompleted(KycStep.BANK)
+        KycProgressRepository.markCompletedLocalOnly(
+            KycStep.BANK,
+            OnboardingSync.formatCompletedNow(),
+        )
         _bankFieldErrors.value = BankFieldErrors()
         _inlineEditStep.value = null
         refresh()
@@ -372,14 +485,6 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         launchDigio()
     }
 
-    fun startDigioFromBank(consent: Boolean) {
-        if (!consent) {
-            _showStubMessage.value = R.string.error_bank_consent
-            return
-        }
-        launchDigio()
-    }
-
     private fun launchDigio() {
         val name = KycProgressRepository.personalDraft().fullName.trim()
         if (name.isBlank() || name.any { it.isDigit() }) {
@@ -403,9 +508,16 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
             return
         }
         saveReferenceDraft(relation, digits)
-        KycProgressRepository.markCompleted(KycStep.REFERENCE)
-        _inlineEditStep.value = null
-        refresh()
+        viewModelScope.launch {
+            onboardingRepository.putReference(relation, digits)
+                .onSuccess {
+                    _inlineEditStep.value = null
+                    refresh()
+                }
+                .onFailure { e ->
+                    _toastMessage.value = e.message ?: "Failed to save reference"
+                }
+        }
     }
 
     fun clearOtherDocsNumberError() {
@@ -421,12 +533,66 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         if (errors.hasErrors) return
 
         val type = OtherDocumentType.fromLabel(documentType) ?: return
+        val docType = KycDocumentRepository.apiDocType(documentType) ?: return
         val normalized = OtherDocsValidator.normalize(type, documentNumber)
+        val bytes = pendingDocBytes
+        if (bytes == null || bytes.isEmpty()) {
+            _showStubMessage.value = R.string.kyc_attach_required
+            return
+        }
+        val holder = KycProgressRepository.personalDraft().fullName.trim().ifBlank { "Rider" }
+        val mime = pendingDocContentType
         saveOtherDocsDraft(documentType, normalized)
-        KycProgressRepository.markCompleted(KycStep.OTHER_DOCS)
+        viewModelScope.launch {
+            kycDocumentRepository.uploadAndSubmit(
+                docType = docType,
+                contentType = mime,
+                bytes = bytes,
+                docNumber = normalized,
+                holderName = holder,
+            ).onFailure { e ->
+                handleOtherDocsUploadFailure(e, docType)
+                return@launch
+            }
+            finishOtherDocsSubmitted()
+        }
+    }
+
+    private fun finishOtherDocsSubmitted() {
+        // Onboarding may keep other_docs as in_progress until review — don't leave an empty form.
+        KycProgressRepository.markCompletedLocalOnly(
+            KycStep.OTHER_DOCS,
+            OnboardingSync.formatCompletedNow(),
+        )
+        clearOtherDocsAttachment()
         _otherDocsFieldErrors.value = OtherDocsFieldErrors()
         _inlineEditStep.value = null
         refresh()
+    }
+
+    private fun handleOtherDocsUploadFailure(e: Throwable, docType: String) {
+        val msg = e.message.orEmpty()
+        if (msg.contains("CONFLICT_KYC_DOC_PENDING")) {
+            // Already pending review — treat as submitted so UI doesn't re-ask for files.
+            viewModelScope.launch {
+                val rejected = kycDocumentRepository.listDocuments().getOrNull()?.let { list ->
+                    kycDocumentRepository.latestRejectionReason(list, docType)
+                }
+                if (rejected != null) {
+                    _toastMessage.value = rejected
+                    refresh()
+                } else {
+                    finishOtherDocsSubmitted()
+                }
+            }
+        } else if (msg.startsWith("S3_UPLOAD_FAILED")) {
+            // Keep attachments so user can retry without re-picking.
+            _toastMessage.value =
+                getApplication<Application>().getString(R.string.kyc_upload_failed_retry)
+        } else {
+            _toastMessage.value = e.message
+                ?: getApplication<Application>().getString(R.string.kyc_upload_failed_retry)
+        }
     }
 
     fun isInlineEditing(step: KycStep): Boolean = _inlineEditStep.value == step
@@ -446,13 +612,25 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun isFormEditable(step: KycStep, status: KycStepStatus): Boolean =
-        status == KycStepStatus.IN_PROGRESS || isInlineEditing(step)
+    fun isFormEditable(step: KycStep, status: KycStepStatus): Boolean {
+        if (step == KycStep.OTHER_DOCS) {
+            val draft = KycProgressRepository.otherDocsDraft()
+            val locked = draft.documentType.isNotBlank() &&
+                draft.documentNumber.isNotBlank() &&
+                (status == KycStepStatus.COMPLETED ||
+                    KycProgressRepository.isServerInProgress(step))
+            return isOtherDocsFormEditable(
+                status = status,
+                hasSubmittedDraft = locked,
+                inlineEditing = isInlineEditing(step),
+            )
+        }
+        return status == KycStepStatus.IN_PROGRESS || isInlineEditing(step)
+    }
 
     fun showsConsent(step: KycStep, status: KycStepStatus): Boolean = false
 
-    fun showsSecondary(step: KycStep, status: KycStepStatus): Boolean =
-        step == KycStep.OTHER_DOCS && isFormEditable(step, status)
+    fun showsSecondary(step: KycStep, status: KycStepStatus): Boolean = false
 
     fun hintRes(step: KycStep, status: KycStepStatus): Int {
         if (status == KycStepStatus.COMPLETED && !isInlineEditing(step)) {
@@ -484,7 +662,7 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
             KycStep.OTHER_DOCS,
             KycStep.PAN -> R.string.kyc_action_submit
             KycStep.AADHAAR -> R.string.aadhaar_verify_digio
-            KycStep.BANK -> R.string.aadhaar_verify_digio
+            KycStep.BANK -> R.string.kyc_action_submit
             KycStep.SELFIE -> R.string.selfie_take_cta
         }
     }
@@ -529,5 +707,9 @@ class KycProgressViewModel(application: Application) : AndroidViewModel(applicat
 
     fun clearOpenDigioUrl() {
         _openDigioUrl.value = null
+    }
+
+    fun clearOpenDocumentsStatus() {
+        _openDocumentsStatus.value = null
     }
 }

@@ -3,13 +3,11 @@ package com.example.transcilmobileapp.kyc
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import com.example.transcilmobileapp.databinding.ActivityPanVerificationBinding
-
 import com.example.transcilmobileapp.core.BaseActivity
-import com.example.transcilmobileapp.core.JourneyType
 import com.example.transcilmobileapp.core.KycNavigator
 import com.example.transcilmobileapp.core.KycStatus
 import com.example.transcilmobileapp.core.UiFormHelpers
+import com.example.transcilmobileapp.databinding.ActivityPanVerificationBinding
 
 class PanVerificationActivity :
     BaseActivity<ActivityPanVerificationBinding>(ActivityPanVerificationBinding::inflate) {
@@ -31,11 +29,6 @@ class PanVerificationActivity :
 
         viewModel.navigateNext.observe(this) { go ->
             if (go == true) {
-                val step = when (KycProgressRepository.currentJourney()) {
-                    JourneyType.RENT_EV -> KycStep.OTHER_DOCS
-                    else -> KycStep.PAN
-                }
-                KycProgressRepository.markCompleted(step)
                 KycFlowNavigator.openProgress(this)
             }
         }
@@ -48,6 +41,12 @@ class PanVerificationActivity :
         viewModel.errorMessage.observe(this) { message ->
             if (!message.isNullOrBlank()) {
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            }
+        }
+        viewModel.warningMessage.observe(this) { message ->
+            if (!message.isNullOrBlank()) {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                viewModel.clearWarning()
             }
         }
     }

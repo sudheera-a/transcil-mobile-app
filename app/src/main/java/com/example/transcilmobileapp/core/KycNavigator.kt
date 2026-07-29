@@ -8,15 +8,23 @@ import com.example.transcilmobileapp.kyc.KycPendingActivity
 
 /**
  * Central navigation for post-submission KYC status screens and home dashboard.
- * Later: drive [openForStatus] from API/repository instead of stubs.
+ * Pending/Approved are driven by onboarding `documents.*`.
  */
 object KycNavigator {
 
     const val EXTRA_KYC_STATUS = "extra_kyc_status"
 
-    fun openAfterSubmission(context: Context) {
-        // Stub until backend: always pending after document submission.
-        openForStatus(context, KycStatus.PENDING)
+    fun openAfterSubmission(
+        context: Context,
+        documentsVerified: Boolean = false,
+        documentsOverall: String? = null,
+    ) {
+        val status = when {
+            documentsVerified -> KycStatus.APPROVED
+            documentsOverall.equals("in_progress", ignoreCase = true) -> KycStatus.PENDING
+            else -> KycStatus.PENDING
+        }
+        openForStatus(context, status)
     }
 
     fun openForStatus(context: Context, status: KycStatus) {

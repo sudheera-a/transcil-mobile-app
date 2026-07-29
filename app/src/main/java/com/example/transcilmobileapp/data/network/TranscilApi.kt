@@ -7,6 +7,15 @@ import com.example.transcilmobileapp.data.model.auth.*
 import com.example.transcilmobileapp.data.model.kyc.DigioStartData
 import com.example.transcilmobileapp.data.model.kyc.DigioStartRequest
 import com.example.transcilmobileapp.data.model.kyc.DigioStatusData
+import com.example.transcilmobileapp.data.model.kyc.KycListData
+import com.example.transcilmobileapp.data.model.kyc.KycDocumentSummary
+import com.example.transcilmobileapp.data.model.kyc.KycSubmitRequest
+import com.example.transcilmobileapp.data.model.kyc.KycUploadData
+import com.example.transcilmobileapp.data.model.kyc.KycUploadRequest
+import com.example.transcilmobileapp.data.model.kyc.PanVerifyData
+import com.example.transcilmobileapp.data.model.kyc.PanVerifyRequest
+import com.example.transcilmobileapp.data.model.kyc.ReferenceData
+import com.example.transcilmobileapp.data.model.kyc.ReferenceUpsertRequest
 import com.example.transcilmobileapp.data.model.onboarding.*
 import com.google.gson.JsonObject
 import retrofit2.http.Body
@@ -96,11 +105,42 @@ interface TranscilApi {
 
     @PUT("v1/me/address")
     suspend fun putAddress(
+        @Header("Idempotency-Key") idempotencyKey: String,
         @Body body: AddressUpsertRequest,
     ): ApiResponse<AddressData>
 
     @GET("v1/me/onboarding")
     suspend fun getOnboarding(): ApiResponse<OnboardingData>
+
+    @GET("v1/me/reference")
+    suspend fun getReference(): ApiResponse<ReferenceData>
+
+    @PUT("v1/me/reference")
+    suspend fun putReference(
+        @Header("Idempotency-Key") idempotencyKey: String,
+        @Body body: ReferenceUpsertRequest,
+    ): ApiResponse<ReferenceData>
+
+    @POST("v1/me/kyc/upload-request")
+    suspend fun kycUploadRequest(
+        @Header("Idempotency-Key") idempotencyKey: String,
+        @Body body: KycUploadRequest,
+    ): ApiResponse<KycUploadData>
+
+    @POST("v1/me/kyc/submit")
+    suspend fun kycSubmit(
+        @Header("Idempotency-Key") idempotencyKey: String,
+        @Body body: KycSubmitRequest,
+    ): ApiResponse<KycDocumentSummary>
+
+    @GET("v1/me/kyc")
+    suspend fun listKyc(): ApiResponse<KycListData>
+
+    @POST("v1/me/verify/pan")
+    suspend fun verifyPan(
+        @Header("Idempotency-Key") idempotencyKey: String,
+        @Body body: PanVerifyRequest,
+    ): ApiResponse<PanVerifyData>
 
     @GET("v1/reference/states")
     suspend fun getStates(): ApiResponse<List<ReferenceStateDto>>

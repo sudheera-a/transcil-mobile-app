@@ -37,14 +37,11 @@ object AuthSession {
         if (onboarding == null) return ColdStartTarget.Home(KycStatus.PENDING)
         return when {
             onboarding.riderRole.isNullOrBlank() -> ColdStartTarget.ChooseJourney
+            onboarding.documents?.verified == true -> ColdStartTarget.Home(KycStatus.APPROVED)
             !onboarding.allComplete -> ColdStartTarget.KycProgress
-            else -> ColdStartTarget.Home(
-                if (onboarding.documents?.verified == true) {
-                    KycStatus.APPROVED
-                } else {
-                    KycStatus.PENDING
-                },
-            )
+            onboarding.documents?.overall.equals("in_progress", ignoreCase = true) ->
+                ColdStartTarget.Home(KycStatus.PENDING)
+            else -> ColdStartTarget.Home(KycStatus.PENDING)
         }
     }
 

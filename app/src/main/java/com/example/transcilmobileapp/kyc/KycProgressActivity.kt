@@ -10,6 +10,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.example.transcilmobileapp.databinding.ActivityKycProgressBinding
@@ -32,12 +33,30 @@ import com.example.transcilmobileapp.core.UiFormHelpers
 class KycProgressActivity :
     BaseActivity<ActivityKycProgressBinding>(ActivityKycProgressBinding::inflate) {
 
+    companion object {
+        /** Profile → Documents: show steps, do not bounce to Pending/Approved. */
+        const val EXTRA_BROWSE_ONLY = "extra_kyc_browse_only"
+    }
+
     private val viewModel: KycProgressViewModel by viewModels()
+    private val browseOnly: Boolean
+        get() = intent.getBooleanExtra(EXTRA_BROWSE_ONLY, false)
     private val dobFormat = SimpleDateFormat("dd - MM - yyyy", Locale.US).apply {
         timeZone = TimeZone.getTimeZone("UTC")
     }
     private val boundSteps = linkedMapOf<KycStep, ItemKycStepBinding>()
     private var bindingInProgress = false
+
+    private val pickOtherDocs = registerForActivityResult(
+        ActivityResultContracts.GetContent(),
+    ) { uri ->
+        if (uri == null) return@registerForActivityResult
+        val mime = contentResolver.getType(uri) ?: "image/jpeg"
+        val bytes = contentResolver.openInputStream(uri)?.use { it.readBytes() }
+            ?: return@registerForActivityResult
+        val displayName = uri.lastPathSegment?.substringAfterLast('/')
+        viewModel.setPendingOtherDocsFile(bytes, mime, displayName)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +112,21 @@ class KycProgressActivity :
                 finish()
             }
         }
+        viewModel.openDocumentsStatus.observe(this) { status ->
+            if (status != null) {
+                persistAllVisibleDrafts()
+                KycNavigator.openForStatus(this, status)
+                viewModel.clearOpenDocumentsStatus()
+                finish()
+            }
+        }
+        viewModel.pickOtherDocsFile.observe(this) { pick ->
+            if (pick == true) {
+                pickOtherDocs.launch("*/*")
+                viewModel.clearPickOtherDocsFile()
+            }
+        }
+        viewModel.otherDocsFileLabel.observe(this) { applyOtherDocsFileUi() }
         viewModel.personalFieldErrors.observe(this) { errors ->
             boundSteps[KycStep.PERSONAL]?.let { applyPersonalFieldErrors(it, errors) }
         }
@@ -109,7 +143,7 @@ class KycProgressActivity :
 
     override fun onResume() {
         super.onResume()
-        viewModel.refresh()
+        viewModel.refresh(allowStatusRedirect = !browseOnly)
     }
 
     override fun onPause() {
@@ -224,7 +258,6 @@ class KycProgressActivity :
         if (showSecondary) {
             itemBinding.btnSecondary.setText(R.string.kyc_action_capture_attach)
         }
-
         itemBinding.btnSecondary.setOnClickListener { viewModel.onSecondaryAction(stepUi.step) }
         itemBinding.btnPrimary.setOnClickListener {
             handlePrimaryClick(itemBinding, stepUi)
@@ -254,8 +287,13 @@ class KycProgressActivity :
                 )
             }
             stepUi.step == KycStep.BANK && editable -> {
-                persistDraftFrom(itemBinding, KycStep.BANK)
-                viewModel.startDigioFromBank(itemBinding.cbBankConsent.isChecked)
+                viewModel.submitBank(
+                    itemBinding.etBankHolderName.text?.toString().orEmpty(),
+                    itemBinding.etBankAccountNumber.text?.toString().orEmpty(),
+                    itemBinding.etBankConfirmAccount.text?.toString().orEmpty(),
+                    itemBinding.etBankIfsc.text?.toString().orEmpty(),
+                    itemBinding.cbBankConsent.isChecked,
+                )
             }
             stepUi.step == KycStep.AADHAAR && editable -> {
                 persistDraftFrom(itemBinding, KycStep.AADHAAR)
@@ -676,15 +714,30 @@ class KycProgressActivity :
 
     private fun bindOtherDocsSection(itemBinding: ItemKycStepBinding, status: KycStepStatus) {
         if (!viewModel.showStepForm(KycStep.OTHER_DOCS, status)) return
-        itemBinding.otherDocsForm.visibility = View.VISIBLE
         val editable = viewModel.isFormEditable(KycStep.OTHER_DOCS, status)
-        val docs = resources.getStringArray(R.array.kyc_other_doc_options)
+        val draft = KycProgressRepository.otherDocsDraft()
+        val showCompletedSummary = !editable &&
+            draft.documentType.isNotBlank() &&
+            draft.documentNumber.isNotBlank()
+        if (showCompletedSummary) {
+            itemBinding.otherDocsForm.visibility = View.GONE
+            itemBinding.tvCompletedSummary.visibility = View.VISIBLE
+            itemBinding.tvCompletedSummary.text = getString(
+                R.string.kyc_other_docs_summary,
+                draft.documentType,
+                draft.documentNumber,
+            )
+            return
+        }
+
+        itemBinding.otherDocsForm.visibility = View.VISIBLE
+        // Prefer GET /v1/me/onboarding steps[].options.doc_types; fallback to local defaults.
+        val docs = KycProgressRepository.otherDocTypeLabels()
         itemBinding.spinnerDocument.adapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,
             docs
         )
-        val draft = KycProgressRepository.otherDocsDraft()
         val docIndex = docs.indexOf(draft.documentType).takeIf { it >= 0 } ?: 0
 
         bindingInProgress = true
@@ -695,7 +748,9 @@ class KycProgressActivity :
         applyOtherDocTypeUi(itemBinding, docs[docIndex])
         itemBinding.spinnerDocument.isEnabled = editable
         setEditable(itemBinding.etDocNumber, editable)
+        itemBinding.btnAttachDoc.isEnabled = editable
         if (editable) {
+            itemBinding.btnAttachDoc.setOnClickListener { viewModel.onAttachOtherDocs() }
             watchText(itemBinding.etDocNumber) {
                 viewModel.clearOtherDocsNumberError()
                 persistDraftFrom(itemBinding, KycStep.OTHER_DOCS)
@@ -717,9 +772,25 @@ class KycProgressActivity :
 
                     override fun onNothingSelected(parent: AdapterView<*>?) = Unit
                 }
+        } else {
+            itemBinding.btnAttachDoc.setOnClickListener(null)
         }
 
         applyOtherDocsFieldErrors(itemBinding, viewModel.otherDocsFieldErrors.value)
+        applyOtherDocsFileUi(itemBinding)
+    }
+
+    private fun applyOtherDocsFileUi(
+        itemBinding: ItemKycStepBinding? = boundSteps[KycStep.OTHER_DOCS],
+    ) {
+        val binding = itemBinding ?: return
+        if (binding.otherDocsForm.visibility != View.VISIBLE) return
+        val label = viewModel.otherDocsFileLabel.value
+        binding.tvDocAttached.visibility = if (label.isNullOrBlank()) View.GONE else View.VISIBLE
+        binding.tvDocAttached.text = label
+        binding.btnAttachDoc.setText(
+            if (label.isNullOrBlank()) R.string.kyc_action_attach_doc else R.string.kyc_action_change_doc,
+        )
     }
 
     private fun applyOtherDocTypeUi(itemBinding: ItemKycStepBinding, docLabel: String) {

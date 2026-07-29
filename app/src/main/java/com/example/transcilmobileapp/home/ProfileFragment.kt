@@ -78,7 +78,11 @@ class ProfileFragment : Fragment() {
                 }
                 ProfileNavEvent.OpenDocuments -> {
                     // Keep Home shell alive — do not use KycFlowNavigator.openProgress (it finishes).
-                    startActivity(Intent(requireContext(), KycProgressActivity::class.java))
+                    // Browse-only: already-approved riders must not bounce to KycApprovedActivity.
+                    startActivity(
+                        Intent(requireContext(), KycProgressActivity::class.java)
+                            .putExtra(KycProgressActivity.EXTRA_BROWSE_ONLY, true),
+                    )
                     viewModel.clearNavEvent()
                 }
                 is ProfileNavEvent.OpenContent -> {
