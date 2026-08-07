@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-   Exclude EncryptedSharedPreferences token store from Auto Backup.
+   Exclude EncryptedSharedPreferences (tokens + KYC bank draft) from Auto Backup.
    See https://developer.android.com/guide/topics/data/autobackup
 -->
 <full-backup-content>
     <exclude domain="sharedpref" path="transcil_tokens.xml" />
     <exclude domain="sharedpref" path="transcil_tokens" />
+    <exclude domain="sharedpref" path="transcil_kyc_local.xml" />
+    <exclude domain="sharedpref" path="transcil_kyc_local" />
 </full-backup-content>

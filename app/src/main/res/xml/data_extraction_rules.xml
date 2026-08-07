@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-   Exclude EncryptedSharedPreferences token store from cloud backup / device transfer.
+   Exclude EncryptedSharedPreferences (tokens + KYC bank draft) from cloud backup / device transfer.
    See https://developer.android.com/about/versions/12/backup-restore#xml-changes
 -->
 <data-extraction-rules>
     <cloud-backup>
         <exclude domain="sharedpref" path="transcil_tokens.xml" />
         <exclude domain="sharedpref" path="transcil_tokens" />
+        <exclude domain="sharedpref" path="transcil_kyc_local.xml" />
+        <exclude domain="sharedpref" path="transcil_kyc_local" />
     </cloud-backup>
     <device-transfer>
         <exclude domain="sharedpref" path="transcil_tokens.xml" />
         <exclude domain="sharedpref" path="transcil_tokens" />
+        <exclude domain="sharedpref" path="transcil_kyc_local.xml" />
+        <exclude domain="sharedpref" path="transcil_kyc_local" />
     </device-transfer>
 </data-extraction-rules>

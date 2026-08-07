@@ -1,9 +1,19 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
 
+val localProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+val prodBaseUrl = "https://api.transcil.in/"
+val debugBaseUrl = localProps.getProperty("transcil.baseUrl", prodBaseUrl)
+
 android {
-    namespace = "com.example.transcilmobileapp"
+    // Kotlin reserved word `in` cannot be a package segment; applicationId stays in.transcil.rider.
+    namespace = "com.transcil.rider"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -15,7 +25,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.transcilmobileapp"
+        applicationId = "in.transcil.rider"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -26,15 +36,31 @@ android {
         buildConfigField(
             "String",
             "BASE_URL",
-            "\"https://api.transcil.in/\""
+            "\"$prodBaseUrl\"",
         )
     }
 
     buildTypes {
+        debug {
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"$debugBaseUrl\"",
+            )
+        }
         release {
-            optimization {
-                enable = false
-            }
+            // AGP 9.2: classic minify/shrink (optimization.enable needs experimental r8.gradual.support)
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"$prodBaseUrl\"",
+            )
         }
     }
     compileOptions {

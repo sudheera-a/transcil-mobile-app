@@ -415,6 +415,8 @@
     <string name="settings_notifications">Notifications</string>
     <string name="settings_language">Language</string>
     <string name="settings_language_value">English</string>
+    <string name="settings_bluetooth">Bluetooth</string>
+    <string name="settings_bluetooth_sub">Connect to nearby devices</string>
     <string name="settings_change_password">Change Password</string>
     <string name="settings_help_center">Help Center</string>
     <string name="settings_terms_privacy">Terms &amp; Privacy</string>
@@ -640,4 +642,34 @@
     <string name="home_swap_battery">Swap Battery</string>
     <string name="home_earnings_today">Earnings today</string>
     <string name="home_browse_vehicles">Browse vehicles</string>
+
+    <string name="bluetooth_title">Bluetooth</string>
+    <string name="bluetooth_back_cd">Back</string>
+    <string name="bluetooth_toggle">Bluetooth</string>
+    <string name="bluetooth_status_off">Bluetooth is off</string>
+    <string name="bluetooth_status_on">On — not connected</string>
+    <string name="bluetooth_status_scanning">Scanning…</string>
+    <string name="bluetooth_status_connecting">Connecting…</string>
+    <string name="bluetooth_status_connected">Connected to %1$s</string>
+    <string name="bluetooth_status_disconnected">Disconnected</string>
+    <string name="bluetooth_status_error">Connection error</string>
+    <string name="bluetooth_status_unsupported">Bluetooth not supported</string>
+    <string name="bluetooth_section_paired">PAIRED</string>
+    <string name="bluetooth_section_available">AVAILABLE</string>
+    <string name="bluetooth_scan">Scan</string>
+    <string name="bluetooth_stop_scan">Stop</string>
+    <string name="bluetooth_empty_paired">No paired devices</string>
+    <string name="bluetooth_empty_available">No devices found — tap Scan</string>
+    <string name="bluetooth_empty_scanning">Looking for nearby devices…</string>
+    <string name="bluetooth_scan_failed">Could not start Bluetooth scan</string>
+    <string name="bluetooth_location_required">Turn on Location to discover nearby Bluetooth devices</string>
+    <string name="bluetooth_send">Send</string>
+    <string name="bluetooth_disconnect">Disconnect</string>
+    <string name="bluetooth_input_hint">Type a message</string>
+    <string name="bluetooth_permission_needed">Bluetooth permission is required</string>
+    <string name="bluetooth_turn_off_system">Opening system Bluetooth settings to turn it off</string>
+    <string name="bluetooth_notification_channel">Bluetooth connection</string>
+    <string name="bluetooth_notification_title">Transcil Bluetooth</string>
+    <string name="bluetooth_notification_connected">Connected to %1$s</string>
+    <string name="bluetooth_notification_connecting">Connecting…</string>
 </resources>

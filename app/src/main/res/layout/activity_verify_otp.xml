@@ -65,31 +65,31 @@
                 android:layout_marginTop="@dimen/spacing_xl"
                 android:orientation="horizontal">
 
-                <com.example.transcilmobileapp.core.OtpDigitEditText
+                <com.transcil.rider.core.OtpDigitEditText
                     android:id="@+id/etOtp1"
                     style="@style/OtpBox" />
 
-                <com.example.transcilmobileapp.core.OtpDigitEditText
+                <com.transcil.rider.core.OtpDigitEditText
                     android:id="@+id/etOtp2"
                     style="@style/OtpBox"
                     android:layout_marginStart="@dimen/spacing_sm" />
 
-                <com.example.transcilmobileapp.core.OtpDigitEditText
+                <com.transcil.rider.core.OtpDigitEditText
                     android:id="@+id/etOtp3"
                     style="@style/OtpBox"
                     android:layout_marginStart="@dimen/spacing_sm" />
 
-                <com.example.transcilmobileapp.core.OtpDigitEditText
+                <com.transcil.rider.core.OtpDigitEditText
                     android:id="@+id/etOtp4"
                     style="@style/OtpBox"
                     android:layout_marginStart="@dimen/spacing_sm" />
 
-                <com.example.transcilmobileapp.core.OtpDigitEditText
+                <com.transcil.rider.core.OtpDigitEditText
                     android:id="@+id/etOtp5"
                     style="@style/OtpBox"
                     android:layout_marginStart="@dimen/spacing_sm" />
 
-                <com.example.transcilmobileapp.core.OtpDigitEditText
+                <com.transcil.rider.core.OtpDigitEditText
                     android:id="@+id/etOtp6"
                     style="@style/OtpBox"
                     android:layout_marginStart="@dimen/spacing_sm" />

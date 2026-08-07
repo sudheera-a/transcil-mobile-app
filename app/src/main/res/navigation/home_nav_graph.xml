@@ -7,31 +7,31 @@
 
     <fragment
         android:id="@+id/homeDashboardFragment"
-        android:name="com.example.transcilmobileapp.home.HomeDashboardFragment"
+        android:name="com.transcil.rider.home.HomeDashboardFragment"
         android:label="@string/home_nav_home"
         tools:layout="@layout/fragment_home_dashboard" />
 
     <fragment
         android:id="@+id/nearbyHubsFragment"
-        android:name="com.example.transcilmobileapp.home.NearbyHubsFragment"
+        android:name="com.transcil.rider.home.NearbyHubsFragment"
         android:label="@string/nearby_hubs_title"
         tools:layout="@layout/fragment_nearby_hubs" />
 
     <fragment
         android:id="@+id/batterySwapFragment"
-        android:name="com.example.transcilmobileapp.home.BatterySwapFragment"
+        android:name="com.transcil.rider.home.BatterySwapFragment"
         android:label="@string/battery_swap_title"
         tools:layout="@layout/fragment_battery_swap" />
 
     <fragment
         android:id="@+id/walletFragment"
-        android:name="com.example.transcilmobileapp.home.WalletFragment"
+        android:name="com.transcil.rider.home.WalletFragment"
         android:label="@string/wallet_title"
         tools:layout="@layout/fragment_wallet" />
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.transcilmobileapp.home.ProfileFragment"
+        android:name="com.transcil.rider.home.ProfileFragment"
         android:label="@string/profile_title"
         tools:layout="@layout/fragment_profile">
         <action
@@ -47,13 +47,13 @@
 
     <fragment
         android:id="@+id/helpFragment"
-        android:name="com.example.transcilmobileapp.home.HelpFragment"
+        android:name="com.transcil.rider.home.HelpFragment"
         android:label="@string/help_native_title"
         tools:layout="@layout/fragment_help" />
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.transcilmobileapp.home.SettingsFragment"
+        android:name="com.transcil.rider.home.SettingsFragment"
         android:label="@string/profile_menu_settings"
         tools:layout="@layout/fragment_settings">
         <action
@@ -62,11 +62,20 @@
         <action
             android:id="@+id/action_settings_to_help"
             app:destination="@id/helpFragment" />
+        <action
+            android:id="@+id/action_settings_to_bluetooth"
+            app:destination="@id/bluetoothFragment" />
     </fragment>
 
     <fragment
+        android:id="@+id/bluetoothFragment"
+        android:name="com.transcil.rider.bluetooth.BluetoothFragment"
+        android:label="@string/bluetooth_title"
+        tools:layout="@layout/fragment_bluetooth" />
+
+    <fragment
         android:id="@+id/apiContentFragment"
-        android:name="com.example.transcilmobileapp.home.ApiContentFragment"
+        android:name="com.transcil.rider.home.ApiContentFragment"
         android:label="@string/settings_help_center"
         tools:layout="@layout/fragment_api_content">
         <argument

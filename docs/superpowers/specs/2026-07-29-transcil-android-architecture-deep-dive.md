@@ -154,7 +154,7 @@ sequenceDiagram
 ### D. KYC happy path (Phase C)
 
 ```mermaid
-flowchart LR
+flowchart TD
   CJ["ChooseJourney PUT rider-role"] --> PD["Personal PATCH profile"]
   PD --> ADDR["Address PUT address"]
   ADDR --> KP["KycProgress accordion"]
